@@ -390,11 +390,11 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Metric</span>
-      <span class="cat-pill active" data-metric="abs">累計 Total</span>
+      <span class="cat-pill active" data-metric="abs">A1 事故數量</span>
       <span class="cat-pill" data-metric="rate">每萬人 Per 10k</span>
     </div>
     <div class="filter-group" style="margin-left:auto">
-      <span class="filter-group-label" id="filterCount">— deaths shown</span>
+      <span class="filter-group-label" id="filterCount">— A1 事故</span>
     </div>
   </div>
 
@@ -424,7 +424,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">Metric</span>
-      <span class="cat-pill active" data-cmetric="abs">死亡數 Total</span>
+      <span class="cat-pill active" data-cmetric="abs">A1 死亡數</span>
       <span class="cat-pill" data-cmetric="per100k">每十萬人 Per 100k</span>
     </div>
     <div class="filter-group" style="margin-left:auto">
@@ -744,7 +744,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
       `<span class="legend-tick">+</span>`,
     ].join('');
     document.getElementById('legendTitle').textContent =
-      `Quintile · ${state.metric === 'rate' ? 'Per 10,000 residents' : 'Cumulative deaths'}`;
+      `Quintile · ${state.metric === 'rate' ? '每萬人 A1 事故' : 'A1 事故數量'}`;
   }
 
   // ====================================================================
@@ -816,7 +816,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
          i < 4 ? `<span class="legend-tick">${fmt(countyBreaks[i])}</span>` : `<span class="legend-tick">+</span>`]),
     ].join('');
     document.getElementById('countyLegendTitle').textContent =
-      `Quintile · ${countyState.metric === 'per100k' ? 'Deaths per 100k' : 'Cumulative deaths'}`;
+      `Quintile · ${countyState.metric === 'per100k' ? '每十萬人死亡' : 'A1 死亡數'}`;
   }
 
   function renderCountyRanking() {
@@ -885,7 +885,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
     document.getElementById('filterCount').textContent =
       state.metric === 'rate'
         ? `${districts.features.length} districts shown`
-        : `${totalShown.toLocaleString()} ${state.mode==='all' && state.year==='all' ? 'events' : 'events under filter'}`;
+        : `${totalShown.toLocaleString()} 件 A1 事故${state.mode==='all' && state.year==='all' ? '' : '（篩選後）'}`;
   }
 
   // Wire filter pills
