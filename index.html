@@ -417,13 +417,37 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
   </div>
 </div>
 
-<!-- 04 — Counties roll-up -->
+<!-- 04 — County choropleth -->
 <div class="section">
-  <div class="section-label">04 — Counties 縣市彙整</div>
-  <div class="county-card">
-    <h4>By County</h4>
-    <div class="card-zh">十年累計死亡（依當前篩選條件動態更新）</div>
-    <div id="byCounty"></div>
+  <div class="section-label">04 — County Choropleth 縣市死亡熱力圖</div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-group-label">Metric</span>
+      <span class="cat-pill active" data-cmetric="abs">死亡數 Total</span>
+      <span class="cat-pill" data-cmetric="per100k">每十萬人 Per 100k</span>
+    </div>
+    <div class="filter-group" style="margin-left:auto">
+      <span class="filter-group-label" id="countyStat">—</span>
+    </div>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-wrap">
+      <div id="countyMap" style="height:640px;background:var(--grey-4);border:1px solid var(--grey-3)"></div>
+      <div class="map-legend">
+        <span class="legend-title" id="countyLegendTitle">Quintile</span>
+        <span id="countyLegendBins" style="display:flex;align-items:center;gap:1px"></span>
+      </div>
+    </div>
+    <div class="county-card" style="max-height:672px;overflow:auto">
+      <h4>Ranking · 全 22 縣市</h4>
+      <div class="card-zh">點選縣市進入完整地圖 · 顏色＝當前指標、長條＝相對比例</div>
+      <div id="byCounty"></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--grey-3);font-family:var(--font-en);font-size:9px;letter-spacing:0.12em;color:var(--grey-2);line-height:1.7">
+        Rate · deaths per 100,000 residents (2013 population, MOI dataset 8410)
+      </div>
+    </div>
   </div>
 </div>
 
@@ -492,10 +516,11 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
 <script>
 (async () => {
   // Load assets in parallel
-  const [districts, agg, populations] = await Promise.all([
+  const [districts, agg, populations, counties] = await Promise.all([
     fetch('districts.geojson').then(r => r.json()),
     fetch('agg.json').then(r => r.json()),
     fetch('populations.json').then(r => r.json()),
+    fetch('counties.geojson').then(r => r.json()),
   ]);
 
   // Build lookup: (county, district) → agg record
@@ -722,39 +747,120 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
       `Quintile · ${state.metric === 'rate' ? 'Per 10,000 residents' : 'Cumulative deaths'}`;
   }
 
-  function renderCounties() {
-    const c = {};
-    districts.features.forEach(f => {
-      const v = valueFor(f.properties.COUNTYNAME, f.properties.TOWNNAME);
+  // ====================================================================
+  //  COUNTY-LEVEL DEATH CHOROPLETH (deaths count + per-100k)
+  // ====================================================================
+  const countyState = { metric: 'abs' };  // abs | per100k
+  // Aggregate deaths/events + population to county level
+  const countyAgg = {};
+  agg.forEach(r => {
+    const a = countyAgg[r.county] || (countyAgg[r.county] = { deaths: 0, events: 0 });
+    a.deaths += r.deaths; a.events += r.events;
+  });
+  const countyPop = {};
+  Object.keys(populations).forEach(cy => {
+    countyPop[cy] = Object.values(populations[cy]).reduce((s, v) => s + v, 0);
+  });
+  function countyDeaths(cy) { return (countyAgg[cy] || {}).deaths || 0; }
+  function countyRate(cy) {
+    const p = countyPop[cy] || 0;
+    return p ? countyDeaths(cy) / p * 100000 : 0;
+  }
+  function countyValue(cy) {
+    return countyState.metric === 'per100k' ? countyRate(cy) : countyDeaths(cy);
+  }
+
+  // County map
+  const countyMap = L.map('countyMap', {
+    center: [23.7, 121.0], zoom: 7, minZoom: 6, maxZoom: 12,
+    zoomControl: true, scrollWheelZoom: true, attributionControl: true,
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 19,
+  }).addTo(countyMap);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19, pane: 'shadowPane',
+  }).addTo(countyMap);
+
+  let countyBreaks = [0, 0, 0, 0];
+  const countyLayer = L.geoJSON(counties, {
+    style: f => ({
+      fillColor: colorFor(countyValue(f.properties.COUNTYNAME), countyBreaks),
+      fillOpacity: 0.82, color: '#fff', weight: 1, className: 'district-feature',
+    }),
+    onEachFeature: (f, lyr) => {
       const cy = f.properties.COUNTYNAME;
-      c[cy] = (c[cy] || 0) + v;
-    });
-    // Compute population totals per county for rate calc
-    const cpop = {};
-    Object.keys(populations).forEach(cy => {
-      cpop[cy] = Object.values(populations[cy]).reduce((s, v) => s + v, 0);
-    });
-    const rows = Object.entries(c).map(([cy, v]) => {
-      const pop = cpop[cy] || 0;
-      const rate = pop ? (v / pop * 10000) : 0;
-      return { name: cy, value: v, pop, rate };
-    });
-    rows.sort((a, b) => b.value - a.value);
-    const maxV = Math.max(1, ...rows.map(r => r.value));
-    const el = document.getElementById('byCounty');
+      lyr.on({
+        mouseover: e => { e.target.setStyle({ weight: 2.5, color: '#1A1A1A' }); e.target.bringToFront(); },
+        mouseout:  e => countyLayer.resetStyle(e.target),
+        click: () => { const s = (window.__COUNTY2SLUG || {})[cy]; if (s) location.href = 'city.html?c=' + s; },
+      });
+      lyr._upd = () => {
+        const d = countyDeaths(cy), r = countyRate(cy), p = countyPop[cy] || 0;
+        lyr.bindTooltip(
+          `<strong>${cy}</strong><br>${d.toLocaleString()} 死 · ${r.toFixed(1)} / 10萬` +
+          `<br><span style="opacity:.7;font-family:'Space Grotesk';font-size:10px">人口 ${p.toLocaleString()} · 點選進入</span>`,
+          { sticky: true, direction: 'top', offset: [0, -4] });
+      };
+      lyr._upd();
+    },
+  }).addTo(countyMap);
+  countyMap.fitBounds(countyLayer.getBounds(), { padding: [12, 12] });
+
+  function renderCountyLegend() {
+    const fmt = v => countyState.metric === 'per100k' ? v.toFixed(1) : Math.round(v);
+    document.getElementById('countyLegendBins').innerHTML = [
+      `<span class="legend-tick">0</span>`,
+      ...COLOR_BINS.flatMap((c, i) =>
+        [`<span class="legend-swatch" style="background:${c}"></span>`,
+         i < 4 ? `<span class="legend-tick">${fmt(countyBreaks[i])}</span>` : `<span class="legend-tick">+</span>`]),
+    ].join('');
+    document.getElementById('countyLegendTitle').textContent =
+      `Quintile · ${countyState.metric === 'per100k' ? 'Deaths per 100k' : 'Cumulative deaths'}`;
+  }
+
+  function renderCountyRanking() {
     const C2S = window.__COUNTY2SLUG || {};
-    el.innerHTML = rows.map((r, i) => {
+    const rows = Object.keys(countyAgg).map(cy => ({
+      name: cy, deaths: countyDeaths(cy), rate: countyRate(cy), pop: countyPop[cy] || 0,
+    }));
+    rows.sort((a, b) => countyState.metric === 'per100k' ? (b.rate - a.rate) : (b.deaths - a.deaths));
+    const maxV = Math.max(1, ...rows.map(r => countyState.metric === 'per100k' ? r.rate : r.deaths));
+    document.getElementById('byCounty').innerHTML = rows.map(r => {
       const slug = C2S[r.name];
       const tag = slug ? 'a' : 'div';
       const href = slug ? ` href="city.html?c=${slug}"` : '';
+      const cur = countyState.metric === 'per100k' ? r.rate : r.deaths;
       return `<${tag}${href} class="county-row${slug ? ' clickable' : ''}" style="text-decoration:none;color:inherit">
         <div class="c-name">${r.name}${slug ? ' ›' : ''}</div>
-        <div class="c-track"><div class="c-fill" style="width:${r.value/maxV*100}%"></div></div>
-        <div class="c-abs">${state.metric === 'rate' ? r.value.toFixed(1) : r.value.toLocaleString()}</div>
-        <div class="c-rate">${r.rate.toFixed(1)}<small>/萬 · ${(r.pop/10000).toFixed(0)}萬</small></div>
+        <div class="c-track"><div class="c-fill" style="width:${cur/maxV*100}%"></div></div>
+        <div class="c-abs">${countyState.metric === 'per100k' ? r.rate.toFixed(1) : r.deaths.toLocaleString()}</div>
+        <div class="c-rate">${r.rate.toFixed(1)}<small>/10萬 · ${r.deaths} 死</small></div>
       </${tag}>`;
     }).join('');
   }
+
+  function recomputeCounty() {
+    const vals = counties.features.map(f => countyValue(f.properties.COUNTYNAME));
+    countyBreaks = quantileBreaks(vals);
+    countyLayer.eachLayer(l => {
+      l.setStyle({ fillColor: colorFor(countyValue(l.feature.properties.COUNTYNAME), countyBreaks) });
+      if (l._upd) l._upd();
+    });
+    renderCountyLegend();
+    renderCountyRanking();
+    // headline stat
+    const totDeaths = Object.values(countyAgg).reduce((s, a) => s + a.deaths, 0);
+    const totPop = Object.values(countyPop).reduce((s, v) => s + v, 0);
+    const natRate = totPop ? (totDeaths / totPop * 100000) : 0;
+    document.getElementById('countyStat').textContent =
+      `全國 ${totDeaths.toLocaleString()} 死 · ${natRate.toFixed(1)} / 10萬`;
+  }
+
+  document.querySelectorAll('[data-cmetric]').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('[data-cmetric]').forEach(x => x.classList.remove('active'));
+    el.classList.add('active'); countyState.metric = el.dataset.cmetric; recomputeCounty();
+  }));
 
   function recompute() {
     const values = districts.features.map(f =>
@@ -774,7 +880,6 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
       renderDetail(cty, dist);
     }
     renderLegend();
-    renderCounties();
     // KPI
     const totalShown = values.reduce((s, v) => s + (state.metric === 'rate' ? 0 : v), 0);
     document.getElementById('filterCount').textContent =
@@ -807,6 +912,9 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
     `${Math.round(allPed/total*100)}<small>%</small>`;
 
   recompute();
+  recomputeCounty();
+  // County map needs a size invalidation once laid out
+  setTimeout(() => countyMap.invalidateSize(), 200);
 })();
 </script>
 </body>
