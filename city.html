@@ -97,6 +97,22 @@ body {
   line-height: 1.5;
 }
 
+/* Floating CTA pill — petition */
+.float-petition {
+  position: fixed; bottom: 18px; right: 18px; z-index: 1500;
+  background: var(--lime); color: var(--black);
+  border: 2px solid var(--black); padding: 12px 18px;
+  font-family: var(--font-zh); font-weight: 700; font-size: 13px;
+  letter-spacing: 0.04em; text-decoration: none;
+  box-shadow: 3px 3px 0 var(--black);
+  transition: transform .12s, box-shadow .12s;
+}
+.float-petition:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--black); }
+.float-petition .fp-arrow { font-family: var(--font-en); margin-left: 4px; }
+@media (max-width: 600px) {
+  .float-petition { bottom: 12px; right: 12px; padding: 10px 14px; font-size: 12px; }
+}
+
 /* ── Section titles ── */
 .section { margin-bottom: 56px; }
 .section-label {
@@ -1047,6 +1063,10 @@ body.lang-en #hdrTitleZh { display: none; }
 </head>
 <body>
 <div class="lang-toggle" id="langToggle"><span class="lt-opt" data-lang="zh">中</span><span class="lt-opt" data-lang="en">EN</span></div>
+<a class="float-petition" href="https://forms.gle/wqWe1f8peB4Qn5c66" target="_blank" rel="noopener">
+  <span class="t-zh">支持五大訴求<span class="fp-arrow">→</span></span>
+  <span class="t-en" style="display:none">Sign the Petition<span class="fp-arrow">→</span></span>
+</a>
 <div class="shell">
 
 <!-- Header -->
@@ -1696,6 +1716,18 @@ const markerLayer = L.layerGroup().addTo(map);
     },
   });
 
+  // ── 修正 leaflet.heat@0.2.0 的崩潰 ────────────────────────────────
+  // 其 _redraw() 開頭即呼叫 this._map.getSize()，毫無 null 防護；而圖層被
+  // 移除後（Leaflet 會把 layer._map 設為 null）先前以 requestAnimationFrame
+  // 排程的重繪仍會觸發 → getSize 於 null 上崩潰。崩潰時 _frame 未被清掉，
+  // 之後 redraw() 因 _frame 仍在而永不重排 → 熱力/兩者圖層從此消失。
+  // 包一層防護：無 map 時安全略過並清掉 _frame，讓圖層可再次重繪。
+  const _heatRedraw = heatLayer._redraw;
+  heatLayer._redraw = function () {
+    if (!this._map) { this._frame = null; return; }
+    return _heatRedraw.apply(this, arguments);
+  };
+
   function makeMarker(ev) {
     const color = MODE_COLOR[ev.mode] || '#888';
     const radius = 6 + Math.min(ev.deaths - 1, 3) * 2;
@@ -1733,8 +1765,8 @@ const markerLayer = L.layerGroup().addTo(map);
     // --- Heat layer ---
     if (state.view === 'heat' || state.view === 'both') {
       const pts = events.map(ev => [ev.lat, ev.lon, ev.deaths || 1]);
-      heatLayer.setLatLngs(pts);
-      if (!map.hasLayer(heatLayer)) heatLayer.addTo(map);
+      if (!map.hasLayer(heatLayer)) heatLayer.addTo(map); // 先確保已掛上（canvas 就緒）
+      heatLayer.setLatLngs(pts);                          // 再設資料
     } else if (map.hasLayer(heatLayer)) {
       map.removeLayer(heatLayer);
     }
