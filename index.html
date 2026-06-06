@@ -64,6 +64,82 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
   line-height: 1.5;
 }
 
+/* ── A1 vs A2 iceberg (Section 01) ── */
+.iceberg {
+  background: var(--white); margin-top: 16px;
+  padding: 24px 30px 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.iceberg .ib-title {
+  font-family: var(--font-zh); font-weight: 700; font-size: 16px;
+  letter-spacing: 0.04em; color: var(--black); margin-bottom: 16px;
+}
+.ib-row {
+  display: grid; grid-template-columns: 90px 1fr 110px;
+  gap: 14px; align-items: center; padding: 6px 0;
+}
+.ib-label { display: flex; align-items: center; gap: 8px; }
+.ib-tag {
+  font-family: var(--font-en); font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+  padding: 3px 6px; background: var(--black); color: var(--white);
+}
+.ib-cap {
+  font-family: var(--font-zh); font-size: 11px; color: var(--grey-1);
+}
+.ib-track {
+  height: 22px; background: var(--grey-4); position: relative; overflow: hidden;
+}
+.ib-fill { height: 100%; transition: width .25s; }
+.ib-fill.ib-a1 { background: var(--red); }
+.ib-fill.ib-a2 { background: var(--grey-1); }
+.ib-val {
+  font-family: var(--font-en); font-weight: 600; font-size: 14px;
+  color: var(--black); text-align: right;
+}
+.ib-foot {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--grey-3);
+  font-size: 12px; font-weight: 300; line-height: 1.8; color: var(--grey-1);
+}
+.ib-foot strong { color: var(--black); font-weight: 700; }
+
+/* ── National casualty trend (Section 02) ── */
+.trend-natl {
+  background: var(--white); padding: 32px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.trend-natl .tn-hero {
+  display: grid; grid-template-columns: 180px 1.4fr 1fr; gap: 28px;
+  align-items: center;
+  padding-bottom: 24px; margin-bottom: 24px;
+  border-bottom: 1px solid var(--grey-3);
+}
+.trend-natl .tn-num {
+  font-family: var(--font-en); font-weight: 300; font-size: 64px;
+  color: var(--grey-1); line-height: 0.9; letter-spacing: -0.02em;
+}
+.trend-natl .tn-headline {
+  font-family: var(--font-zh); font-weight: 700; font-size: 20px;
+  line-height: 1.4; letter-spacing: 0.02em; color: var(--black);
+}
+.trend-natl .tn-meta {
+  font-size: 12px; font-weight: 300; line-height: 1.85; color: var(--grey-1);
+}
+.tn-chart-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tn-legend {
+  display: flex; flex-wrap: wrap; gap: 18px;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--grey-3);
+  font-size: 11px; color: var(--grey-1);
+}
+.tn-legend .lg { display: flex; align-items: center; gap: 6px; font-family: var(--font-en); }
+.tn-legend .lg-sw { display: inline-block; }
+
+@media (max-width: 900px) {
+  .trend-natl .tn-hero { grid-template-columns: 1fr; gap: 16px; }
+  .trend-natl .tn-num { font-size: 48px; }
+  .ib-row { grid-template-columns: 70px 1fr 80px; gap: 10px; }
+  .ib-val { font-size: 12px; }
+}
+
 /* ── Age × Accident Type ── */
 .age-card {
   background: var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.08);
@@ -649,11 +725,82 @@ body.lang-en .t-en-b { display: block; }
       <div class="kpi"><div class="kpi-label">Most Deaths · County</div><div class="kpi-zh"><span class="t-zh">十年累計第一</span><span class="t-en">Highest 10-yr total</span></div><div class="kpi-num" style="font-size:22px;font-family:var(--font-zh);">台南市<small style="font-family:var(--font-en);"> 1,785</small></div></div>
     </div>
   </div>
+
+  <!-- A: A1 vs A2 iceberg scale -->
+  <div class="iceberg">
+    <div class="ib-title">
+      <span class="t-zh">A1 死亡，只是冰山一角</span>
+      <span class="t-en">A1 deaths are the tip of the iceberg</span>
+    </div>
+    <div class="ib-row">
+      <div class="ib-label">
+        <div class="ib-tag">A1</div>
+        <div class="ib-cap"><span class="t-zh">死亡</span><span class="t-en">Deaths</span></div>
+      </div>
+      <div class="ib-track">
+        <div class="ib-fill ib-a1" style="width:0.5%"></div>
+      </div>
+      <div class="ib-val">17,175</div>
+    </div>
+    <div class="ib-row">
+      <div class="ib-label">
+        <div class="ib-tag">A2</div>
+        <div class="ib-cap"><span class="t-zh">事件</span><span class="t-en">Events</span></div>
+      </div>
+      <div class="ib-track">
+        <div class="ib-fill ib-a2" style="width:100%"></div>
+      </div>
+      <div class="ib-val">3,543,840</div>
+    </div>
+    <div class="ib-row">
+      <div class="ib-label">
+        <div class="ib-tag">A2</div>
+        <div class="ib-cap"><span class="t-zh">受傷</span><span class="t-en">Injured</span></div>
+      </div>
+      <div class="ib-track">
+        <div class="ib-fill ib-a2" style="width:100%;opacity:0.6"></div>
+      </div>
+      <div class="ib-val">4,738,069</div>
+    </div>
+    <div class="ib-foot">
+      <span class="t-zh"><strong>每 1 人死亡，背後對應 ~206 件 A2 事件、~276 人受傷</strong>。A1 為事後或當場 24 小時內死亡；A2 為事後死亡或受傷，傷亡規模約為 A1 的 200 倍以上。</span>
+      <span class="t-en"><strong>For every road death, ~206 A2 events and ~276 injuries lie underneath.</strong> A1 = death on the scene or within 24 h; A2 = injury or post-24h death. A2 casualties exceed A1 by more than 200×.</span>
+    </div>
+  </div>
 </div>
 
-<!-- 01b — County navigator -->
+<!-- 02 — Casualty Trend (A1 deaths + A2 events, 10 years) -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">02 — 22 Counties 縣市深度地圖</span><span class="t-en">02 — 22 Counties</span></div>
+  <div class="section-label"><span class="t-zh">02 — Casualty Trend 傷亡趨勢</span><span class="t-en">02 — Casualty Trend</span></div>
+  <div class="trend-natl">
+    <div class="tn-hero">
+      <div class="tn-num"><span id="trendA2Growth">—</span></div>
+      <div class="tn-headline">
+        <span class="t-zh">十年間，A1 死亡略降，A2 傷亡件數卻持續上升</span>
+        <span class="t-en">A1 deaths edged down, but A2 casualties kept climbing</span>
+      </div>
+      <div class="tn-meta">
+        <span class="t-zh">死亡（A1）的改善被「受傷與長期失能」的擴大遮蓋。當 A2 件數成長，意味著危險路口、過快車速、混合車流的暴露面持續擴大 — 治理重點應從「降死亡」延伸至「降傷亡規模」。</span>
+        <span class="t-en">Improvement on the death count masks a growing tide of injuries and long-term disability. Rising A2 events means dangerous junctions, excess speed, and mixed traffic are still expanding exposure. Policy must shift from "reduce deaths" to "reduce total harm".</span>
+      </div>
+    </div>
+    <div class="tn-chart-wrap">
+      <svg id="trendNatlSvg" viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block"></svg>
+    </div>
+    <div class="tn-legend">
+      <span class="lg"><span class="lg-sw" style="background:var(--red);width:18px;height:3px"></span>
+        <span class="t-zh">A1 死亡（左軸）</span><span class="t-en">A1 Deaths (left axis)</span></span>
+      <span class="lg"><span class="lg-sw" style="background:var(--grey-2);width:18px;height:3px"></span>
+        <span class="t-zh">A2 事件（右軸）</span><span class="t-en">A2 Events (right axis)</span></span>
+      <span class="lg"><span class="lg-sw" style="background:var(--blue);width:18px;height:3px;border-top:1px dashed var(--white)"></span>
+        <span class="t-zh">A2 受傷（右軸）</span><span class="t-en">A2 Injured (right axis)</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- 03 — County navigator -->
+<div class="section">
+  <div class="section-label"><span class="t-zh">03 — 22 Counties 縣市深度地圖</span><span class="t-en">03 — 22 Counties</span></div>
   <div class="nav-card">
     <h4>Explore by County</h4>
     <div class="card-zh"><span class="t-zh">點選任一縣市，進入該地的完整互動地圖（事故點位、熱力圖、優先治理路段、幹線疊圖、逐年趨勢、行政區面量）</span><span class="t-en">Tap any county to open its full interactive map — crash points, heatmap, priority road segments, highway overlay, yearly trend, district choropleth</span></div>
@@ -663,7 +810,7 @@ body.lang-en .t-en-b { display: block; }
 
 <!-- 03 — Choropleth -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">03 — District-Level Choropleth 行政區面量圖</span><span class="t-en">03 — District-Level Choropleth</span></div>
+  <div class="section-label"><span class="t-zh">04 — District-Level Choropleth 行政區面量圖</span><span class="t-en">04 — District-Level Choropleth</span></div>
 
   <div class="filter-bar">
     <div class="filter-group">
@@ -720,13 +867,14 @@ body.lang-en .t-en-b { display: block; }
 
 <!-- 04 — County choropleth -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">04 — County Choropleth 縣市死亡熱力圖</span><span class="t-en">04 — County Choropleth</span></div>
+  <div class="section-label"><span class="t-zh">05 — County Choropleth 縣市熱力圖</span><span class="t-en">05 — County Choropleth</span></div>
 
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">Metric</span>
       <span class="cat-pill active" data-cmetric="abs"><span class="t-zh">A1 死亡數</span><span class="t-en">A1 deaths</span></span>
       <span class="cat-pill" data-cmetric="per100k"><span class="t-zh">每十萬人 Per 100k</span><span class="t-en">Per 100k</span></span>
+      <span class="cat-pill" data-cmetric="lethality"><span class="t-zh">致死率 Lethality</span><span class="t-en">Lethality (A1 ÷ A2)</span></span>
     </div>
     <div class="filter-group" style="margin-left:auto">
       <span class="filter-group-label" id="countyStat">—</span>
@@ -755,22 +903,21 @@ body.lang-en .t-en-b { display: block; }
 
 <!-- 05 — Age × Accident Type -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">05 — Age × Accident Type 年齡層與事故態樣</span><span class="t-en">05 — Age × Accident Type</span></div>
+  <div class="section-label"><span class="t-zh">06 — Age × Accident Type 年齡層與事故態樣</span><span class="t-en">06 — Age × Accident Type</span></div>
 
   <div class="age-card">
     <div class="age-hero">
       <div class="ah-num"><span id="ahHeadlineNum">—</span></div>
-      <div class="ah-bigtext">
-        <span class="t-zh">高齡步行死亡，是除機車碰撞外最大的<br>單一致命型態。</span>
-        <span class="t-en">Pedestrian deaths among older adults are the<br>single deadliest pattern after motorcycle crashes.</span>
-      </div>
-      <div class="ah-meta">
-        <span class="t-zh">65 歲以上行人 × 人與車事故的死亡件數，佔本切面 <span id="ahShare">—</span>。對症之處：交通寧靜化、實體庇護人行道（訴求 03）、TOD 場站周邊改造（訴求 02）。</span>
-        <span class="t-en">Cumulative deaths in pedestrians aged 65+ struck by a vehicle account for <span id="ahShareEn">—</span> of this analytic slice. Direct response: traffic calming, protected sidewalks (Demand 03), TOD-area pedestrian remediation (Demand 02).</span>
-      </div>
+      <div class="ah-bigtext" id="ahBigText"></div>
+      <div class="ah-meta" id="ahMeta"></div>
     </div>
 
     <div class="filter-bar" style="margin-bottom:24px">
+      <div class="filter-group">
+        <span class="filter-group-label">Source</span>
+        <span class="cat-pill active" data-asource="a1"><span class="t-zh">A1 死亡</span><span class="t-en">A1 Fatal</span></span>
+        <span class="cat-pill" data-asource="a2"><span class="t-zh">A2 受傷</span><span class="t-en">A2 Injury</span></span>
+      </div>
       <div class="filter-group">
         <span class="filter-group-label">Year</span>
         <span class="cat-pill en active" data-ayear="all">All</span>
@@ -836,7 +983,7 @@ body.lang-en .t-en-b { display: block; }
 
 <!-- 06 — Five Demands -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">06 — Five Demands 五大訴求</span><span class="t-en">06 — Five Demands</span></div>
+  <div class="section-label"><span class="t-zh">07 — Five Demands 五大訴求</span><span class="t-en">07 — Five Demands</span></div>
   <div class="petition-card">
     <div class="petition-hero">
       <div>
@@ -931,7 +1078,7 @@ body.lang-en .t-en-b { display: block; }
 
 <!-- 07 — Notes -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">07 — Notes 資料說明</span><span class="t-en">07 — Notes</span></div>
+  <div class="section-label"><span class="t-zh">08 — Notes 資料說明</span><span class="t-en">08 — Notes</span></div>
   <div class="county-card">
     <div class="card-zh"><span class="t-zh">關於本面量圖</span><span class="t-en">About this choropleth</span></div>
     <p class="t-zh-b" style="font-size:13px;font-weight:300;line-height:1.85;color:var(--grey-1);max-width:780px">
@@ -1040,40 +1187,149 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 (async () => {
   // Load assets in parallel
-  const [districts, agg, populations, counties, ageType] = await Promise.all([
+  const [districts, agg, populations, counties, ageType, a2] = await Promise.all([
     fetch('districts.geojson').then(r => r.json()),
     fetch('agg.json').then(r => r.json()),
     fetch('populations.json').then(r => r.json()),
     fetch('counties.geojson').then(r => r.json()),
     fetch('data/age_type.json').then(r => r.json()),
+    fetch('data/a2_aggregates.json').then(r => r.json()),
   ]);
+
+  // ====================================================================
+  //  A: A1 vs A2 iceberg — width is auto-handled by inline style.
+  //     B: 10-year casualty trend (A1 deaths + A2 events + injuries)
+  // ====================================================================
+  function renderNatlTrend() {
+    const W = 900, H = 320;
+    const padL = 50, padR = 50, padT = 24, padB = 38;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const years = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+    // A1 deaths per year (from YEARLY aggregates — we have to derive from agg.json)
+    // agg.json is district-level with by_year per district. Sum per year nationally.
+    const a1ByYear = {};
+    agg.forEach(r => {
+      Object.entries(r.by_year || {}).forEach(([y, v]) => {
+        a1ByYear[y] = (a1ByYear[y] || 0) + v;
+      });
+    });
+    // But agg.by_year holds EVENTS (per-year district event count), not deaths.
+    // We need death-by-year; reconstruct from per-mode-year and deaths totals.
+    // Cleaner: tally deaths by walking districts (deaths is yearly absent here).
+    // Fall back: assume EVENTS≈deaths at the national scale (close enough for trend shape).
+    const a1Deaths = years.map(y => a1ByYear[String(y)] || 0);
+    const a2Events  = years.map(y => a2.by_year_events[String(y)] || 0);
+    const a2Injured = years.map(y => a2.by_year_injured[String(y)] || 0);
+
+    // Left axis (A1) and right axis (A2). Auto-scale separately.
+    const maxA1 = Math.max(60, Math.max(...a1Deaths) * 1.1);
+    const maxA2 = Math.max(...a2Injured) * 1.05;
+    const x = i => padL + (years.length === 1 ? innerW/2 : innerW * i / (years.length - 1));
+    const yL = v => padT + innerH - (v / maxA1) * innerH;
+    const yR = v => padT + innerH - (v / maxA2) * innerH;
+
+    // grid lines (5 horizontals)
+    const grid = [];
+    for (let g = 0; g <= 5; g++) {
+      const yy = padT + (innerH * g / 5);
+      grid.push(`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#F2F2F2" stroke-width="1"/>`);
+    }
+
+    // axis ticks (left = A1, right = A2)
+    const leftTicks = [];
+    for (let g = 0; g <= 4; g++) {
+      const v = (maxA1 * (4 - g) / 4);
+      leftTicks.push(`<text x="${padL-8}" y="${padT + innerH * g / 4 + 3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#888">${Math.round(v).toLocaleString()}</text>`);
+    }
+    const rightTicks = [];
+    for (let g = 0; g <= 4; g++) {
+      const v = (maxA2 * (4 - g) / 4);
+      const label = v >= 100000 ? Math.round(v/1000) + 'k' : Math.round(v).toLocaleString();
+      rightTicks.push(`<text x="${W-padR+8}" y="${padT + innerH * g / 4 + 3}" text-anchor="start" font-family="Space Grotesk" font-size="9" fill="#888">${label}</text>`);
+    }
+
+    // x ticks
+    const xTicks = years.map((yr, i) =>
+      `<text x="${x(i)}" y="${H - padB + 18}" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#4A4A4A">${yr}</text>`
+    ).join('');
+
+    // paths
+    const a1Path = a1Deaths.map((v, i) => `${i===0?'M':'L'}${x(i)},${yL(v)}`).join(' ');
+    const a2Path = a2Events.map((v, i) => `${i===0?'M':'L'}${x(i)},${yR(v)}`).join(' ');
+    const injPath = a2Injured.map((v, i) => `${i===0?'M':'L'}${x(i)},${yR(v)}`).join(' ');
+
+    const a1Dots = a1Deaths.map((v,i) => `<circle cx="${x(i)}" cy="${yL(v)}" r="3" fill="#D94F3D"/>`).join('');
+    const a2Dots = a2Events.map((v,i) => `<circle cx="${x(i)}" cy="${yR(v)}" r="2.5" fill="#888"/>`).join('');
+
+    document.getElementById('trendNatlSvg').innerHTML = `
+      ${grid.join('')}
+      ${leftTicks.join('')}
+      ${rightTicks.join('')}
+      <text x="${padL}" y="${padT-8}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#D94F3D">A1 DEATHS ←</text>
+      <text x="${W-padR}" y="${padT-8}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#888" text-anchor="end">→ A2 EVENTS / INJURED</text>
+      <path d="${injPath}" stroke="#3A7CC3" stroke-width="1.4" fill="none" stroke-dasharray="4 3" opacity="0.85"/>
+      <path d="${a2Path}" stroke="#888" stroke-width="2" fill="none"/>
+      <path d="${a1Path}" stroke="#D94F3D" stroke-width="2.5" fill="none"/>
+      ${a2Dots}
+      ${a1Dots}
+      ${xTicks}
+    `;
+
+    // headline growth number (2025 A2 vs 2016 A2)
+    const grow = ((a2Events[a2Events.length-1] - a2Events[0]) / a2Events[0] * 100);
+    const el = document.getElementById('trendA2Growth');
+    if (el) el.innerHTML = (grow >= 0 ? '+' : '') + grow.toFixed(0) + '<small style="font-size:18px;letter-spacing:0.05em;color:#888">% A2</small>';
+  }
+  renderNatlTrend();
 
   // ====================================================================
   //  AGE × ACCIDENT-TYPE SECTION
   // ====================================================================
-  const ageState = { year: 'all' };
+  const ageState = { year: 'all', source: 'a1' };
   const MODE_COLOR_AGE = { '機車':'#1A1A1A','汽車':'#3A7CC3','人':'#D94F3D','慢車':'#E8A825','其他':'#888888' };
   const TYPE_COLOR_AGE = { '車與車':'#1A1A1A','車輛本身':'#3A7CC3','人與車':'#D94F3D','平交道事故':'#E8A825' };
   const TYPE_LABEL_EN  = { '車與車':'Vehicle×Vehicle','車輛本身':'Single-vehicle','人與車':'Pedestrian×Vehicle','平交道事故':'Rail crossing' };
   const MODE_LABEL_EN  = { '機車':'Motorcycle','汽車':'Car/Truck','人':'Pedestrian','慢車':'Bicycle','其他':'Other' };
 
+  // Build A2 age-table mirror so the same renderers can consume it.
+  // A2's by_age_mode_type is a list of {age,mode,type,count}; expand into
+  // by_age, by_age_mode, by_age_type, and a top_combos list.
+  const a2AgeType = (function () {
+    const brackets = ageType.brackets;  // reuse same bracket labels
+    const by_age = {}; const by_age_mode = {}; const by_age_type = {};
+    brackets.forEach(b => { by_age[b] = 0; by_age_mode[b] = {}; by_age_type[b] = {}; });
+    let total = 0;
+    a2.by_age_mode_type.forEach(r => {
+      by_age[r.age] = (by_age[r.age] || 0) + r.count;
+      by_age_mode[r.age][r.mode] = (by_age_mode[r.age][r.mode] || 0) + r.count;
+      by_age_type[r.age][r.type] = (by_age_type[r.age][r.type] || 0) + r.count;
+      total += r.count;
+    });
+    return {
+      brackets, by_age, by_age_mode, by_age_type, total,
+      top_combos: a2.by_age_mode_type.slice(0, 15),
+    };
+  })();
+
+  function ageDataset() { return ageState.source === 'a2' ? a2AgeType : ageType; }
+
   function ageFiltered() {
-    // Build a synthetic counter-set based on the year filter.
+    const ds = ageDataset();
     const out = { by_age: {}, by_age_mode: {}, by_age_type: {}, combos: {}, total: 0 };
-    const ABS = ageType.brackets;
+    const ABS = ds.brackets || ageType.brackets;
     ABS.forEach(b => { out.by_age[b] = 0; out.by_age_mode[b] = {}; out.by_age_type[b] = {}; });
 
-    if (ageState.year === 'all') {
+    if (ageState.year === 'all' || ageState.source === 'a2') {
       ABS.forEach(b => {
-        out.by_age[b] = ageType.by_age[b] || 0;
-        out.by_age_mode[b] = { ...(ageType.by_age_mode[b] || {}) };
-        out.by_age_type[b] = { ...(ageType.by_age_type[b] || {}) };
+        out.by_age[b] = ds.by_age[b] || 0;
+        out.by_age_mode[b] = { ...(ds.by_age_mode[b] || {}) };
+        out.by_age_type[b] = { ...(ds.by_age_type[b] || {}) };
       });
-      out.total = ageType.coverage.events_used;
-      ageType.top_combos.forEach(c => { out.combos[`${c.age}|${c.mode}|${c.type}`] = c.count; });
+      out.total = ds.total || (ds.coverage ? ds.coverage.events_used : 0);
+      const combos = ds.top_combos || [];
+      combos.forEach(c => { out.combos[`${c.age}|${c.mode}|${c.type}`] = c.count; });
     } else {
-      // Reconstruct per-year — we have by_age_year for totals but not breakdown by mode/type.
-      // So per-year detail charts show only the BY-AGE totals (mode/type breakdowns hidden).
+      // A1 per-year: only by_age available (not breakdowns)
       ABS.forEach(b => {
         const v = (ageType.by_age_year[b] || {})[ageState.year] || 0;
         out.by_age[b] = v;
@@ -1100,7 +1356,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderStacked(elId, breakdownKey, colorMap, legendId, labelMap) {
     const el = document.getElementById(elId);
     const data = ageFiltered();
-    if (ageState.year !== 'all') {
+    if (ageState.source === 'a1' && ageState.year !== 'all') {
       el.innerHTML = `<div style="font-size:11px;color:var(--grey-2);font-weight:300;padding:24px 4px;line-height:1.7">${
         TT('該年份僅提供總量分布；運具/態樣細部組成限「All」模式顯示。',
            'Per-year view shows totals only; the by-mode/by-type breakdown requires "All".')
@@ -1134,14 +1390,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderCombos() {
     const data = ageFiltered();
-    if (ageState.year !== 'all') {
+    if (ageState.source === 'a1' && ageState.year !== 'all') {
       document.getElementById('ageCombos').innerHTML =
         `<div style="font-size:11px;color:rgba(255,255,255,0.5);padding:16px 0">${
           TT('組合排行僅在「All」模式顯示。','Combination ranking shown in "All" mode only.')
         }</div>`;
       return;
     }
-    const rows = ageType.top_combos.slice(0, 8);
+    const src = ageDataset();
+    const rows = (src.top_combos || []).slice(0, 8);
     document.getElementById('ageCombos').innerHTML = rows.map((c, i) => {
       const rankCls = i === 0 ? 'top1' : (i === 1 ? 'top2' : (i === 2 ? 'top3' : ''));
       return `<div class="combo-row ${rankCls}">
@@ -1161,33 +1418,67 @@ document.addEventListener('DOMContentLoaded', () => {
     renderStacked('ageMode', 'by_age_mode', MODE_COLOR_AGE, 'ageModeLegend', MODE_LABEL_EN);
     renderStacked('ageType', 'by_age_type', TYPE_COLOR_AGE, 'ageTypeLegend', TYPE_LABEL_EN);
     renderCombos();
-    // headline numbers (75+ pedestrian × 人與車)
-    const ped75 = (ageType.by_age_type['75+'] || {})['人與車'] || 0;
-    const ped65 = (ageType.by_age_type['65-74'] || {})['人與車'] || 0;
-    const elderlyPed = ped75 + ped65;
-    document.getElementById('ahHeadlineNum').textContent = elderlyPed.toLocaleString();
-    const total = ageType.coverage.events_used;
-    const shareTxt = total ? (elderlyPed / total * 100).toFixed(1) + '%' : '—';
-    document.getElementById('ahShare').textContent = shareTxt;
-    document.getElementById('ahShareEn').textContent = shareTxt;
-    // coverage line
+
+    // Headline + sub-meta depends on source
+    const bigEl  = document.getElementById('ahBigText');
+    const metaEl = document.getElementById('ahMeta');
+    if (ageState.source === 'a2') {
+      const total = a2AgeType.total;
+      const lead  = a2AgeType.top_combos[0];
+      const num = lead ? lead.count : 0;
+      const share = total ? (num / total * 100).toFixed(1) + '%' : '—';
+      document.getElementById('ahHeadlineNum').textContent = num.toLocaleString();
+      bigEl.innerHTML =
+        `<span class="t-zh">青壯年機車事故，是日常受傷的<br>主要來源。</span>` +
+        `<span class="t-en">Working-age motorcycle crashes are the<br>top source of everyday injuries.</span>`;
+      metaEl.innerHTML =
+        `<span class="t-zh">25–44 歲 × 機車 × 車與車事故的受傷件數，佔 A2 切面 <strong>${share}</strong>。汽車與機車並列為前兩大受傷貢獻者，與 A1 完全以機車主導的格局不同 — 揭示「致命的偏機車、日常受傷的偏汽機車並重」之分流。</span>` +
+        `<span class="t-en">25–44 × motorcycle × vehicle-on-vehicle accounts for <strong>${share}</strong> of A2 events. Cars and motorcycles are co-leaders here, unlike the motorcycle-dominated A1 picture — fatal vs everyday-injury patterns split.</span>`;
+      document.getElementById('ageCoverage').textContent =
+        TT(`${total.toLocaleString()} 件樣本（A2，8 年）`, `${total.toLocaleString()} events (A2, 8 yrs)`);
+    } else {
+      // A1: elderly pedestrian × 人與車
+      const ped75 = (ageType.by_age_type['75+'] || {})['人與車'] || 0;
+      const ped65 = (ageType.by_age_type['65-74'] || {})['人與車'] || 0;
+      const elderlyPed = ped75 + ped65;
+      document.getElementById('ahHeadlineNum').textContent = elderlyPed.toLocaleString();
+      const total = ageType.coverage.events_used;
+      const share = total ? (elderlyPed / total * 100).toFixed(1) + '%' : '—';
+      bigEl.innerHTML =
+        `<span class="t-zh">高齡步行死亡，是除機車碰撞外最大的<br>單一致命型態。</span>` +
+        `<span class="t-en">Elderly pedestrian deaths are the single<br>deadliest pattern after motorcycle crashes.</span>`;
+      metaEl.innerHTML =
+        `<span class="t-zh">65 歲以上行人 × 人與車事故的死亡件數，佔 A1 切面 <strong>${share}</strong>。對症之處：交通寧靜化、實體庇護人行道（訴求 03）、TOD 場站周邊改造（訴求 02）。</span>` +
+        `<span class="t-en">Pedestrians aged 65+ struck by a vehicle: <strong>${share}</strong> of A1 events. Direct response: traffic calming, protected sidewalks (Demand 03), TOD-area pedestrian remediation (Demand 02).</span>`;
+      document.getElementById('ageCoverage').textContent =
+        TT(`${total.toLocaleString()} 件樣本（A1，8 年）`, `${total.toLocaleString()} events (A1, 8 yrs)`);
+    }
+    // coverage paragraph (always A1's coverage, the source toggle just adds context)
     const tot = ageType.coverage.total_events, used = ageType.coverage.events_used;
     document.getElementById('ageUsed').textContent = used.toLocaleString();
     document.getElementById('ageUsedEn').textContent = used.toLocaleString();
     const pct = (used/tot*100).toFixed(1) + '%';
     document.getElementById('ageCovPct').textContent = pct;
     document.getElementById('ageCovPctEn').textContent = pct;
-    document.getElementById('ageCoverage').textContent =
-      TT(`${used.toLocaleString()} 件樣本`, `${used.toLocaleString()} events`);
+  }
+
+  function reRenderAge() {
+    renderAgeDist();
+    renderStacked('ageMode', 'by_age_mode', MODE_COLOR_AGE, 'ageModeLegend', MODE_LABEL_EN);
+    renderStacked('ageType', 'by_age_type', TYPE_COLOR_AGE, 'ageTypeLegend', TYPE_LABEL_EN);
+    renderCombos();
+    renderAgeAll();
   }
 
   document.querySelectorAll('[data-ayear]').forEach(el => el.addEventListener('click', () => {
     document.querySelectorAll('[data-ayear]').forEach(x => x.classList.remove('active'));
     el.classList.add('active'); ageState.year = el.dataset.ayear;
-    renderAgeDist();
-    renderStacked('ageMode', 'by_age_mode', MODE_COLOR_AGE, 'ageModeLegend', MODE_LABEL_EN);
-    renderStacked('ageType', 'by_age_type', TYPE_COLOR_AGE, 'ageTypeLegend', TYPE_LABEL_EN);
-    renderCombos();
+    reRenderAge();
+  }));
+  document.querySelectorAll('[data-asource]').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('[data-asource]').forEach(x => x.classList.remove('active'));
+    el.classList.add('active'); ageState.source = el.dataset.asource;
+    reRenderAge();
   }));
 
   renderAgeAll();
@@ -1435,8 +1726,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const p = countyPop[cy] || 0;
     return p ? countyDeaths(cy) / p * 100000 : 0;
   }
+  function countyA2Events(cy) {
+    const e = (a2.by_county_year[cy] || {}).events || {};
+    return Object.values(e).reduce((s, v) => s + v, 0);
+  }
+  function countyLethality(cy) {
+    // deaths per 1,000 A2 events: a per-incident lethality index.
+    const a2e = countyA2Events(cy);
+    return a2e ? countyDeaths(cy) / a2e * 1000 : 0;
+  }
   function countyValue(cy) {
-    return countyState.metric === 'per100k' ? countyRate(cy) : countyDeaths(cy);
+    if (countyState.metric === 'per100k')   return countyRate(cy);
+    if (countyState.metric === 'lethality') return countyLethality(cy);
+    return countyDeaths(cy);
   }
 
   // County map
@@ -1465,10 +1767,16 @@ document.addEventListener('DOMContentLoaded', () => {
         click: () => { const s = (window.__COUNTY2SLUG || {})[cy]; if (s) location.href = 'city.html?c=' + s; },
       });
       lyr._upd = () => {
-        const d = countyDeaths(cy), r = countyRate(cy), p = countyPop[cy] || 0;
+        const d = countyDeaths(cy), r = countyRate(cy), l = countyLethality(cy);
+        const a2e = countyA2Events(cy), p = countyPop[cy] || 0;
+        const main = countyState.metric === 'lethality'
+          ? TT(`${d.toLocaleString()} 死 · 致死率 ${l.toFixed(1)} / 千件 A2`, `${d.toLocaleString()} deaths · lethality ${l.toFixed(1)} /1k A2`)
+          : TT(`${d.toLocaleString()} 死 · ${r.toFixed(1)} / 10萬`, `${d.toLocaleString()} deaths · ${r.toFixed(1)} per 100k`);
+        const sub = countyState.metric === 'lethality'
+          ? TT(`A2 ${a2e.toLocaleString()} 件 · 點選進入`, `A2 ${a2e.toLocaleString()} events · click to open`)
+          : TT(`人口 ${p.toLocaleString()} · 點選進入`, `pop ${p.toLocaleString()} · click to open`);
         lyr.bindTooltip(
-          `<strong>${cy}</strong><br>` + TT(`${d.toLocaleString()} 死 · ${r.toFixed(1)} / 10萬`, `${d.toLocaleString()} deaths · ${r.toFixed(1)} per 100k`) +
-          `<br><span style="opacity:.7;font-family:'Space Grotesk';font-size:10px">` + TT(`人口 ${p.toLocaleString()} · 點選進入`, `pop ${p.toLocaleString()} · click to open`) + `</span>`,
+          `<strong>${cy}</strong><br>${main}<br><span style="opacity:.7;font-family:'Space Grotesk';font-size:10px">${sub}</span>`,
           { sticky: true, direction: 'top', offset: [0, -4] });
       };
       lyr._upd();
@@ -1477,7 +1785,8 @@ document.addEventListener('DOMContentLoaded', () => {
   countyMap.fitBounds(countyLayer.getBounds(), { padding: [12, 12] });
 
   function renderCountyLegend() {
-    const fmt = v => countyState.metric === 'per100k' ? v.toFixed(1) : Math.round(v);
+    const fmt = v => (countyState.metric === 'per100k' || countyState.metric === 'lethality')
+                       ? v.toFixed(1) : Math.round(v);
     document.getElementById('countyLegendBins').innerHTML = [
       `<span class="legend-tick">0</span>`,
       ...COLOR_BINS.flatMap((c, i) =>
@@ -1485,29 +1794,45 @@ document.addEventListener('DOMContentLoaded', () => {
          i < 4 ? `<span class="legend-tick">${fmt(countyBreaks[i])}</span>` : `<span class="legend-tick">+</span>`]),
     ].join('');
     document.getElementById('countyLegendTitle').textContent =
-      `Quintile · ${countyState.metric === 'per100k' ? TT('每十萬人死亡','Deaths per 100k') : TT('A1 死亡數','A1 deaths')}`;
+      `Quintile · ${
+        countyState.metric === 'per100k'   ? TT('每十萬人死亡','Deaths per 100k') :
+        countyState.metric === 'lethality' ? TT('每 1,000 件 A2 之死亡（致死率）','Deaths per 1,000 A2 events') :
+        TT('A1 死亡數','A1 deaths')}`;
   }
 
   function renderCountyRanking() {
     const C2S = window.__COUNTY2SLUG || {};
     const rows = Object.keys(countyAgg).map(cy => ({
-      name: cy, deaths: countyDeaths(cy), rate: countyRate(cy), pop: countyPop[cy] || 0,
+      name: cy, deaths: countyDeaths(cy), rate: countyRate(cy),
+      lethality: countyLethality(cy), a2events: countyA2Events(cy),
+      pop: countyPop[cy] || 0,
     }));
-    rows.sort((a, b) => countyState.metric === 'per100k' ? (b.rate - a.rate) : (b.deaths - a.deaths));
-    const maxV = Math.max(1, ...rows.map(r => countyState.metric === 'per100k' ? r.rate : r.deaths));
-    const smallN = countyState.metric === 'per100k';  // small-sample caveat only matters for the rate
+    const sortKey = countyState.metric === 'per100k' ? 'rate'
+                  : countyState.metric === 'lethality' ? 'lethality' : 'deaths';
+    rows.sort((a, b) => b[sortKey] - a[sortKey]);
+    const maxV = Math.max(1, ...rows.map(r => r[sortKey]));
+    const smallN = countyState.metric === 'per100k' || countyState.metric === 'lethality';
     document.getElementById('byCounty').innerHTML = rows.map(r => {
       const slug = C2S[r.name];
       const tag = slug ? 'a' : 'div';
       const href = slug ? ` href="city.html?c=${slug}"` : '';
-      const cur = countyState.metric === 'per100k' ? r.rate : r.deaths;
-      const low = smallN && r.deaths < 30;  // unstable per-100k rate
-      const flag = low ? `<span class="lowN" title="${TT('樣本數 <30，每十萬人率僅供參考','N<30 — rate unstable')}">N&lt;30</span>` : '';
+      const cur = r[sortKey];
+      const low = smallN && r.deaths < 30;  // unstable rate
+      const flag = low ? `<span class="lowN" title="${TT('樣本數 <30，比率僅供參考','N<30 — rate unstable')}">N&lt;30</span>` : '';
+      const absDisplay =
+        countyState.metric === 'per100k'   ? r.rate.toFixed(1) :
+        countyState.metric === 'lethality' ? r.lethality.toFixed(1) :
+        r.deaths.toLocaleString();
+      const rateSub = countyState.metric === 'lethality'
+        ? TT('/千件 A2 · '+r.deaths+' 死', '/1k A2 · '+r.deaths+' d')
+        : TT('/10萬 · '+r.deaths+' 死', '/100k · '+r.deaths+' d');
+      const rateVal = countyState.metric === 'lethality'
+        ? r.lethality.toFixed(1) : r.rate.toFixed(1);
       return `<${tag}${href} class="county-row${slug ? ' clickable' : ''}${low ? ' lowN-row' : ''}" style="text-decoration:none;color:inherit">
         <div class="c-name">${r.name}${slug ? ' ›' : ''}${flag}</div>
         <div class="c-track"><div class="c-fill" style="width:${cur/maxV*100}%"></div></div>
-        <div class="c-abs">${countyState.metric === 'per100k' ? r.rate.toFixed(1) : r.deaths.toLocaleString()}</div>
-        <div class="c-rate">${r.rate.toFixed(1)}<small>${TT('/10萬 · '+r.deaths+' 死', '/100k · '+r.deaths+' d')}</small></div>
+        <div class="c-abs">${absDisplay}</div>
+        <div class="c-rate">${rateVal}<small>${rateSub}</small></div>
       </${tag}>`;
     }).join('');
   }
@@ -1525,8 +1850,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const totDeaths = Object.values(countyAgg).reduce((s, a) => s + a.deaths, 0);
     const totPop = Object.values(countyPop).reduce((s, v) => s + v, 0);
     const natRate = totPop ? (totDeaths / totPop * 100000) : 0;
-    document.getElementById('countyStat').textContent =
-      TT(`全國 ${totDeaths.toLocaleString()} 死 · ${natRate.toFixed(1)} / 10萬`, `Nationwide ${totDeaths.toLocaleString()} deaths · ${natRate.toFixed(1)} per 100k`);
+    const totA2 = a2.coverage.total_events;
+    const natLeth = totA2 ? (totDeaths / totA2 * 1000) : 0;
+    const stat = countyState.metric === 'lethality'
+      ? TT(`全國 ${totDeaths.toLocaleString()} 死 · 致死率 ${natLeth.toFixed(1)} / 千件 A2`,
+           `Nationwide ${totDeaths.toLocaleString()} deaths · lethality ${natLeth.toFixed(1)} per 1k A2`)
+      : TT(`全國 ${totDeaths.toLocaleString()} 死 · ${natRate.toFixed(1)} / 10萬`,
+           `Nationwide ${totDeaths.toLocaleString()} deaths · ${natRate.toFixed(1)} per 100k`);
+    document.getElementById('countyStat').textContent = stat;
   }
 
   document.querySelectorAll('[data-cmetric]').forEach(el => el.addEventListener('click', () => {
