@@ -230,7 +230,7 @@ body {
   font-size: 7pt; font-weight: 400; color: var(--grey-2);
   letter-spacing: 0.15em; text-transform: uppercase; margin-left: 1.5mm;
 }
-.map-svg-wrap { flex: 1; background: var(--grey-4); padding: 2mm; }
+.map-svg-wrap { flex: 1; background: #EFF2F5; padding: 2mm; }
 .map-svg { width: 100%; height: 100%; }
 .legend { display: flex; margin-top: 2mm; }
 .legend .l-row { display: flex; flex: 1; }
@@ -1004,7 +1004,7 @@ function renderMap(svgId, lookup, palette, legendId) {
   const breaks = quantiles(values, 5);
   const parts = geo.features.map((f, i) => {
     const idx = bin(values[i], breaks);
-    return `<path d="${pathFor(f, w, h)}" fill="${palette[idx] || palette[0]}" stroke="#FFF" stroke-width="0.25"/>`;
+    return `<path d="${pathFor(f, w, h)}" fill="${palette[idx] || palette[0]}" stroke="#FFFFFF" stroke-width="0.4"/>`;
   });
   svg.innerHTML = parts.join('');
 
@@ -1028,11 +1028,13 @@ function formatLeg(v) {
 }
 
 // ── Palettes ─────────────────────────────────────────────────
+// palette[0] uses warm near-white (not grey-4) so it stays distinct
+// from the new bluish-grey map background (#EFF2F5).
 const PAL = {
-  red:  ['#F2F2F2', '#FFE0D4', '#F4A08F', '#D94F3D', '#A33A2D'],
-  blue: ['#F2F2F2', '#D6E5F3', '#9DC0E0', '#5A92C8', '#2E5A87'],
-  gold: ['#F2F2F2', '#FAEDC6', '#EFD183', '#E8A825', '#A85F00'],
-  vzt:  ['#F2F2F2', '#E8F000', '#C8D400', '#E8A825', '#D94F3D'],
+  red:  ['#FBEAE3', '#F4A08F', '#E2735E', '#D94F3D', '#A33A2D'],
+  blue: ['#E1ECF6', '#B9D2EB', '#7CA9D6', '#3A7CC3', '#1F4B7A'],
+  gold: ['#FAF0D8', '#F2D998', '#E8B85A', '#D89018', '#A56300'],
+  vzt:  ['#F4F9D2', '#E8F000', '#C8D400', '#E8A825', '#D94F3D'],
 };
 
 // ── P04 · Density Maps ───────────────────────────────────────
