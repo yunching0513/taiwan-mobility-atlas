@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>22 縣市交通事故死傷排名 · 2016–2025 · A4 Flyer</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4 portrait; margin: 0; }
+
+:root {
+  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#888; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
+  --lime:#C8D400; --lime-dk:#A8B200; --lime-lt:#E8F000;
+  --red:#D94F3D; --red-dk:#A33A2D; --gold:#E8A825; --blue:#3A7CC3;
+  --font-zh:'Noto Sans TC',sans-serif;
+  --font-en:'Space Grotesk',sans-serif;
+}
+body {
+  font-family: var(--font-zh); background:#ddd; color:var(--black);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.page {
+  width:210mm; min-height:297mm; background:var(--white);
+  margin:12mm auto; padding:12mm 12mm 10mm;
+  box-shadow:0 2px 12px rgba(0,0,0,0.15);
+  display:flex; flex-direction:column;
+}
+@media print {
+  body { background:var(--white); }
+  .page { margin:0; box-shadow:none; }
+  .no-print { display:none !important; }
+}
+.toolbar {
+  position:fixed; top:16px; right:16px; z-index:10;
+  background:var(--black); color:var(--white);
+  padding:10px 16px; font-family:var(--font-en);
+  font-size:12px; letter-spacing:0.12em; cursor:pointer; border:none;
+}
+.toolbar:hover { background:var(--lime-dk); color:var(--black); }
+
+/* ── Hero ── */
+.hero {
+  display:grid; grid-template-columns: 1fr auto;
+  gap:8mm; padding-bottom:5mm; margin-bottom:4mm;
+  border-bottom:0.7mm solid var(--black);
+  align-items:flex-end;
+}
+.hero h1 {
+  font-family:var(--font-en); font-size:8.5pt; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--grey-2);
+  font-weight:500; line-height:1.5; margin-bottom:1mm;
+}
+.hero .h-zh {
+  font-weight:700; font-size:19pt; letter-spacing:0.04em;
+  color:var(--black); line-height:1.2;
+}
+.hero .h-sub {
+  font-size:9pt; font-weight:300; color:var(--grey-1);
+  margin-top:1.2mm; letter-spacing:0.04em; line-height:1.55;
+}
+.hero .h-sub strong { color:var(--black); font-weight:700; }
+.logo-mark {
+  display:inline-block; font-family:var(--font-en);
+  font-size:6.5pt; font-weight:600; letter-spacing:0.18em;
+  padding:1mm 2mm; border:0.4mm solid var(--black);
+  line-height:1.4; text-transform:uppercase;
+}
+.hero-stat {
+  text-align:right; min-width:42mm;
+}
+.hero-stat .label {
+  font-family:var(--font-en); font-size:7pt; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--grey-2); margin-bottom:0.5mm;
+}
+.hero-stat .num {
+  font-family:var(--font-en); font-size:28pt; font-weight:300;
+  color:var(--red); line-height:0.95; letter-spacing:-0.02em;
+}
+.hero-stat .sub {
+  font-size:8pt; color:var(--grey-1); margin-top:1mm; letter-spacing:0.03em;
+}
+
+/* ── 2×2 ranking grid ── */
+.grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:4mm; flex:1;
+}
+.rk {
+  background:var(--grey-4); padding:3.5mm 3.5mm 3mm;
+  display:flex; flex-direction:column;
+}
+.rk .rk-head {
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin-bottom:1mm;
+}
+.rk .rk-head h3 {
+  font-family:var(--font-en); font-size:8pt; font-weight:600;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--grey-2);
+}
+.rk .rk-zh {
+  font-weight:700; font-size:11.5pt; letter-spacing:0.04em;
+  color:var(--black); margin-bottom:0.5mm;
+}
+.rk .rk-tag {
+  font-size:7.2pt; color:var(--grey-1); font-weight:300;
+  margin-bottom:2.5mm; letter-spacing:0.03em; line-height:1.5;
+}
+.rk .rk-tag strong { color:var(--black); font-weight:700; }
+.rk.cA1 { border-top:1.2mm solid var(--red); }
+.rk.cRate { border-top:1.2mm solid var(--red-dk); }
+.rk.cA2 { border-top:1.2mm solid var(--grey-1); }
+.rk.cLeth { border-top:1.2mm solid var(--gold); }
+
+.rk table { width:100%; border-collapse:collapse; }
+.rk td {
+  font-size:7pt; padding:0.45mm 1mm; vertical-align:middle;
+  line-height:1.2; font-weight:400;
+}
+.rk td.rk-num {
+  font-family:var(--font-en); font-weight:600; font-size:7pt;
+  color:var(--grey-2); text-align:right; width:5mm; padding-right:1.5mm;
+}
+.rk tr.top1 td.rk-num { color:var(--red); }
+.rk tr.top2 td.rk-num, .rk tr.top3 td.rk-num { color:var(--red-dk); }
+.rk td.rk-name {
+  font-weight:400; color:var(--black);
+  width:13mm; letter-spacing:0.02em;
+}
+.rk tr.top1 td.rk-name { font-weight:700; }
+.rk td.rk-bar {
+  padding:0 1mm;
+}
+.rk td.rk-bar .bar-track {
+  background:var(--white); height:1.6mm; position:relative; overflow:hidden;
+}
+.rk td.rk-bar .bar-fill { height:100%; }
+.rk.cA1 td.rk-bar .bar-fill { background:var(--red); }
+.rk.cRate td.rk-bar .bar-fill { background:var(--red-dk); }
+.rk.cA2 td.rk-bar .bar-fill { background:var(--grey-1); }
+.rk.cLeth td.rk-bar .bar-fill { background:var(--gold); }
+.rk td.rk-val {
+  font-family:var(--font-en); font-weight:600; font-size:7pt;
+  text-align:right; color:var(--black); width:14mm;
+}
+.rk td.rk-val small {
+  display:block; font-size:5.5pt; letter-spacing:0.12em;
+  color:var(--grey-2); font-weight:400;
+}
+
+/* ── Footer ── */
+.foot {
+  margin-top:4mm; padding-top:3mm;
+  border-top:0.3mm solid var(--grey-3);
+  display:grid; grid-template-columns: 1fr auto;
+  gap:5mm; align-items:flex-end;
+}
+.foot .f-src {
+  font-size:6.3pt; color:var(--grey-2); font-weight:300;
+  letter-spacing:0.03em; line-height:1.6; max-width:130mm;
+}
+.foot .f-src strong { color:var(--black); font-weight:700; }
+.foot .cta {
+  text-align:center;
+  padding:3mm 5mm;
+  background:var(--lime); border:0.5mm solid var(--black);
+  box-shadow:1mm 1mm 0 var(--black);
+}
+.foot .cta .cta-zh {
+  font-weight:700; font-size:9pt; letter-spacing:0.05em; color:var(--black);
+}
+.foot .cta .cta-en {
+  font-family:var(--font-en); font-size:6pt; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--black); margin-top:0.5mm; font-weight:600;
+}
+.foot .cta .cta-url {
+  font-family:var(--font-en); font-size:5.5pt; letter-spacing:0.05em;
+  color:var(--grey-1); margin-top:1mm;
+}
+
+.footer-bar {
+  margin-top:3mm; display:flex; justify-content:space-between;
+  align-items:center;
+  font-family:var(--font-en); font-size:6pt; letter-spacing:0.18em;
+  color:var(--grey-2); text-transform:uppercase;
+}
+.footer-bar .tag {
+  display:inline-block; background:var(--lime); color:var(--black);
+  padding:0.5mm 2mm; font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<button class="toolbar no-print" onclick="window.print()">PRINT / SAVE AS PDF</button>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <span class="logo-mark">Taiwan Mobility Atlas</span>
+      <h1 style="margin-top:2mm">22 Counties · Casualty Ranking · 2016–2025</h1>
+      <div class="h-zh">22 縣市交通事故死傷排名</div>
+      <div class="h-sub">
+        <strong>17,175 人死亡</strong>、<strong>354 萬件事故</strong>、<strong>474 萬人受傷</strong>。<br>
+        絕對數 vs 每十萬人 vs 致死率 — 三種視角揭露截然不同的危險地圖。
+      </div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">10-YEAR TOTAL</div>
+      <div class="num">17,175</div>
+      <div class="sub">A1 死亡（24 h 內）</div>
+    </div>
+  </div>
+
+  <!-- 2×2 GRID -->
+  <div class="grid">
+
+    <!-- A1 absolute -->
+    <div class="rk cA1">
+      <div class="rk-head"><h3>01 · ABSOLUTE</h3></div>
+      <div class="rk-zh">A1 死亡人數</div>
+      <div class="rk-tag">十年累計死亡絕對數 · 人口大縣領先</div>
+      <table id="t-a1"></table>
+    </div>
+
+    <!-- per-capita -->
+    <div class="rk cRate">
+      <div class="rk-head"><h3>02 · PER CAPITA</h3></div>
+      <div class="rk-zh">每十萬人死亡率</div>
+      <div class="rk-tag">以居民人口為分母 · <strong>東部與農業縣翻上前段班</strong></div>
+      <table id="t-rate"></table>
+    </div>
+
+    <!-- A2 events -->
+    <div class="rk cA2">
+      <div class="rk-head"><h3>03 · VOLUME</h3></div>
+      <div class="rk-zh">A2 事件總量</div>
+      <div class="rk-tag">十年累計 A2（事後死亡或受傷）事件件數</div>
+      <table id="t-a2"></table>
+    </div>
+
+    <!-- Lethality -->
+    <div class="rk cLeth">
+      <div class="rk-head"><h3>04 · LETHALITY</h3></div>
+      <div class="rk-zh">致死率（每千件 A2 死亡）</div>
+      <div class="rk-tag">A1 ÷ A2 × 1000 · <strong>每件事故有多致命</strong></div>
+      <table id="t-leth"></table>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="foot">
+    <div class="f-src">
+      <strong>資料來源</strong>：內政部警政署 A1 / A2 級道路交通事故開放資料（透過 data.gov.tw）；
+      <strong>人口</strong>：內政部戶政司 dataset 8410（民國 102 年）；
+      <strong>邊界圖資</strong>：g0v/twTown1982 整併至 2014 年後行政地理。<br>
+      <strong>方法論</strong>：A1 = 當場或 24 小時內死亡；A2 = 事後死亡或受傷，多當事人列已去重至事件層級。<br>
+      <strong>發起單位</strong>：TCAN 台灣氣候行動網絡 × 還路於民行人路權促進會（Vision Zero Taiwan）。
+    </div>
+    <a class="cta" href="https://forms.gle/wqWe1f8peB4Qn5c66">
+      <div class="cta-zh">支持五大訴求</div>
+      <div class="cta-en">Sign the Petition →</div>
+      <div class="cta-url">forms.gle/wqWe1f8peB4Qn5c66</div>
+    </a>
+  </div>
+
+  <div class="footer-bar">
+    <span>VISIONZEROTAIWAN.GITHUB.IO / TAIWAN-MOBILITY-ATLAS</span>
+    <span class="tag">2026</span>
+  </div>
+</div>
+
+<script>
+(async () => {
+  const [agg, populations, a2] = await Promise.all([
+    fetch('agg.json').then(r => r.json()),
+    fetch('populations.json').then(r => r.json()),
+    fetch('data/a2_aggregates.json').then(r => r.json()),
+  ]);
+
+  // Aggregate A1 deaths to county
+  const countyA1 = {};
+  agg.forEach(r => { countyA1[r.county] = (countyA1[r.county] || 0) + r.deaths; });
+
+  // County populations
+  const countyPop = {};
+  Object.keys(populations).forEach(cy => {
+    countyPop[cy] = Object.values(populations[cy]).reduce((s, v) => s + v, 0);
+  });
+
+  // A2 events per county
+  const countyA2 = {};
+  Object.entries(a2.by_county_year).forEach(([cy, d]) => {
+    countyA2[cy] = Object.values(d.events || {}).reduce((s, v) => s + v, 0);
+  });
+
+  const counties = Object.keys(countyA1).sort();
+
+  function renderRanking(tableId, sortFn, valueFn, valueFmt, subFn, lowNFn) {
+    const rows = counties.map(cy => ({
+      name: cy,
+      a1: countyA1[cy] || 0,
+      pop: countyPop[cy] || 0,
+      a2: countyA2[cy] || 0,
+      rate: countyPop[cy] ? (countyA1[cy] || 0) / countyPop[cy] * 100000 : 0,
+      leth: countyA2[cy] ? (countyA1[cy] || 0) / countyA2[cy] * 1000 : 0,
+    }));
+    rows.sort(sortFn);
+    const maxV = Math.max(1, ...rows.map(valueFn));
+
+    document.getElementById(tableId).innerHTML = rows.map((r, i) => {
+      const v = valueFn(r);
+      const cls = i === 0 ? 'top1' : (i === 1 ? 'top2' : (i === 2 ? 'top3' : ''));
+      const flag = lowNFn && lowNFn(r) ? ' <span style="font-family:var(--font-en);font-size:5pt;color:var(--gold);font-weight:600;letter-spacing:0.05em">N&lt;30</span>' : '';
+      return `<tr class="${cls}">
+        <td class="rk-num">${String(i+1).padStart(2,'0')}</td>
+        <td class="rk-name">${r.name}${flag}</td>
+        <td class="rk-bar"><div class="bar-track"><div class="bar-fill" style="width:${(v/maxV*100).toFixed(1)}%"></div></div></td>
+        <td class="rk-val">${valueFmt(v)}<small>${subFn(r)}</small></td>
+      </tr>`;
+    }).join('');
+  }
+
+  renderRanking('t-a1',
+    (a,b) => b.a1 - a.a1,
+    r => r.a1,
+    v => v.toLocaleString(),
+    r => '死亡',
+  );
+  renderRanking('t-rate',
+    (a,b) => b.rate - a.rate,
+    r => r.rate,
+    v => v.toFixed(1),
+    r => '/十萬',
+    r => r.a1 < 30,
+  );
+  renderRanking('t-a2',
+    (a,b) => b.a2 - a.a2,
+    r => r.a2,
+    v => v >= 100000 ? (v/1000).toFixed(0) + 'k' : v.toLocaleString(),
+    r => '件',
+  );
+  renderRanking('t-leth',
+    (a,b) => b.leth - a.leth,
+    r => r.leth,
+    v => v.toFixed(1),
+    r => '/千件',
+    r => r.a1 < 30,
+  );
+})();
+</script>
+</body>
+</html>
