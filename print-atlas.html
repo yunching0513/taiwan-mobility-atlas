@@ -296,6 +296,23 @@ body {
   color: var(--grey-2); font-weight: 400;
 }
 
+/* "two-up" — when only 2 ranking panels share the page (death-only or
+   event-only split), each panel has ~2× vertical room. Bump typography
+   and bar height so the rows breathe and use the space. */
+.rk-grid.two-up .rk { padding: 5mm 5mm 4mm; }
+.rk-grid.two-up .rk .rk-head h3 { font-size: 9pt; }
+.rk-grid.two-up .rk .rk-zh { font-size: 14pt; margin-bottom: 1mm; }
+.rk-grid.two-up .rk .rk-tag { font-size: 8.5pt; margin-bottom: 4mm; line-height: 1.55; }
+.rk-grid.two-up .rk td { padding: 1.9mm 1.2mm; font-size: 9pt; line-height: 1.25; }
+.rk-grid.two-up .rk td.rk-num { width: 8mm; padding-right: 2mm; font-size: 9pt; }
+.rk-grid.two-up .rk td.rk-name { width: 19mm; font-size: 9.5pt; letter-spacing: 0.02em; }
+.rk-grid.two-up .rk td.rk-val { width: 19mm; font-size: 9.5pt; }
+.rk-grid.two-up .rk td.rk-val small { font-size: 6.5pt; margin-top: 0.5mm; }
+.rk-grid.two-up .rk td.rk-bar .bar-track { height: 2.4mm; }
+.rk-grid.two-up .rk tr.top1 td.rk-num { font-size: 11pt; }
+.rk-grid.two-up .rk tr.top1 td.rk-name { font-size: 10.5pt; }
+.rk-grid.two-up .rk tr.top1 td.rk-val { font-size: 10.5pt; }
+
 /* ── P07 Age × Mode heatmap ─────────────────────────────────── */
 .heatmap-wrap { flex: 1; display: flex; flex-direction: column; }
 .heat-svg { width: 100%; flex: 1; }
@@ -393,11 +410,11 @@ body {
       <div class="cv-title-en">Taiwan Mobility Atlas</div>
       <div class="cv-title-zh">台灣交通安全<br>資料圖表本</div>
       <div class="cv-sub">十年回顧 · 2016–2025 · 22 縣市 · 364 鄉鎮市區<br>
-      A 10-page A4 data atlas of road traffic casualties in Taiwan, 2016–2025.</div>
+      An 11-page A4 data atlas of road traffic casualties in Taiwan, 2016–2025.</div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:flex-end">
       <div class="cv-marks">DATA · NPA A1 + A2 / MOI POPULATIONS / g0v BOUNDARIES</div>
-      <div class="cv-marks">10 PAGES · A4 PORTRAIT</div>
+      <div class="cv-marks">11 PAGES · A4 PORTRAIT</div>
     </div>
   </div>
 
@@ -428,11 +445,12 @@ body {
         <li><span class="lbl"><b>03</b> 十年走勢 · 10-Year Trend</span><span class="pg">P.03</span></li>
         <li><span class="lbl"><b>04</b> 密度地圖 · Density Maps</span><span class="pg">P.04</span></li>
         <li><span class="lbl"><b>05</b> 總量地圖 · Volume Maps</span><span class="pg">P.05</span></li>
-        <li><span class="lbl"><b>06</b> 縣市排名 · Rankings</span><span class="pg">P.06</span></li>
-        <li><span class="lbl"><b>07</b> 受害者圖譜 · Victim Profile</span><span class="pg">P.07</span></li>
-        <li><span class="lbl"><b>08</b> 運具與年度 · Mode × Year</span><span class="pg">P.08</span></li>
-        <li><span class="lbl"><b>09</b> 致死率 · Lethality</span><span class="pg">P.09</span></li>
-        <li><span class="lbl"><b>10</b> 五大訴求 · Five Demands</span><span class="pg">P.10</span></li>
+        <li><span class="lbl"><b>06</b> 死亡排名 · Rankings · Deaths</span><span class="pg">P.06</span></li>
+        <li><span class="lbl"><b>07</b> 事件排名 · Rankings · Events</span><span class="pg">P.07</span></li>
+        <li><span class="lbl"><b>08</b> 受害者圖譜 · Victim Profile</span><span class="pg">P.08</span></li>
+        <li><span class="lbl"><b>09</b> 運具與年度 · Mode × Year</span><span class="pg">P.09</span></li>
+        <li><span class="lbl"><b>10</b> 致死率 · Lethality</span><span class="pg">P.10</span></li>
+        <li><span class="lbl"><b>11</b> 五大訴求 · Five Demands</span><span class="pg">P.11</span></li>
       </ol>
     </div>
 
@@ -448,7 +466,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">02 / 10</div>
+    <div class="ph-no">02 / 11</div>
     <div class="ph-cat">The Iceberg · A1 vs A2</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -532,7 +550,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">03 / 10</div>
+    <div class="ph-no">03 / 11</div>
     <div class="ph-cat">10-Year Trend · 2016–2025</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -564,7 +582,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">04 / 10</div>
+    <div class="ph-no">04 / 11</div>
     <div class="ph-cat">Density Maps · Per Capita</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -611,7 +629,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">05 / 10</div>
+    <div class="ph-no">05 / 11</div>
     <div class="ph-cat">Volume Maps · Absolute</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -654,23 +672,23 @@ body {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════ -->
-<!-- P06 · COUNTY RANKINGS                                        -->
+<!-- P06 · RANKINGS · DEATHS                                      -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">06 / 10</div>
-    <div class="ph-cat">22 Counties · Rankings</div>
+    <div class="ph-no">06 / 11</div>
+    <div class="ph-cat">22 Counties · Death Rankings</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
 
-  <div class="title-en">Rankings · Four Metrics</div>
-  <div class="title-zh">22 縣市排名 — 四個視角</div>
+  <div class="title-en">Rankings · Death Metrics</div>
+  <div class="title-zh">22 縣市排名 — 死亡指標</div>
   <div class="deck">
-    絕對死亡、每十萬人死亡、事件量、致死率 — <strong>同一份資料、四個答案</strong>。
-    人口大縣領先絕對量；東部與農業縣翻上每十萬人前段；致死率揭露每件事故有多致命的鄉村劣勢。
+    絕對死亡 vs 每十萬人死亡 — <strong>同一份資料、兩個視角</strong>。
+    人口大縣領先絕對量；東部與農業縣翻上每十萬人前段班，揭露居民個人風險的真實落差。
   </div>
 
-  <div class="rk-grid" style="margin-top:5mm">
+  <div class="rk-grid two-up" style="margin-top:5mm">
     <div class="rk cA1">
       <div class="rk-head"><h3>01 · ABSOLUTE</h3></div>
       <div class="rk-zh">A1 死亡人數</div>
@@ -683,10 +701,36 @@ body {
       <div class="rk-tag">以居民人口為分母 · <b>東部與農業縣翻上前段班</b></div>
       <table id="t-rate"></table>
     </div>
+  </div>
+
+  <div class="pf">
+    <span>Source · NPA A1 / MOI 8410 (2013 population)</span>
+    <span class="pf-tag">P.06</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- P07 · RANKINGS · EVENTS & LETHALITY                          -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph">
+    <div class="ph-no">07 / 11</div>
+    <div class="ph-cat">22 Counties · Event & Lethality</div>
+    <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
+  </div>
+
+  <div class="title-en">Rankings · Event Volume × Lethality</div>
+  <div class="title-zh">22 縣市排名 — 事件與致死率</div>
+  <div class="deck">
+    事件量 vs 致死率 — <strong>「發生多少」與「一旦發生有多致命」是兩個獨立面向</strong>。
+    都市事件量最大，鄉村致死率最高 — 後者反映醫療可近性、車速與道路設計的綜合差異。
+  </div>
+
+  <div class="rk-grid two-up" style="margin-top:5mm">
     <div class="rk cA2">
       <div class="rk-head"><h3>03 · VOLUME</h3></div>
       <div class="rk-zh">A2 事件總量</div>
-      <div class="rk-tag">十年累計 A2 事件件數</div>
+      <div class="rk-tag">十年累計 A2（事後死亡或受傷）事件件數</div>
       <table id="t-a2"></table>
     </div>
     <div class="rk cLeth">
@@ -698,8 +742,8 @@ body {
   </div>
 
   <div class="pf">
-    <span>Source · NPA A1 + A2 / MOI 8410 (2013 population)</span>
-    <span class="pf-tag">P.06</span>
+    <span>Source · NPA A2 + A1 / 10-year cumulative</span>
+    <span class="pf-tag">P.07</span>
   </div>
 </div>
 
@@ -708,7 +752,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">07 / 10</div>
+    <div class="ph-no">08 / 11</div>
     <div class="ph-cat">Victim Profile · Age × Mode</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -741,7 +785,7 @@ body {
 
   <div class="pf">
     <span>Data · NPA A1 (full-schema years) · victim-mode classification</span>
-    <span class="pf-tag">P.07</span>
+    <span class="pf-tag">P.08</span>
   </div>
 </div>
 
@@ -750,7 +794,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">08 / 10</div>
+    <div class="ph-no">09 / 11</div>
     <div class="ph-cat">Mode × Year · Stacked</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -775,7 +819,7 @@ body {
 
   <div class="pf">
     <span>Data · NPA A1 (2016–2025) · victim-mode classification</span>
-    <span class="pf-tag">P.08</span>
+    <span class="pf-tag">P.09</span>
   </div>
 </div>
 
@@ -784,7 +828,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">09 / 10</div>
+    <div class="ph-no">10 / 11</div>
     <div class="ph-cat">Lethality · A1 ÷ A2</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -814,7 +858,7 @@ body {
 
   <div class="pf">
     <span>Method · Lethality = A1 / A2 × 1000 per county</span>
-    <span class="pf-tag">P.09</span>
+    <span class="pf-tag">P.10</span>
   </div>
 </div>
 
@@ -823,7 +867,7 @@ body {
 <!-- ════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="ph">
-    <div class="ph-no">10 / 10</div>
+    <div class="ph-no">11 / 11</div>
     <div class="ph-cat">Five Demands · Action</div>
     <div class="ph-mark">TAIWAN MOBILITY ATLAS</div>
   </div>
@@ -907,7 +951,7 @@ body {
 
   <div class="pf">
     <span>VISIONZEROTAIWAN.GITHUB.IO / TAIWAN-MOBILITY-ATLAS</span>
-    <span class="pf-tag">P.10</span>
+    <span class="pf-tag">P.11</span>
   </div>
 </div>
 
