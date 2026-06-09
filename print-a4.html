@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>台灣鄉鎮市區交通事故面量圖 · 2016–2025 · A4 Print</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@page { size: A4 portrait; margin: 0; }
+
+:root {
+  --black: #1A1A1A; --grey-1: #4A4A4A; --grey-2: #888; --grey-3: #D0D0D0;
+  --grey-4: #F2F2F2; --white: #FFF;
+  --lime: #C8D400; --lime-dk: #A8B200; --lime-lt: #E8F000;
+  --red: #D94F3D; --gold: #E8A825; --blue: #3A7CC3;
+  --font-zh: 'Noto Sans TC', sans-serif;
+  --font-en: 'Space Grotesk', sans-serif;
+}
+
+body {
+  font-family: var(--font-zh);
+  background: #ddd;
+  color: var(--black);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* A4 page wrapper: shows shadow on screen, becomes the page on print */
+.page {
+  width: 210mm; min-height: 297mm;
+  background: var(--white);
+  margin: 12mm auto;
+  padding: 14mm 13mm 12mm;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column;
+}
+
+@media print {
+  body { background: var(--white); }
+  .page { margin: 0; box-shadow: none; width: 210mm; min-height: 297mm; }
+  .no-print { display: none !important; }
+}
+
+.toolbar {
+  position: fixed; top: 16px; right: 16px; z-index: 10;
+  background: var(--black); color: var(--white);
+  padding: 10px 16px; font-family: var(--font-en);
+  font-size: 12px; letter-spacing: 0.12em; cursor: pointer;
+  border: none;
+}
+.toolbar:hover { background: var(--lime-dk); color: var(--black); }
+
+/* ── header ── */
+.hdr {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding-bottom: 4mm; border-bottom: 0.7mm solid var(--black);
+  margin-bottom: 6mm;
+}
+.hdr .h-left h1 {
+  font-family: var(--font-en); font-size: 9pt; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--grey-2);
+  font-weight: 500; line-height: 1.4; margin-bottom: 1mm;
+}
+.hdr .h-left .h-zh {
+  font-weight: 700; font-size: 18pt; letter-spacing: 0.04em;
+  color: var(--black); line-height: 1.2;
+}
+.hdr .h-left .h-sub {
+  font-size: 8.5pt; font-weight: 300; color: var(--grey-1);
+  margin-top: 1mm; letter-spacing: 0.03em;
+}
+.hdr .h-right {
+  font-family: var(--font-en); font-size: 7.5pt;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--grey-2); text-align: right; line-height: 1.6;
+}
+.hdr .h-right strong { color: var(--black); font-weight: 600; }
+
+/* ── two-column maps ── */
+.maps {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8mm; flex: 1;
+}
+.map-block {
+  display: flex; flex-direction: column;
+}
+.map-block .mb-label {
+  font-family: var(--font-en); font-size: 8.5pt; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--grey-2); margin-bottom: 1.5mm;
+}
+.map-block .mb-title {
+  font-weight: 700; font-size: 11.5pt; letter-spacing: 0.02em;
+  color: var(--black); margin-bottom: 0.8mm;
+}
+.map-block .mb-sub {
+  font-size: 8pt; color: var(--grey-1); font-weight: 300;
+  margin-bottom: 2.5mm; letter-spacing: 0.04em;
+}
+.map-block .mb-stat {
+  font-family: var(--font-en); font-size: 18pt; font-weight: 300;
+  color: var(--black); line-height: 1; letter-spacing: -0.02em;
+  margin-bottom: 0.5mm;
+}
+.map-block .mb-stat small {
+  font-size: 8pt; letter-spacing: 0.16em; color: var(--grey-2);
+  font-weight: 500; margin-left: 2mm; vertical-align: 4pt;
+}
+.map-canvas {
+  flex: 1; border: 0.3mm solid var(--grey-3);
+  background: var(--grey-4); position: relative;
+  overflow: hidden;
+  margin-top: 2mm;
+}
+.map-canvas svg { width: 100%; height: 100%; display: block; }
+.map-canvas svg path.dist {
+  stroke: var(--white); stroke-width: 0.18;
+}
+.legend {
+  margin-top: 2.5mm;
+  font-family: var(--font-en); font-size: 6.5pt;
+  color: var(--grey-1); letter-spacing: 0.04em;
+}
+.legend-title {
+  font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--grey-2); margin-bottom: 1mm;
+}
+.legend-bins { display: flex; align-items: center; gap: 0; }
+.legend-bins .sw { width: 9mm; height: 3mm; }
+.legend-bins .tk { padding: 0 1mm; color: var(--grey-2); }
+.legend-foot {
+  margin-top: 1.5mm;
+  font-size: 6.5pt; color: var(--grey-2); font-weight: 300;
+  letter-spacing: 0.03em; line-height: 1.5;
+}
+
+/* ── footer ── */
+.foot {
+  border-top: 0.3mm solid var(--grey-3);
+  margin-top: 5mm; padding-top: 3mm;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  font-size: 6.5pt; color: var(--grey-2); font-weight: 300;
+  letter-spacing: 0.04em; line-height: 1.7;
+}
+.foot .f-left { max-width: 130mm; }
+.foot .f-left strong { color: var(--black); font-weight: 700; }
+.foot .f-right {
+  font-family: var(--font-en); text-align: right;
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.foot .f-right .tag {
+  display: inline-block;
+  background: var(--lime); color: var(--black);
+  padding: 0.5mm 2mm; font-weight: 700;
+  margin-top: 0.5mm;
+}
+
+.logo-mark {
+  display: inline-block;
+  font-family: var(--font-en); font-size: 6.5pt; font-weight: 600;
+  letter-spacing: 0.18em; padding: 1mm 2mm;
+  border: 0.4mm solid var(--black); line-height: 1.4;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<button class="toolbar no-print" onclick="window.print()">
+  PRINT / SAVE AS PDF
+</button>
+
+<div class="page">
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="h-left">
+      <span class="logo-mark">Taiwan Mobility Atlas</span>
+      <h1 style="margin-top:2mm">National Choropleth · A1 Fatal &amp; A2 Casualty · 2016–2025</h1>
+      <div class="h-zh">台灣鄉鎮市區交通事故面量圖</div>
+      <div class="h-sub">十年回顧 · 全 364 區 · 22 縣市 · 警政署 A1 / A2 開放資料</div>
+    </div>
+    <div class="h-right">
+      A1 + A2 OPEN DATA<br>
+      <strong>17,175 deaths</strong><br>
+      <strong>3,543,840 events</strong>
+    </div>
+  </div>
+
+  <!-- TWO MAPS -->
+  <div class="maps">
+
+    <!-- MAP 1: A1 deaths -->
+    <div class="map-block">
+      <div class="mb-label">Map 01 · A1 Fatal</div>
+      <div class="mb-title">交通事故死亡人數</div>
+      <div class="mb-sub">A1 10-year cumulative deaths per district</div>
+      <div class="mb-stat" id="m1Stat">—</div>
+      <div class="map-canvas" id="m1"></div>
+      <div class="legend">
+        <div class="legend-title">QUINTILE · DEATHS</div>
+        <div class="legend-bins" id="m1Legend"></div>
+        <div class="legend-foot">每筆事件 A1 = 當場或 24 小時內死亡。色階：分位數五等分。</div>
+      </div>
+    </div>
+
+    <!-- MAP 2: A2 events -->
+    <div class="map-block">
+      <div class="mb-label">Map 02 · A2 Events</div>
+      <div class="mb-title">交通事故件數</div>
+      <div class="mb-sub">A2 10-year cumulative events per district</div>
+      <div class="mb-stat" id="m2Stat">—</div>
+      <div class="map-canvas" id="m2"></div>
+      <div class="legend">
+        <div class="legend-title">QUINTILE · A2 EVENTS</div>
+        <div class="legend-bins" id="m2Legend"></div>
+        <div class="legend-foot">A2 = 事後死亡或受傷之事故，每件事故含多位當事人已去重。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="foot">
+    <div class="f-left">
+      <strong>資料來源</strong>：內政部警政署 A1 / A2 級道路交通事故開放資料（透過 data.gov.tw）。
+      <strong>邊界圖資</strong>：g0v/twTown1982 行政區界，整併至 2014 年後行政地理。
+      <strong>發起單位</strong>：TCAN 台灣氣候行動網絡 × 還路於民行人路權促進會（Vision Zero Taiwan）。
+      連署：forms.gle/wqWe1f8peB4Qn5c66
+    </div>
+    <div class="f-right">
+      visionzerotaiwan.github.io/<br>taiwan-mobility-atlas
+      <div><span class="tag">2026</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(async () => {
+  const [districts, agg, a2] = await Promise.all([
+    fetch('districts.geojson').then(r => r.json()),
+    fetch('agg.json').then(r => r.json()),
+    fetch('data/a2_aggregates.json').then(r => r.json()),
+  ]);
+
+  // Lookup: (county|district) → A1 deaths, A2 events
+  const a1Map = new Map();
+  agg.forEach(r => a1Map.set(`${r.county}|${r.district}`, r.deaths));
+  const a2Map = new Map();
+  Object.entries(a2.by_district_cumulative).forEach(([k, v]) => a2Map.set(k, v.events));
+
+  // Bounding box — focus on main island + Penghu; outlying islands (Kinmen,
+  // Matsu) handled gracefully if they fall outside.
+  const lonMin = 119.25, lonMax = 122.05;
+  const latMin = 21.85,  latMax = 25.35;
+
+  // VZT 5-bin sequential palette
+  const BINS = ['#F2F2F2', '#E8F000', '#C8D400', '#E8A825', '#D94F3D'];
+
+  function quantileBreaks(values) {
+    const non0 = values.filter(v => v > 0).sort((a, b) => a - b);
+    if (!non0.length) return [0, 0, 0, 0];
+    const q = p => non0[Math.min(non0.length - 1, Math.floor(non0.length * p))];
+    return [q(0.2), q(0.4), q(0.6), q(0.8)];
+  }
+  function colorFor(v, breaks) {
+    if (v <= 0) return BINS[0];
+    if (v <= breaks[0]) return BINS[1];
+    if (v <= breaks[1]) return BINS[2];
+    if (v <= breaks[2]) return BINS[3];
+    return BINS[4];
+  }
+
+  function project(lon, lat, w, h) {
+    const x = (lon - lonMin) / (lonMax - lonMin) * w;
+    const y = h - (lat - latMin) / (latMax - latMin) * h;
+    return [x, y];
+  }
+  function ringToPath(ring, w, h) {
+    return ring.map(([lon, lat], i) => {
+      const [x, y] = project(lon, lat, w, h);
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`;
+    }).join('') + 'Z';
+  }
+  function geometryToPath(geom, w, h) {
+    const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+    return polys.map(poly => poly.map(ring => ringToPath(ring, w, h)).join(' ')).join(' ');
+  }
+
+  // Render a single map into a target element id, using a (key→value) lookup.
+  function renderMap(elId, lookup, statId, legendId, officialTotal) {
+    const el = document.getElementById(elId);
+    // SVG sized to the box's natural aspect (about 80mm × 220mm). The viewBox
+    // is in projected px and the path stroke is in viewBox units.
+    const w = 800, h = 1000;  // viewBox; tall to match Taiwan shape
+    const values = districts.features.map(f =>
+      lookup.get(`${f.properties.COUNTYNAME}|${f.properties.TOWNNAME}`) || 0);
+    const breaks = quantileBreaks(values);
+
+    const paths = districts.features.map(f => {
+      const v = lookup.get(`${f.properties.COUNTYNAME}|${f.properties.TOWNNAME}`) || 0;
+      const fill = colorFor(v, breaks);
+      const d = geometryToPath(f.geometry, w, h);
+      return `<path class="dist" d="${d}" fill="${fill}"/>`;
+    }).join('');
+
+    el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${paths}</svg>`;
+
+    // headline stat — use the official project total so the print PDF
+    // matches the live atlas (rendered districts may be a few short of the
+    // full universe due to small-island boundary gaps).
+    const max = Math.max(...values);
+    document.getElementById(statId).innerHTML =
+      `${officialTotal.toLocaleString()}<small>合計</small>`;
+
+    // legend
+    const fmt = v => v >= 1000 ? Math.round(v).toLocaleString() : Math.round(v);
+    document.getElementById(legendId).innerHTML = [
+      `<span class="tk">0</span>`,
+      `<span class="sw" style="background:${BINS[0]}"></span>`,
+      `<span class="tk">${fmt(breaks[0])}</span>`,
+      `<span class="sw" style="background:${BINS[1]}"></span>`,
+      `<span class="tk">${fmt(breaks[1])}</span>`,
+      `<span class="sw" style="background:${BINS[2]}"></span>`,
+      `<span class="tk">${fmt(breaks[2])}</span>`,
+      `<span class="sw" style="background:${BINS[3]}"></span>`,
+      `<span class="tk">${fmt(breaks[3])}</span>`,
+      `<span class="sw" style="background:${BINS[4]}"></span>`,
+      `<span class="tk">${fmt(max)}</span>`,
+    ].join('');
+  }
+
+  renderMap('m1', a1Map, 'm1Stat', 'm1Legend', 17175);
+  renderMap('m2', a2Map, 'm2Stat', 'm2Legend', a2.coverage.total_events);
+})();
+</script>
+</body>
+</html>
