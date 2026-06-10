@@ -1219,14 +1219,14 @@ body.lang-en #hdrTitleZh { display: none; }
   <div class="section-label"><span class="t-zh">03 — Vision Zero · 達標軌跡</span><span class="t-en">03 — Vision Zero Trajectory</span></div>
 
   <div class="trend-card" style="margin-bottom:18px">
-    <h4>2024 → 2035 → 2050 · Required Trajectory</h4>
-    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準，計算達成「2035 年減半、2050 年 A1 歸零、A2 降至 10%」目標所需的軌跡。紅／藍實線為歷史實績；亮綠虛線為達標軌跡。狀態徽章以 2025 實績對比軌跡，判斷縣市是「領先」或「落後」進度。</span><span class="t-en">From the 2024 baseline, compute the trajectory required to meet 2035 (−50%) and 2050 (A1 = 0, A2 = −90%) targets. Solid lines = history; lime dashed = required path. The status badge compares 2025 actual to the required path.</span></div>
+    <h4>2024 → 2035 → 2050 · Required Trajectory + BAU Projection</h4>
+    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>灰色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 以近 7 年（2019–2025）線性趨勢 ±1 SD 投影至 2050，呈現高低區間。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Grey envelope</strong> = business-as-usual projection — linear regression on the last 7 years (2019–2025) extended to 2050 with ±1 SD uncertainty band. The gap between BAU and the required path is the policy effort needed.</span></div>
   </div>
 
   <div class="vz-grid">
     <div class="vz-card">
       <h4 style="font-family:var(--font-en);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--grey-2);font-weight:600;margin-bottom:4px">A1 · Fatal Deaths Trajectory</h4>
-      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">A1 死亡軌跡 · 紅實線歷史 · 亮綠虛線目標</span><span class="t-en">A1 fatal deaths · red = history · lime = required</span></div>
+      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">紅實線歷史 · 亮綠虛線達標 · 灰色帶 BAU 高低</span><span class="t-en">Red = history · lime = required · grey band = BAU range</span></div>
       <div class="vz-status" id="vzA1Status">—</div>
       <div class="vz-chart-wrap"><svg id="vzA1Svg" viewBox="0 0 700 280" preserveAspectRatio="xMidYMid meet"></svg></div>
       <div class="vz-targets">
@@ -1238,7 +1238,7 @@ body.lang-en #hdrTitleZh { display: none; }
 
     <div class="vz-card">
       <h4 style="font-family:var(--font-en);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--grey-2);font-weight:600;margin-bottom:4px">A2 · Casualty Events Trajectory</h4>
-      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">A2 事件軌跡 · 藍實線歷史 · 亮綠虛線目標</span><span class="t-en">A2 events · blue = history · lime = required</span></div>
+      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">藍實線歷史 · 亮綠虛線達標 · 灰色帶 BAU 高低</span><span class="t-en">Blue = history · lime = required · grey band = BAU range</span></div>
       <div class="vz-status" id="vzA2Status">—</div>
       <div class="vz-chart-wrap"><svg id="vzA2Svg" viewBox="0 0 700 280" preserveAspectRatio="xMidYMid meet"></svg></div>
       <div class="vz-targets">
@@ -1249,7 +1249,7 @@ body.lang-en #hdrTitleZh { display: none; }
     </div>
   </div>
 
-  <div class="vz-foot">Method · Linear interpolation · Baseline 2024 · A1 + A2 NPA Open Data 2016–2025</div>
+  <div class="vz-foot">Method · Trajectory: linear interpolation from 2024 baseline · BAU: OLS regression on last 7 years ± 1 SD · A1 + A2 NPA Open Data 2016–2025</div>
 </div>
 
 <!-- ══ 04 — Map ══ -->
@@ -2282,41 +2282,121 @@ const markerLayer = L.layerGroup().addTo(map);
     if (v >= 1000)  return (v / 1000).toFixed(1) + 'k';
     return Math.round(v).toLocaleString();
   }
+  // Catmull-Rom-to-Bezier smoothed path. pts: array of [x, y].
+  function _vzSmooth(pts) {
+    if (pts.length < 2) return '';
+    if (pts.length === 2)
+      return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
+    let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(0, i - 1)];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[Math.min(pts.length - 1, i + 2)];
+      const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+      const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+      const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += `C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    }
+    return d;
+  }
+  // Business-as-usual projection: linear regression on the last 7 years
+  // (2019-2025), then ±1 SD residual envelope extrapolated to 2050.
+  // Returns null when there isn't enough data (very small counties).
+  function _vzBAU(hist) {
+    const RECENT = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    const pairs = RECENT.map(y => [y, hist[y] != null ? hist[y] : (hist[String(y)] || 0)])
+                        .filter(p => p[1] > 0);
+    if (pairs.length < 4) return null;
+    const n = pairs.length;
+    const sx  = pairs.reduce((s, p) => s + p[0], 0);
+    const sy  = pairs.reduce((s, p) => s + p[1], 0);
+    const sxy = pairs.reduce((s, p) => s + p[0] * p[1], 0);
+    const sx2 = pairs.reduce((s, p) => s + p[0] * p[0], 0);
+    const denom = n * sx2 - sx * sx;
+    if (denom === 0) return null;
+    const slope = (n * sxy - sx * sy) / denom;
+    const intercept = (sy - slope * sx) / n;
+    const preds = pairs.map(p => slope * p[0] + intercept);
+    const resids = pairs.map((p, i) => p[1] - preds[i]);
+    const sd = Math.sqrt(resids.reduce((s, r) => s + r * r, 0) / Math.max(1, n - 2));
+    const center = {}, high = {}, low = {};
+    for (let y = 2025; y <= 2050; y++) {
+      const v = slope * y + intercept;
+      center[y] = Math.max(0, v);
+      high[y]   = Math.max(0, v + sd);
+      low[y]    = Math.max(0, v - sd);
+    }
+    return { center, high, low, slope, sd };
+  }
   function _vzDraw(svgId, hist, traj, color) {
     const svg = document.getElementById(svgId);
     if (!svg) return;
     const W = 700, H = 280;
     const pad = { t: 18, r: 24, b: 38, l: 54 };
     const HIST_YEARS = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
-    const allVals = [...HIST_YEARS.map(y => hist[y] || hist[String(y)] || 0), ...Object.values(traj)];
-    const yMax = Math.max(1, ...allVals) * 1.08;
+    const PROJ_YEARS = []; for (let y = 2025; y <= 2050; y++) PROJ_YEARS.push(y);
+
+    const bau = _vzBAU(hist);
+
+    const histVals = HIST_YEARS.map(y => hist[y] || hist[String(y)] || 0);
+    const trajVals = Object.values(traj);
+    const bauVals  = bau ? [...Object.values(bau.high)] : [];
+    const yMax = Math.max(1, ...histVals, ...trajVals, ...bauVals) * 1.08;
+
     const xS = y => pad.l + (y - 2016) / (2050 - 2016) * (W - pad.l - pad.r);
     const yS = v => pad.t + (1 - v / yMax) * (H - pad.t - pad.b);
 
     let s = '';
+    // chart area
     s += `<rect x="${pad.l}" y="${pad.t}" width="${W-pad.l-pad.r}" height="${H-pad.t-pad.b}" fill="white" stroke="#D0D0D0" stroke-width="0.6"/>`;
+    // reference vertical lines
     [2025, 2035, 2050].forEach(y => {
       const isToday = y === 2025;
       s += `<line x1="${xS(y)}" y1="${pad.t}" x2="${xS(y)}" y2="${H-pad.b}" stroke="${isToday?'#888':'#E8A825'}" stroke-width="${isToday?0.6:0.9}" stroke-dasharray="${isToday?'2,2':'3,2'}"/>`;
     });
+    // x-axis labels
     [2016, 2025, 2035, 2050].forEach(y => {
       s += `<text x="${xS(y)}" y="${H-pad.b+18}" font-family="Space Grotesk" font-size="11" fill="#888" text-anchor="middle">${y}</text>`;
     });
+    // y-axis ticks
     [0, yMax / 2, yMax].forEach(v => {
       s += `<line x1="${pad.l-3}" y1="${yS(v)}" x2="${pad.l}" y2="${yS(v)}" stroke="#888" stroke-width="0.5"/>`;
       s += `<text x="${pad.l-6}" y="${yS(v)+4}" font-family="Space Grotesk" font-size="10" fill="#888" text-anchor="end">${_vzFmt(v)}</text>`;
     });
-    // required trajectory (lime dashed)
+
+    // ── BAU envelope (drawn first so other lines sit on top) ──
+    if (bau) {
+      const topPts = PROJ_YEARS.map(y => [xS(y), yS(bau.high[y])]);
+      const botPts = PROJ_YEARS.map(y => [xS(y), yS(bau.low[y])]).reverse();
+      const envD = _vzSmooth(topPts) + 'L' + botPts.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z';
+      s += `<path d="${envD}" fill="#B0B0B0" fill-opacity="0.22" stroke="none"/>`;
+      // BAU center smooth dashed
+      const cPath = _vzSmooth(PROJ_YEARS.map(y => [xS(y), yS(bau.center[y])]));
+      s += `<path d="${cPath}" fill="none" stroke="#6E6E6E" stroke-width="1.6" stroke-dasharray="2,2"/>`;
+      // High / low edge lines (thin)
+      s += `<path d="${_vzSmooth(PROJ_YEARS.map(y => [xS(y), yS(bau.high[y])]))}" fill="none" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>`;
+      s += `<path d="${_vzSmooth(PROJ_YEARS.map(y => [xS(y), yS(bau.low[y])]))}" fill="none" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>`;
+      // BAU 2050 label
+      const bau50h = bau.high[2050], bau50l = bau.low[2050];
+      const labelY = (yS(bau50h) + yS(bau50l)) / 2;
+      s += `<text x="${xS(2050)+6}" y="${labelY-4}" font-family="Space Grotesk" font-size="9" font-weight="700" fill="#4A4A4A">BAU</text>`;
+      s += `<text x="${xS(2050)+6}" y="${labelY+7}" font-family="Space Grotesk" font-size="9" fill="#888">${_vzFmt(bau50l)}–${_vzFmt(bau50h)}</text>`;
+    }
+
+    // ── required trajectory (lime dashed, smooth) ──
     const tEntries = Object.entries(traj).sort((a,b) => +a[0] - +b[0]);
-    const tPath = tEntries.map(([y, v], i) => `${i===0?'M':'L'}${xS(+y).toFixed(1)},${yS(v).toFixed(1)}`).join('');
-    s += `<path d="${tPath}" fill="none" stroke="#A8B200" stroke-width="2.5" stroke-dasharray="5,3"/>`;
+    const tPts = tEntries.map(([y, v]) => [xS(+y), yS(v)]);
+    s += `<path d="${_vzSmooth(tPts)}" fill="none" stroke="#A8B200" stroke-width="2.5" stroke-dasharray="5,3"/>`;
     s += `<circle cx="${xS(2035)}" cy="${yS(traj[2035])}" r="4.5" fill="#A8B200"/>`;
     s += `<circle cx="${xS(2050)}" cy="${yS(traj[2050])}" r="4.5" fill="#A8B200"/>`;
     s += `<text x="${xS(2035)}" y="${yS(traj[2035])-10}" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" text-anchor="middle">−50%</text>`;
     s += `<text x="${xS(2050)}" y="${yS(traj[2050])-10}" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" text-anchor="middle">${traj[2050]===0 ? 'ZERO' : '−90%'}</text>`;
-    // historical (solid)
-    const hPath = HIST_YEARS.map((y, i) => `${i===0?'M':'L'}${xS(y).toFixed(1)},${yS(hist[y] || hist[String(y)] || 0).toFixed(1)}`).join('');
-    s += `<path d="${hPath}" fill="none" stroke="${color}" stroke-width="2.8"/>`;
+
+    // ── historical (solid, smooth) ──
+    const hPts = HIST_YEARS.map(y => [xS(y), yS(hist[y] || hist[String(y)] || 0)]);
+    s += `<path d="${_vzSmooth(hPts)}" fill="none" stroke="${color}" stroke-width="2.8"/>`;
     HIST_YEARS.forEach(y => {
       s += `<circle cx="${xS(y).toFixed(1)}" cy="${yS(hist[y] || hist[String(y)] || 0).toFixed(1)}" r="2.6" fill="${color}"/>`;
     });
