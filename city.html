@@ -1277,7 +1277,7 @@ body.lang-en #hdrTitleZh { display: none; }
 
   <div class="trend-card" style="margin-bottom:18px">
     <h4>2024 → 2035 → 2050 · Required Trajectory + BAU Projection</h4>
-    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>同色淡色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 以近 7 年（2019–2025）線性趨勢 ±1 SD 投影至 2050。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Tinted band</strong> (same hue as the metric) = business-as-usual projection — linear regression on the last 7 years (2019–2025) extended to 2050 with ±1 SD uncertainty band. The gap between BAU and the required path is the policy effort needed.</span></div>
+    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>同色淡色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 採<strong>混合模型</strong>：下降趨勢用<strong>等比衰減（log-linear / compound rate）</strong>避免「線性誤判為自然歸零」，上升趨勢用<strong>線性 OLS</strong> 避免指數外推爆炸，呈現 ±1 SD 區間。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Tinted band</strong> (same hue as the metric) = business-as-usual projection — <strong>hybrid model</strong>: log-linear (compound rate) for declining series so the trend asymptotes rather than spuriously hitting zero; linear OLS for growing series so the projection doesn't explode exponentially. ±1 SD uncertainty envelope. The gap between BAU and the required path is the policy effort needed.</span></div>
   </div>
 
   <div class="vz-grid">
@@ -1330,7 +1330,7 @@ body.lang-en #hdrTitleZh { display: none; }
     </div>
   </div>
 
-  <div class="vz-foot">Method · Trajectory: linear interpolation from 2024 baseline · BAU: OLS regression on last 7 years ± 1 SD · A1 + A2 NPA Open Data 2016–2025</div>
+  <div class="vz-foot">Method · Trajectory: linear interpolation from 2024 baseline · BAU: hybrid (log-linear for declining, linear OLS for growing) on last 7 years ± 1 SD · A1 + A2 NPA Open Data 2016–2025</div>
 </div>
 
 <!-- ══ 04 — Map ══ -->
@@ -2400,34 +2400,79 @@ const markerLayer = L.layerGroup().addTo(map);
       return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
     return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}` + _vzSmoothC(pts);
   }
-  // Business-as-usual projection: linear regression on the last 7 years
-  // (2019-2025), then ±1 SD residual envelope extrapolated to 2050.
-  // Returns null when there isn't enough data (very small counties).
+  // Business-as-usual projection on the last 7 years (2019-2025),
+  // extrapolated through 2050 with ±1 SD uncertainty.
+  //
+  // We use a HYBRID model chosen by the linear-OLS slope sign:
+  //
+  //   slope <= 0  (declining)  -> log-linear  (compound rate)
+  //   slope >  0  (growing)    -> linear OLS
+  //
+  // Why hybrid?  Plain linear extrapolation makes declining series
+  // hit zero around 2040 and gets visually clipped, misreading as
+  // "naturally reaches Vision Zero".  Plain log-linear makes growing
+  // series explode exponentially (Taichung A2 → 1.17M by 2050,
+  // unrealistic).  The hybrid picks the theoretically appropriate
+  // form per direction: compound captures diminishing-returns when
+  // numbers shrink; linear stays modest when numbers grow.
+  //
+  // Returns null when fewer than 4 positive samples exist (very
+  // small counties like Lienchiang).
   function _vzBAU(hist) {
     const RECENT = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
     const pairs = RECENT.map(y => [y, hist[y] != null ? hist[y] : (hist[String(y)] || 0)])
                         .filter(p => p[1] > 0);
     if (pairs.length < 4) return null;
     const n = pairs.length;
+
+    // ── Linear OLS — used directly for growing series, used as
+    //    a slope-sign discriminator otherwise ──
     const sx  = pairs.reduce((s, p) => s + p[0], 0);
     const sy  = pairs.reduce((s, p) => s + p[1], 0);
     const sxy = pairs.reduce((s, p) => s + p[0] * p[1], 0);
     const sx2 = pairs.reduce((s, p) => s + p[0] * p[0], 0);
     const denom = n * sx2 - sx * sx;
     if (denom === 0) return null;
-    const slope = (n * sxy - sx * sy) / denom;
-    const intercept = (sy - slope * sx) / n;
-    const preds = pairs.map(p => slope * p[0] + intercept);
-    const resids = pairs.map((p, i) => p[1] - preds[i]);
+    const linSlope = (n * sxy - sx * sy) / denom;
+
+    if (linSlope > 0) {
+      // Growing series: keep linear (avoid exponential blow-up).
+      const intercept = (sy - linSlope * sx) / n;
+      const preds = pairs.map(p => linSlope * p[0] + intercept);
+      const resids = pairs.map((p, i) => p[1] - preds[i]);
+      const sd = Math.sqrt(resids.reduce((s, r) => s + r * r, 0) / Math.max(1, n - 2));
+      const center = {}, high = {}, low = {};
+      for (let y = 2025; y <= 2050; y++) {
+        const v = linSlope * y + intercept;
+        center[y] = Math.max(0, v);
+        high[y]   = Math.max(0, v + sd);
+        low[y]    = Math.max(0, v - sd);
+      }
+      return { center, high, low, slope: linSlope, sd, model: 'linear' };
+    }
+
+    // Declining / flat series: log-linear (compound rate) so it
+    // approaches a positive asymptote rather than hitting zero.
+    const logs = pairs.map(p => [p[0], Math.log(p[1])]);
+    const lsx  = logs.reduce((s, p) => s + p[0], 0);
+    const lsy  = logs.reduce((s, p) => s + p[1], 0);
+    const lsxy = logs.reduce((s, p) => s + p[0] * p[1], 0);
+    const lsx2 = logs.reduce((s, p) => s + p[0] * p[0], 0);
+    const lDenom = n * lsx2 - lsx * lsx;
+    if (lDenom === 0) return null;
+    const slope = (n * lsxy - lsx * lsy) / lDenom;
+    const intercept = (lsy - slope * lsx) / n;
+    const preds = logs.map(p => slope * p[0] + intercept);
+    const resids = logs.map((p, i) => p[1] - preds[i]);
     const sd = Math.sqrt(resids.reduce((s, r) => s + r * r, 0) / Math.max(1, n - 2));
     const center = {}, high = {}, low = {};
     for (let y = 2025; y <= 2050; y++) {
-      const v = slope * y + intercept;
-      center[y] = Math.max(0, v);
-      high[y]   = Math.max(0, v + sd);
-      low[y]    = Math.max(0, v - sd);
+      const logV = slope * y + intercept;
+      center[y] = Math.exp(logV);
+      high[y]   = Math.exp(logV + sd);
+      low[y]    = Math.exp(logV - sd);
     }
-    return { center, high, low, slope, sd };
+    return { center, high, low, slope, sd, model: 'log-linear', compoundRate: Math.exp(slope) - 1 };
   }
   function _vzDraw(svgId, hist, traj, color) {
     const svg = document.getElementById(svgId);
