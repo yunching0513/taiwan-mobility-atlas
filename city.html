@@ -1277,7 +1277,7 @@ body.lang-en #hdrTitleZh { display: none; }
 
   <div class="trend-card" style="margin-bottom:18px">
     <h4>2024 → 2035 → 2050 · Required Trajectory + BAU Projection</h4>
-    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>同色淡色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 採<strong>混合模型</strong>：下降趨勢用<strong>等比衰減（log-linear / compound rate）</strong>避免「線性誤判為自然歸零」，上升趨勢用<strong>線性 OLS</strong> 避免指數外推爆炸，呈現 ±1 SD 區間。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Tinted band</strong> (same hue as the metric) = business-as-usual projection — <strong>hybrid model</strong>: log-linear (compound rate) for declining series so the trend asymptotes rather than spuriously hitting zero; linear OLS for growing series so the projection doesn't explode exponentially. ±1 SD uncertainty envelope. The gap between BAU and the required path is the policy effort needed.</span></div>
+    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>同色淡色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 採<strong>混合模型</strong>：下降趨勢用<strong>等比衰減（log-linear / compound rate）</strong>避免「線性誤判為自然歸零」，上升趨勢用<strong>線性 OLS</strong> 避免指數外推爆炸，呈現 ±1 SD 區間。<strong>A1 死亡之 HIGH 上界另加入「政策停滯」情境</strong>：假設政府不採取積極作為時，僅靠車輛安全、醫療進步等被動因素，每年至多自然下降 1%，避免低估政策缺口。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Tinted band</strong> (same hue as the metric) = business-as-usual projection — <strong>hybrid model</strong>: log-linear (compound rate) for declining series so the trend asymptotes rather than spuriously hitting zero; linear OLS for growing series so the projection doesn't explode exponentially. ±1 SD uncertainty envelope. <strong>For A1 the HIGH bound is additionally widened to a policy-stagnation floor</strong> assuming at most 1%/year passive decline (vehicle safety, trauma medicine) without active government intervention — so the band doesn't understate the policy gap when recent rates are unsustainable. The gap between BAU and the required path is the policy effort needed.</span></div>
   </div>
 
   <div class="vz-grid">
@@ -1330,7 +1330,7 @@ body.lang-en #hdrTitleZh { display: none; }
     </div>
   </div>
 
-  <div class="vz-foot">Method · Trajectory: linear interpolation from 2024 baseline · BAU: hybrid (log-linear for declining, linear OLS for growing) on last 7 years ± 1 SD · A1 + A2 NPA Open Data 2016–2025</div>
+  <div class="vz-foot">Method · Trajectory: linear interpolation from 2024 baseline · BAU: hybrid (log-linear for declining, linear OLS for growing) on last 7 years ± 1 SD · A1 high widened to 1%/yr passive-decline floor · A1 + A2 NPA Open Data 2016–2025</div>
 </div>
 
 <!-- ══ 04 — Map ══ -->
@@ -2416,9 +2416,23 @@ const markerLayer = L.layerGroup().addTo(map);
   // form per direction: compound captures diminishing-returns when
   // numbers shrink; linear stays modest when numbers grow.
   //
+  // Policy-stagnation HIGH bound for A1 deaths
+  // -------------------------------------------
+  // The recent compound decline of A1 deaths (e.g. Taichung -5.5%/yr)
+  // is partly driven by passive factors (vehicle safety tech, trauma
+  // medicine) that won't necessarily continue, and partly by scattered
+  // policy that may not survive government inaction.  Without an
+  // active Vision Zero programme we shouldn't assume the same pace
+  // holds for 26 more years.  For A1 declining series we therefore
+  // pull the HIGH bound UP to at least a "passive-only" stagnation
+  // floor of -1% / year compound — the rough envelope expected from
+  // tech / medical progress alone.  This widens the band upward and
+  // refuses to under-state the policy gap when the recent rate is
+  // unsustainable.
+  //
   // Returns null when fewer than 4 positive samples exist (very
   // small counties like Lienchiang).
-  function _vzBAU(hist) {
+  function _vzBAU(hist, metric) {
     const RECENT = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
     const pairs = RECENT.map(y => [y, hist[y] != null ? hist[y] : (hist[String(y)] || 0)])
                         .filter(p => p[1] > 0);
@@ -2435,6 +2449,7 @@ const markerLayer = L.layerGroup().addTo(map);
     if (denom === 0) return null;
     const linSlope = (n * sxy - sx * sy) / denom;
 
+    let result;
     if (linSlope > 0) {
       // Growing series: keep linear (avoid exponential blow-up).
       const intercept = (sy - linSlope * sx) / n;
@@ -2448,33 +2463,51 @@ const markerLayer = L.layerGroup().addTo(map);
         high[y]   = Math.max(0, v + sd);
         low[y]    = Math.max(0, v - sd);
       }
-      return { center, high, low, slope: linSlope, sd, model: 'linear' };
+      result = { center, high, low, slope: linSlope, sd, model: 'linear' };
+    } else {
+      // Declining / flat series: log-linear (compound rate).
+      const logs = pairs.map(p => [p[0], Math.log(p[1])]);
+      const lsx  = logs.reduce((s, p) => s + p[0], 0);
+      const lsy  = logs.reduce((s, p) => s + p[1], 0);
+      const lsxy = logs.reduce((s, p) => s + p[0] * p[1], 0);
+      const lsx2 = logs.reduce((s, p) => s + p[0] * p[0], 0);
+      const lDenom = n * lsx2 - lsx * lsx;
+      if (lDenom === 0) return null;
+      const slope = (n * lsxy - lsx * lsy) / lDenom;
+      const intercept = (lsy - slope * lsx) / n;
+      const preds = logs.map(p => slope * p[0] + intercept);
+      const resids = logs.map((p, i) => p[1] - preds[i]);
+      const sd = Math.sqrt(resids.reduce((s, r) => s + r * r, 0) / Math.max(1, n - 2));
+      const center = {}, high = {}, low = {};
+      for (let y = 2025; y <= 2050; y++) {
+        const logV = slope * y + intercept;
+        center[y] = Math.exp(logV);
+        high[y]   = Math.exp(logV + sd);
+        low[y]    = Math.exp(logV - sd);
+      }
+      result = { center, high, low, slope, sd, model: 'log-linear', compoundRate: Math.exp(slope) - 1 };
     }
 
-    // Declining / flat series: log-linear (compound rate) so it
-    // approaches a positive asymptote rather than hitting zero.
-    const logs = pairs.map(p => [p[0], Math.log(p[1])]);
-    const lsx  = logs.reduce((s, p) => s + p[0], 0);
-    const lsy  = logs.reduce((s, p) => s + p[1], 0);
-    const lsxy = logs.reduce((s, p) => s + p[0] * p[1], 0);
-    const lsx2 = logs.reduce((s, p) => s + p[0] * p[0], 0);
-    const lDenom = n * lsx2 - lsx * lsx;
-    if (lDenom === 0) return null;
-    const slope = (n * lsxy - lsx * lsy) / lDenom;
-    const intercept = (lsy - slope * lsx) / n;
-    const preds = logs.map(p => slope * p[0] + intercept);
-    const resids = logs.map((p, i) => p[1] - preds[i]);
-    const sd = Math.sqrt(resids.reduce((s, r) => s + r * r, 0) / Math.max(1, n - 2));
-    const center = {}, high = {}, low = {};
-    for (let y = 2025; y <= 2050; y++) {
-      const logV = slope * y + intercept;
-      center[y] = Math.exp(logV);
-      high[y]   = Math.exp(logV + sd);
-      low[y]    = Math.exp(logV - sd);
+    // ── Policy-stagnation HIGH override for A1 declining series ──
+    // Pull the HIGH bound up to a floor that assumes only 1% / year
+    // passive natural decline — the realistic minimum without active
+    // policy. Counties where the model's high is already above this
+    // (slow current decline) are unaffected.
+    if (metric === 'A1' && result.model === 'log-linear' && result.slope < 0) {
+      const baseline = hist[2024] != null ? hist[2024] : (hist['2024'] || 0);
+      if (baseline > 0) {
+        const STAGNATION = 0.99;  // -1%/year passive decline only
+        for (let y = 2025; y <= 2050; y++) {
+          const stagn = baseline * Math.pow(STAGNATION, y - 2024);
+          if (stagn > result.high[y]) result.high[y] = stagn;
+        }
+        result.stagnationApplied = true;
+      }
     }
-    return { center, high, low, slope, sd, model: 'log-linear', compoundRate: Math.exp(slope) - 1 };
+
+    return result;
   }
-  function _vzDraw(svgId, hist, traj, color) {
+  function _vzDraw(svgId, hist, traj, color, metric) {
     const svg = document.getElementById(svgId);
     if (!svg) return;
     const W = 700, H = 280;
@@ -2482,7 +2515,7 @@ const markerLayer = L.layerGroup().addTo(map);
     const HIST_YEARS = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
     const PROJ_YEARS = []; for (let y = 2025; y <= 2050; y++) PROJ_YEARS.push(y);
 
-    const bau = _vzBAU(hist);
+    const bau = _vzBAU(hist, metric);
 
     const histVals = HIST_YEARS.map(y => hist[y] || hist[String(y)] || 0);
     const trajVals = Object.values(traj);
@@ -2706,8 +2739,8 @@ const markerLayer = L.layerGroup().addTo(map);
     const a1T = _vzTraj(a1Base, 0);    // A1 → zero by 2050
     const a2T = _vzTraj(a2Base, 0.1);  // A2 → 10% by 2050
 
-    _vzDraw('vzA1Svg', a1Hist, a1T.traj, '#D94F3D');
-    _vzDraw('vzA2Svg', a2Hist, a2T.traj, '#3A7CC3');
+    _vzDraw('vzA1Svg', a1Hist, a1T.traj, '#D94F3D', 'A1');
+    _vzDraw('vzA2Svg', a2Hist, a2T.traj, '#3A7CC3', 'A2');
 
     document.getElementById('vzA1Base').textContent = a1Base;
     document.getElementById('vzA1T35').textContent = Math.round(a1Base * 0.5);
