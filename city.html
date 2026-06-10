@@ -1250,13 +1250,13 @@ body.lang-en #hdrTitleZh { display: none; }
 
   <div class="trend-card" style="margin-bottom:18px">
     <h4>2024 → 2035 → 2050 · Required Trajectory + BAU Projection</h4>
-    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>灰色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 以近 7 年（2019–2025）線性趨勢 ±1 SD 投影至 2050，呈現高低區間。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Grey envelope</strong> = business-as-usual projection — linear regression on the last 7 years (2019–2025) extended to 2050 with ±1 SD uncertainty band. The gap between BAU and the required path is the policy effort needed.</span></div>
+    <div class="card-zh"><span class="t-zh">以 2024 年實績為基準。<strong>亮綠虛線</strong>為達成「2035 減半、2050 A1 歸零 / A2 −90%」目標所需軌跡；<strong>同色淡色帶</strong>為「不採取積極措施」的 BAU（business-as-usual）推估 — 以近 7 年（2019–2025）線性趨勢 ±1 SD 投影至 2050。BAU 與目標軌跡之間的差距，即為政策必須補足的努力量。</span><span class="t-en">From 2024 baseline. <strong>Lime dashed</strong> = trajectory required to meet 2035 (−50%) and 2050 (A1 = 0 / A2 = −90%) targets. <strong>Tinted band</strong> (same hue as the metric) = business-as-usual projection — linear regression on the last 7 years (2019–2025) extended to 2050 with ±1 SD uncertainty band. The gap between BAU and the required path is the policy effort needed.</span></div>
   </div>
 
   <div class="vz-grid">
     <div class="vz-card">
       <h4 style="font-family:var(--font-en);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--grey-2);font-weight:600;margin-bottom:4px">A1 · Fatal Deaths Trajectory</h4>
-      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">紅實線歷史 · 亮綠虛線達標 · 灰色帶 BAU 高低</span><span class="t-en">Red = history · lime = required · grey band = BAU range</span></div>
+      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">紅實線歷史 · 亮綠虛線達標 · 淡紅色帶 BAU 高低</span><span class="t-en">Red = history · lime = required · red band = BAU range</span></div>
       <div class="vz-status" id="vzA1Status">—</div>
       <div class="vz-chart-wrap"><svg id="vzA1Svg" viewBox="0 0 700 280" preserveAspectRatio="xMidYMid meet"></svg></div>
       <div class="vz-action">
@@ -1280,7 +1280,7 @@ body.lang-en #hdrTitleZh { display: none; }
 
     <div class="vz-card">
       <h4 style="font-family:var(--font-en);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--grey-2);font-weight:600;margin-bottom:4px">A2 · Casualty Events Trajectory</h4>
-      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">藍實線歷史 · 亮綠虛線達標 · 灰色帶 BAU 高低</span><span class="t-en">Blue = history · lime = required · grey band = BAU range</span></div>
+      <div class="card-zh" style="font-size:13px;color:var(--black);margin-bottom:14px;letter-spacing:0.05em"><span class="t-zh">藍實線歷史 · 亮綠虛線達標 · 淡藍色帶 BAU 高低</span><span class="t-en">Blue = history · lime = required · blue band = BAU range</span></div>
       <div class="vz-status" id="vzA2Status">—</div>
       <div class="vz-chart-wrap"><svg id="vzA2Svg" viewBox="0 0 700 280" preserveAspectRatio="xMidYMid meet"></svg></div>
       <div class="vz-action">
@@ -2349,11 +2349,11 @@ const markerLayer = L.layerGroup().addTo(map);
     return '0';
   }
   // Catmull-Rom-to-Bezier smoothed path. pts: array of [x, y].
-  function _vzSmooth(pts) {
+  // _vzSmoothC returns just the C-segments (no leading M) for chaining
+  // inside a larger path (e.g. closed envelope polygons).
+  function _vzSmoothC(pts) {
     if (pts.length < 2) return '';
-    if (pts.length === 2)
-      return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
-    let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+    let d = '';
     for (let i = 0; i < pts.length - 1; i++) {
       const p0 = pts[Math.max(0, i - 1)];
       const p1 = pts[i];
@@ -2366,6 +2366,12 @@ const markerLayer = L.layerGroup().addTo(map);
       d += `C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
     }
     return d;
+  }
+  function _vzSmooth(pts) {
+    if (pts.length < 2) return '';
+    if (pts.length === 2)
+      return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
+    return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}` + _vzSmoothC(pts);
   }
   // Business-as-usual projection: linear regression on the last 7 years
   // (2019-2025), then ±1 SD residual envelope extrapolated to 2050.
@@ -2433,22 +2439,29 @@ const markerLayer = L.layerGroup().addTo(map);
     });
 
     // ── BAU envelope (drawn first so other lines sit on top) ──
+    // Symmetric smoothed polygon: top edge Catmull-Rom forward, bottom
+    // edge Catmull-Rom backward, closed.  Fill tinted with the metric
+    // color so the band visually reads as "this metric's no-action
+    // scenario" rather than generic uncertainty noise.
     if (bau) {
       const topPts = PROJ_YEARS.map(y => [xS(y), yS(bau.high[y])]);
-      const botPts = PROJ_YEARS.map(y => [xS(y), yS(bau.low[y])]).reverse();
-      const envD = _vzSmooth(topPts) + 'L' + botPts.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z';
-      s += `<path d="${envD}" fill="#B0B0B0" fill-opacity="0.22" stroke="none"/>`;
-      // BAU center smooth dashed
+      const botPtsRev = PROJ_YEARS.map(y => [xS(y), yS(bau.low[y])]).reverse();
+      const envD =
+        `M${topPts[0][0].toFixed(1)},${topPts[0][1].toFixed(1)}` +
+        _vzSmoothC(topPts) +
+        `L${botPtsRev[0][0].toFixed(1)},${botPtsRev[0][1].toFixed(1)}` +
+        _vzSmoothC(botPtsRev) +
+        'Z';
+      s += `<path d="${envD}" fill="${color}" fill-opacity="0.10" stroke="${color}" stroke-opacity="0.30" stroke-width="0.5"/>`;
+      // BAU center: single subtle dashed line, same metric hue but muted
       const cPath = _vzSmooth(PROJ_YEARS.map(y => [xS(y), yS(bau.center[y])]));
-      s += `<path d="${cPath}" fill="none" stroke="#6E6E6E" stroke-width="1.6" stroke-dasharray="2,2"/>`;
-      // High / low edge lines (thin)
-      s += `<path d="${_vzSmooth(PROJ_YEARS.map(y => [xS(y), yS(bau.high[y])]))}" fill="none" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>`;
-      s += `<path d="${_vzSmooth(PROJ_YEARS.map(y => [xS(y), yS(bau.low[y])]))}" fill="none" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>`;
-      // BAU 2050 label
+      s += `<path d="${cPath}" fill="none" stroke="${color}" stroke-opacity="0.55" stroke-width="1.4" stroke-dasharray="4,3"/>`;
+      // BAU 2050 label — placed inside the band on the right edge so it
+      // doesn't collide with the lime trajectory's −50% / ZERO label.
       const bau50h = bau.high[2050], bau50l = bau.low[2050];
       const labelY = (yS(bau50h) + yS(bau50l)) / 2;
-      s += `<text x="${xS(2050)+6}" y="${labelY-4}" font-family="Space Grotesk" font-size="9" font-weight="700" fill="#4A4A4A">BAU</text>`;
-      s += `<text x="${xS(2050)+6}" y="${labelY+7}" font-family="Space Grotesk" font-size="9" fill="#888">${_vzFmt(bau50l)}–${_vzFmt(bau50h)}</text>`;
+      s += `<text x="${xS(2050)-6}" y="${labelY-2}" font-family="Space Grotesk" font-size="9" font-weight="700" fill="#666" text-anchor="end">BAU</text>`;
+      s += `<text x="${xS(2050)-6}" y="${labelY+10}" font-family="Space Grotesk" font-size="8.5" fill="#999" text-anchor="end">${_vzFmt(bau50l)}–${_vzFmt(bau50h)}</text>`;
     }
 
     // ── required trajectory (lime dashed, smooth) ──
