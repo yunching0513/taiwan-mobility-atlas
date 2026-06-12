@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIG.10F LinkedIn</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --lime:    #C8D400;
+  --lime-dk: #A8B200;
+  --black:   #1A1A1A;
+  --g1:      #4A4A4A;
+  --g2:      #888888;
+  --g3:      #D0D0D0;
+  --white:   #FFFFFF;
+  --zh:      'Noto Sans TC', sans-serif;
+  --en:      'Space Grotesk', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+}
+html, body { background: var(--white); color: var(--black); font-family: var(--zh); font-weight: 300; }
+
+/* 1200×900, 4:3 LinkedIn feed format */
+.page-li {
+  width: 1200px;
+  height: 900px;
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  grid-template-rows: 50px 1fr 130px;
+  position: relative;
+}
+
+/* Header strip — top across both columns */
+.ph-li {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 38px;
+  border-bottom: 1px solid var(--g3);
+}
+.ph-l-li { font-family: var(--en); font-size: 14px; font-weight: 700;
+           letter-spacing: 0.22em; text-transform: uppercase; color: var(--black); }
+.ph-r-li { font-family: var(--en); font-size: 12px; letter-spacing: 0.18em; color: var(--g2); }
+
+/* Left column — narrative */
+.left-col {
+  padding: 32px 28px 24px 38px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--g3);
+}
+.kicker-li { font-family: var(--en); font-size: 14px; font-weight: 700;
+             letter-spacing: 0.22em; text-transform: uppercase; color: var(--lime-dk);
+             margin-bottom: 12px; }
+.title-li { font-size: 40px; font-weight: 700; line-height: 1.16;
+            color: var(--black); margin-bottom: 14px; letter-spacing: -0.01em; }
+.title-li .accent { color: var(--lime-dk); }
+.subtitle-li { font-family: var(--en); font-size: 14px; letter-spacing: 0.06em;
+               color: var(--g2); line-height: 1.4; margin-bottom: 20px; }
+
+/* Stats row inside left column */
+.stats-li {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--g3);
+}
+.stat-num-li   { font-family: var(--en); font-size: 32px; font-weight: 700;
+                 color: var(--lime-dk); line-height: 1; letter-spacing: -0.02em; }
+.stat-label-li { font-size: 13px; color: var(--g1); margin-top: 6px; line-height: 1.35;
+                 font-weight: 400; }
+
+/* Insight block inside left column */
+.insight-li {
+  background: var(--black);
+  color: var(--white);
+  padding: 16px 18px;
+  margin-top: auto;
+  border-radius: 0;
+}
+.insight-tag-li { font-family: var(--en); font-size: 11px; font-weight: 700;
+                  letter-spacing: 0.22em; text-transform: uppercase; color: var(--lime);
+                  margin-bottom: 8px; }
+.insight-text-li { font-size: 14px; line-height: 1.5; font-weight: 400; }
+.insight-text-li strong { color: var(--lime); font-weight: 700; }
+
+/* Right column — chart */
+.right-col {
+  padding: 24px 28px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chart-li {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 0;
+}
+.legend-li {
+  display: flex;
+  gap: 22px;
+  padding-top: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--g1);
+  font-weight: 400;
+}
+.leg-item-li { display: flex; align-items: center; gap: 8px; }
+.note-li { font-size: 11px; color: var(--g2); line-height: 1.5;
+           padding-top: 8px; font-weight: 400; }
+
+/* Footer — bottom across both columns */
+.foot-li {
+  grid-column: 1 / -1;
+  padding: 18px 38px;
+  border-top: 1px solid var(--g3);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+.foot-l-li { font-size: 11px; color: var(--g2); line-height: 1.55; flex: 1; }
+.foot-l-li strong { color: var(--g1); font-weight: 500; }
+.foot-r-li { font-family: var(--en); font-size: 11px; letter-spacing: 0.18em; color: var(--g2);
+             text-align: right; line-height: 1.55; }
+
+/* SVG element classes — shared with mobile version */
+.axis { stroke: #1A1A1A; stroke-width: 1.5; fill: none; }
+.grid { stroke: #D0D0D0; stroke-width: 1; stroke-dasharray: 3 5; }
+.grid-light { stroke: #EAEAEA; stroke-width: 0.8; }
+.tick-text { font-family: 'Space Grotesk', sans-serif; font-size: 16px; fill: #4A4A4A; font-weight: 500; }
+.ax-label  { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; font-size: 18px;
+             fill: #4A4A4A; font-weight: 500; letter-spacing: 0.08em; }
+
+.area-dk { fill: #1A1A1A; opacity: 0.10; }
+.line-dk { stroke: #1A1A1A; stroke-width: 2.5; fill: none; }
+.mk-dk   { fill: #1A1A1A; }
+.mk-dk-big { fill: #1A1A1A; stroke: #C8D400; stroke-width: 3; }
+.area-lm { fill: #C8D400; opacity: 0.20; }
+.line-lm { stroke: #A8B200; stroke-width: 2.5; fill: none; }
+.mk-lm   { fill: #A8B200; }
+.mk-lm-big { fill: #A8B200; stroke: #FFFFFF; stroke-width: 2; }
+.line-gr { stroke: #888888; stroke-width: 2; stroke-dasharray: 5 5; fill: none; }
+.mk-gr   { fill: #888888; }
+
+.lbl-big { font-family: 'Space Grotesk', sans-serif; font-size: 22px;
+           fill: #1A1A1A; font-weight: 700; letter-spacing: -0.01em; }
+.lbl-big-lm { font-family: 'Space Grotesk', sans-serif; font-size: 22px;
+              fill: #A8B200; font-weight: 700; letter-spacing: -0.01em; }
+.lbl-sm  { font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+           fill: #4A4A4A; font-weight: 500; }
+.lbl-sm-lm { font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+             fill: #A8B200; font-weight: 600; }
+.lbl-tag { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; font-size: 13px;
+           fill: #888888; font-weight: 500; letter-spacing: 0.15em;
+           text-transform: uppercase; }
+.lbl-tag-lm { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; font-size: 13px;
+              fill: #A8B200; font-weight: 500; letter-spacing: 0.15em;
+              text-transform: uppercase; }
+.leg-dash-dk { width: 28px; height: 2.5px; background: #1A1A1A; display: inline-block; }
+.leg-dash-lm { width: 28px; height: 2.5px; background: #A8B200; display: inline-block; }
+.leg-dash-gr { width: 28px; height: 2px; background: #888888; display: inline-block; }
+.leg-dot-dk  { width: 11px; height: 11px; border-radius: 50%; background: #4A4A4A; display: inline-block; }
+.leg-dot-lm  { width: 14px; height: 14px; border-radius: 50%; background: #A8B200; display: inline-block; }
+
+.pt    { fill: #4A4A4A; }
+.pt-tw { fill: #1A1A1A; stroke: #C8D400; stroke-width: 2.5; }
+</style>
+</head>
+<body>
+<div class="page-li">
+  <div class="ph-li">
+    <div class="ph-l-li">VZT · TCAN</div>
+    <div class="ph-r-li">FIG. 10F · 2026</div>
+  </div>
+
+  <div class="left-col">
+    <div class="kicker-li">DUAL ZERO · LEADERBOARD</div>
+    <div class="title-li">Top 5 safest vs<br>Top 5 most dangerous</div>
+    <div class="subtitle-li">Ranked across 86 administrative regions</div>
+    <div class="stats-li"><div><div class="stat-num-li">5/5</div><div class="stat-label-li">Safest are Japan metros</div></div><div><div class="stat-num-li">5/5</div><div class="stat-label-li">Dangerous are Taiwan</div></div><div><div class="stat-num-li">24×</div><div class="stat-label-li">Pingtung / Tokyo ratio</div></div><div><div class="stat-num-li">0</div><div class="stat-label-li">Taiwan in safest top 30</div></div></div>
+    <div class="insight-li">
+      <div class="insight-tag-li">KEY INSIGHT</div>
+      <div class="insight-text-li">The 5 safest regions are all <strong>Japanese metros</strong> (Tokyo, Osaka, Kanagawa, Saitama, Hyogo); the 5 most dangerous are all <strong>Taiwanese counties</strong>. <strong>No Taiwan county enters the safest top 30</strong>.</div>
+    </div>
+  </div>
+
+  <div class="right-col">
+<svg viewBox="0 0 700 560" xmlns="http://www.w3.org/2000/svg" class="chart-li" preserveAspectRatio="xMidYMid meet">
+      <text x="6.0" y="14" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="14" fill="#A8B200" font-weight="700" letter-spacing="0.18em">TOP 5 SAFEST</text>
+      <text x="376.0" y="14" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="14" fill="#1A1A1A" font-weight="700" letter-spacing="0.18em">TOP 5 MOST DANGEROUS</text>
+      <text x="6.0" y="74.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#A8B200" font-weight="700" letter-spacing="-0.04em">01</text>
+      <rect x="70.0" y="38.0" width="50" height="16" fill="#A8B200" opacity="0.15" stroke="#A8B200" stroke-width="1"/>
+      <text x="95.0" y="50.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" letter-spacing="0.14em">JAPAN</text>
+      <text x="70.0" y="70.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Tokyo</text>
+      <text x="70.0" y="94.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#A8B200" font-weight="700" letter-spacing="-0.02em">0.97</text>
+      <text x="130.0" y="94.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="70.0" y="110.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">136 deaths · 13.99M</text>
+      <line x1="0.0" y1="116.0" x2="330.0" y2="116.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="6.0" y="162.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#A8B200" font-weight="700" letter-spacing="-0.04em">02</text>
+      <rect x="70.0" y="126.0" width="50" height="16" fill="#A8B200" opacity="0.15" stroke="#A8B200" stroke-width="1"/>
+      <text x="95.0" y="138.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" letter-spacing="0.14em">JAPAN</text>
+      <text x="70.0" y="158.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Osaka</text>
+      <text x="70.0" y="182.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#A8B200" font-weight="700" letter-spacing="-0.02em">1.31</text>
+      <text x="130.0" y="182.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="70.0" y="198.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">115 deaths · 8.78M</text>
+      <line x1="0.0" y1="204.0" x2="330.0" y2="204.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="6.0" y="250.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#A8B200" font-weight="700" letter-spacing="-0.04em">03</text>
+      <rect x="70.0" y="214.0" width="50" height="16" fill="#A8B200" opacity="0.15" stroke="#A8B200" stroke-width="1"/>
+      <text x="95.0" y="226.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" letter-spacing="0.14em">JAPAN</text>
+      <text x="70.0" y="246.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Kanagawa</text>
+      <text x="70.0" y="270.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#A8B200" font-weight="700" letter-spacing="-0.02em">1.46</text>
+      <text x="130.0" y="270.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="70.0" y="286.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">135 deaths · 9.23M</text>
+      <line x1="0.0" y1="292.0" x2="330.0" y2="292.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="6.0" y="338.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#A8B200" font-weight="700" letter-spacing="-0.04em">04</text>
+      <rect x="70.0" y="302.0" width="50" height="16" fill="#A8B200" opacity="0.15" stroke="#A8B200" stroke-width="1"/>
+      <text x="95.0" y="314.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" letter-spacing="0.14em">JAPAN</text>
+      <text x="70.0" y="334.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Saitama</text>
+      <text x="70.0" y="358.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#A8B200" font-weight="700" letter-spacing="-0.02em">1.77</text>
+      <text x="130.0" y="358.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="70.0" y="374.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">130 deaths · 7.34M</text>
+      <line x1="0.0" y1="380.0" x2="330.0" y2="380.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="6.0" y="426.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#A8B200" font-weight="700" letter-spacing="-0.04em">05</text>
+      <rect x="70.0" y="390.0" width="50" height="16" fill="#A8B200" opacity="0.15" stroke="#A8B200" stroke-width="1"/>
+      <text x="95.0" y="402.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#A8B200" font-weight="700" letter-spacing="0.14em">JAPAN</text>
+      <text x="70.0" y="422.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Hyogo</text>
+      <text x="70.0" y="446.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#A8B200" font-weight="700" letter-spacing="-0.02em">1.79</text>
+      <text x="130.0" y="446.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="70.0" y="462.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">97 deaths · 5.43M</text>
+      <line x1="0.0" y1="468.0" x2="330.0" y2="468.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="376.0" y="74.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#1A1A1A" font-weight="700" letter-spacing="-0.04em">01</text>
+      <rect x="440.0" y="38.0" width="50" height="16" fill="#1A1A1A" opacity="0.15" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="465.0" y="50.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="700" letter-spacing="0.14em">TAIWAN</text>
+      <text x="440.0" y="70.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Pingtung</text>
+      <text x="440.0" y="94.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#1A1A1A" font-weight="700" letter-spacing="-0.02em">23.92</text>
+      <text x="500.0" y="94.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="440.0" y="110.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">188 deaths · 0.79M</text>
+      <line x1="370.0" y1="116.0" x2="700.0" y2="116.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="376.0" y="162.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#1A1A1A" font-weight="700" letter-spacing="-0.04em">02</text>
+      <rect x="440.0" y="126.0" width="50" height="16" fill="#1A1A1A" opacity="0.15" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="465.0" y="138.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="700" letter-spacing="0.14em">TAIWAN</text>
+      <text x="440.0" y="158.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Yunlin</text>
+      <text x="440.0" y="182.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#1A1A1A" font-weight="700" letter-spacing="-0.02em">22.92</text>
+      <text x="500.0" y="182.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="440.0" y="198.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">150 deaths · 0.65M</text>
+      <line x1="370.0" y1="204.0" x2="700.0" y2="204.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="376.0" y="250.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#1A1A1A" font-weight="700" letter-spacing="-0.04em">03</text>
+      <rect x="440.0" y="214.0" width="50" height="16" fill="#1A1A1A" opacity="0.15" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="465.0" y="226.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="700" letter-spacing="0.14em">TAIWAN</text>
+      <text x="440.0" y="246.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Chiayi County</text>
+      <text x="440.0" y="270.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#1A1A1A" font-weight="700" letter-spacing="-0.02em">21.74</text>
+      <text x="500.0" y="270.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="440.0" y="286.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">103 deaths · 0.47M</text>
+      <line x1="370.0" y1="292.0" x2="700.0" y2="292.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="376.0" y="338.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#1A1A1A" font-weight="700" letter-spacing="-0.04em">04</text>
+      <rect x="440.0" y="302.0" width="50" height="16" fill="#1A1A1A" opacity="0.15" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="465.0" y="314.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="700" letter-spacing="0.14em">TAIWAN</text>
+      <text x="440.0" y="334.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Taitung</text>
+      <text x="440.0" y="358.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#1A1A1A" font-weight="700" letter-spacing="-0.02em">21.54</text>
+      <text x="500.0" y="358.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="440.0" y="374.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">45 deaths · 0.21M</text>
+      <line x1="370.0" y1="380.0" x2="700.0" y2="380.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="376.0" y="426.0" text-anchor="start" font-family="Space Grotesk" font-size="42" fill="#1A1A1A" font-weight="700" letter-spacing="-0.04em">05</text>
+      <rect x="440.0" y="390.0" width="50" height="16" fill="#1A1A1A" opacity="0.15" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="465.0" y="402.0" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="700" letter-spacing="0.14em">TAIWAN</text>
+      <text x="440.0" y="422.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="17" fill="#1A1A1A" font-weight="700">Hualien</text>
+      <text x="440.0" y="446.0" text-anchor="start" font-family="Space Grotesk" font-size="22" fill="#1A1A1A" font-weight="700" letter-spacing="-0.02em">19.84</text>
+      <text x="500.0" y="446.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#888" font-weight="500" letter-spacing="0.1em">PER 100K</text>
+      <text x="440.0" y="462.0" text-anchor="start" font-family="Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">62 deaths · 0.31M</text>
+      <line x1="370.0" y1="468.0" x2="700.0" y2="468.0" stroke="#D0D0D0" stroke-width="0.7"/>
+      <text x="0" y="484.0" text-anchor="start" font-family="Noto Sans TC, Space Grotesk" font-size="12" fill="#888" font-weight="700" letter-spacing="0.16em">FAMOUS-CITY REFERENCE</text>
+      <circle cx="50.0" cy="502.0" r="5" fill="#1A1A1A"/>
+      <text x="50.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#1A1A1A" font-weight="700">4.57</text>
+      <text x="50.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Taipei</text>
+      <circle cx="150.0" cy="502.0" r="5" fill="#A8B200"/>
+      <text x="150.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#A8B200" font-weight="700">1.31</text>
+      <text x="150.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Osaka</text>
+      <circle cx="250.0" cy="502.0" r="5" fill="#A8B200"/>
+      <text x="250.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#A8B200" font-weight="700">1.96</text>
+      <text x="250.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Kyoto</text>
+      <circle cx="350.0" cy="502.0" r="5" fill="#A8B200"/>
+      <text x="350.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#A8B200" font-weight="700">2.52</text>
+      <text x="350.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Okinawa</text>
+      <circle cx="450.0" cy="502.0" r="5" fill="#888888"/>
+      <text x="450.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#888888" font-weight="700">2.33</text>
+      <text x="450.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Seoul</text>
+      <circle cx="550.0" cy="502.0" r="5" fill="#888888"/>
+      <text x="550.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#888888" font-weight="700">3.23</text>
+      <text x="550.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Busan</text>
+      <circle cx="650.0" cy="502.0" r="5" fill="#888888"/>
+      <text x="650.0" y="514.0" text-anchor="middle" font-family="Space Grotesk" font-size="16" fill="#888888" font-weight="700">7.14</text>
+      <text x="650.0" y="532.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="500">Jeju</text>
+    </svg>
+    <div class="legend-li"><div class="leg-item-li"><span class="leg-dot-lm"></span>Japan (dominates safest)</div><div class="leg-item-li"><span class="leg-dot-dk"></span>Taiwan (dominates most dangerous)</div></div>
+    <div class="note-li">Note: 86 = Taiwan 21 + Korea 17 + Japan 47 (excludes Lienchiang outlier, 14K pop). Data 2023-2024.</div>
+  </div>
+
+  <div class="foot-li">
+    <div class="foot-l-li"><strong>Sources</strong> Taiwan MOTC · Korea Road Traffic Authority · Japan NPA　·　<strong>Compiled by</strong> Yun Ching Wu　·　<strong>Joint initiative</strong> TCAN · VZT</div>
+    <div class="foot-r-li">DATA YEAR 2023–2024</div>
+  </div>
+</div>
+</body>
+</html>

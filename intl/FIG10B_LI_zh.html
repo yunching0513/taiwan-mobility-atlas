@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>FIG.10B LinkedIn</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --lime:    #C8D400;
+  --lime-dk: #A8B200;
+  --black:   #1A1A1A;
+  --g1:      #4A4A4A;
+  --g2:      #888888;
+  --g3:      #D0D0D0;
+  --white:   #FFFFFF;
+  --zh:      'Noto Sans TC', sans-serif;
+  --en:      'Space Grotesk', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+}
+html, body { background: var(--white); color: var(--black); font-family: var(--zh); font-weight: 300; }
+
+/* 1200×900, 4:3 LinkedIn feed format */
+.page-li {
+  width: 1200px;
+  height: 900px;
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  grid-template-rows: 50px 1fr 130px;
+  position: relative;
+}
+
+/* Header strip — top across both columns */
+.ph-li {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 38px;
+  border-bottom: 1px solid var(--g3);
+}
+.ph-l-li { font-family: var(--en); font-size: 14px; font-weight: 700;
+           letter-spacing: 0.22em; text-transform: uppercase; color: var(--black); }
+.ph-r-li { font-family: var(--en); font-size: 12px; letter-spacing: 0.18em; color: var(--g2); }
+
+/* Left column — narrative */
+.left-col {
+  padding: 32px 28px 24px 38px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--g3);
+}
+.kicker-li { font-family: var(--en); font-size: 14px; font-weight: 700;
+             letter-spacing: 0.22em; text-transform: uppercase; color: var(--lime-dk);
+             margin-bottom: 12px; }
+.title-li { font-size: 40px; font-weight: 700; line-height: 1.16;
+            color: var(--black); margin-bottom: 14px; letter-spacing: -0.01em; }
+.title-li .accent { color: var(--lime-dk); }
+.subtitle-li { font-family: var(--en); font-size: 14px; letter-spacing: 0.06em;
+               color: var(--g2); line-height: 1.4; margin-bottom: 20px; }
+
+/* Stats row inside left column */
+.stats-li {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--g3);
+}
+.stat-num-li   { font-family: var(--en); font-size: 32px; font-weight: 700;
+                 color: var(--lime-dk); line-height: 1; letter-spacing: -0.02em; }
+.stat-label-li { font-size: 13px; color: var(--g1); margin-top: 6px; line-height: 1.35;
+                 font-weight: 400; }
+
+/* Insight block inside left column */
+.insight-li {
+  background: var(--black);
+  color: var(--white);
+  padding: 16px 18px;
+  margin-top: auto;
+  border-radius: 0;
+}
+.insight-tag-li { font-family: var(--en); font-size: 11px; font-weight: 700;
+                  letter-spacing: 0.22em; text-transform: uppercase; color: var(--lime);
+                  margin-bottom: 8px; }
+.insight-text-li { font-size: 14px; line-height: 1.5; font-weight: 400; }
+.insight-text-li strong { color: var(--lime); font-weight: 700; }
+
+/* Right column — chart */
+.right-col {
+  padding: 24px 28px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chart-li {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 0;
+}
+.legend-li {
+  display: flex;
+  gap: 22px;
+  padding-top: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--g1);
+  font-weight: 400;
+}
+.leg-item-li { display: flex; align-items: center; gap: 8px; }
+.note-li { font-size: 11px; color: var(--g2); line-height: 1.5;
+           padding-top: 8px; font-weight: 400; }
+
+/* Footer — bottom across both columns */
+.foot-li {
+  grid-column: 1 / -1;
+  padding: 18px 38px;
+  border-top: 1px solid var(--g3);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+.foot-l-li { font-size: 11px; color: var(--g2); line-height: 1.55; flex: 1; }
+.foot-l-li strong { color: var(--g1); font-weight: 500; }
+.foot-r-li { font-family: var(--en); font-size: 11px; letter-spacing: 0.18em; color: var(--g2);
+             text-align: right; line-height: 1.55; }
+
+/* SVG element classes — shared with mobile version */
+.axis { stroke: #1A1A1A; stroke-width: 1.5; fill: none; }
+.grid { stroke: #D0D0D0; stroke-width: 1; stroke-dasharray: 3 5; }
+.grid-light { stroke: #EAEAEA; stroke-width: 0.8; }
+.tick-text { font-family: 'Space Grotesk', sans-serif; font-size: 16px; fill: #4A4A4A; font-weight: 500; }
+.ax-label  { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; font-size: 18px;
+             fill: #4A4A4A; font-weight: 500; letter-spacing: 0.08em; }
+
+.area-dk { fill: #1A1A1A; opacity: 0.10; }
+.line-dk { stroke: #1A1A1A; stroke-width: 2.5; fill: none; }
+.mk-dk   { fill: #1A1A1A; }
+.mk-dk-big { fill: #1A1A1A; stroke: #C8D400; stroke-width: 3; }
+.area-lm { fill: #C8D400; opacity: 0.20; }
+.line-lm { stroke: #A8B200; stroke-width: 2.5; fill: none; }
+.mk-lm   { fill: #A8B200; }
+.mk-lm-big { fill: #A8B200; stroke: #FFFFFF; stroke-width: 2; }
+.line-gr { stroke: #888888; stroke-width: 2; stroke-dasharray: 5 5; fill: none; }
+.mk-gr   { fill: #888888; }
+
+.lbl-big { font-family: 'Space Grotesk', sans-serif; font-size: 22px;
+           fill: #1A1A1A; font-weight: 700; letter-spacing: -0.01em; }
+.lbl-big-lm { font-family: 'Space Grotesk', sans-serif; font-size: 22px;
+              fill: #A8B200; font-weight: 700; letter-spacing: -0.01em; }
+.lbl-sm  { font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+           fill: #4A4A4A; font-weight: 500; }
+.lbl-sm-lm { font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+             fill: #A8B200; font-weight: 600; }
+.lbl-tag { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; font-size: 13px;
+           fill: #888888; font-weight: 500; letter-spacing: 0.15em;
+           text-transform: uppercase; }
+.lbl-tag-lm { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; font-size: 13px;
+              fill: #A8B200; font-weight: 500; letter-spacing: 0.15em;
+              text-transform: uppercase; }
+.leg-dash-dk { width: 28px; height: 2.5px; background: #1A1A1A; display: inline-block; }
+.leg-dash-lm { width: 28px; height: 2.5px; background: #A8B200; display: inline-block; }
+.leg-dash-gr { width: 28px; height: 2px; background: #888888; display: inline-block; }
+.leg-dot-dk  { width: 11px; height: 11px; border-radius: 50%; background: #4A4A4A; display: inline-block; }
+.leg-dot-lm  { width: 14px; height: 14px; border-radius: 50%; background: #A8B200; display: inline-block; }
+
+.pt    { fill: #4A4A4A; }
+.pt-tw { fill: #1A1A1A; stroke: #C8D400; stroke-width: 2.5; }
+</style>
+</head>
+<body>
+<div class="page-li">
+  <div class="ph-li">
+    <div class="ph-l-li">VZT · TCAN</div>
+    <div class="ph-r-li">FIG. 10B · 2026</div>
+  </div>
+
+  <div class="left-col">
+    <div class="kicker-li">DUAL ZERO · BOX DISTRIBUTION</div>
+    <div class="title-li">臺灣分佈不只偏移，<br>也<span class="accent">擴散</span></div>
+    <div class="subtitle-li">三國行政區死亡率四分位分佈</div>
+    <div class="stats-li"><div><div class="stat-num-li">4.1×</div><div class="stat-label-li">臺灣 vs 日本中位數倍數</div></div><div><div class="stat-num-li">23.9</div><div class="stat-label-li">臺灣最大（屏東）</div></div><div><div class="stat-num-li">5.0</div><div class="stat-label-li">日本最大（福井）</div></div><div><div class="stat-num-li">17.4</div><div class="stat-label-li">臺灣 IQR 寬度</div></div></div>
+    <div class="insight-li">
+      <div class="insight-tag-li">KEY INSIGHT · 核心發現</div>
+      <div class="insight-text-li">日本 47 縣集中在 <strong>1-5</strong>，韓國 17 區分佈在 <strong>2-11</strong>，臺灣 22 縣市散佈在 <strong>0-24</strong>。<strong>分佈寬度本身就是基礎設施品質差異</strong>。</div>
+    </div>
+  </div>
+
+  <div class="right-col">
+<svg viewBox="0 0 700 560" xmlns="http://www.w3.org/2000/svg" class="chart-li" preserveAspectRatio="xMidYMid meet">
+      <line x1="100.0" y1="30" x2="100.0" y2="490" class="grid"/>
+      <text x="100.0" y="514.0" text-anchor="middle" class="tick-text">0</text>
+      <line x1="214.0" y1="30" x2="214.0" y2="490" class="grid"/>
+      <text x="214.0" y="514.0" text-anchor="middle" class="tick-text">5</text>
+      <line x1="328.0" y1="30" x2="328.0" y2="490" class="grid"/>
+      <text x="328.0" y="514.0" text-anchor="middle" class="tick-text">10</text>
+      <line x1="442.0" y1="30" x2="442.0" y2="490" class="grid"/>
+      <text x="442.0" y="514.0" text-anchor="middle" class="tick-text">15</text>
+      <line x1="556.0" y1="30" x2="556.0" y2="490" class="grid"/>
+      <text x="556.0" y="514.0" text-anchor="middle" class="tick-text">20</text>
+      <line x1="670.0" y1="30" x2="670.0" y2="490" class="grid"/>
+      <text x="670.0" y="514.0" text-anchor="middle" class="tick-text">25</text>
+      <text x="85.0" y="85.0" text-anchor="end" font-family="Noto Sans TC, Space Grotesk" font-size="22" fill="#A8B200" font-weight="700">日本</text>
+      <text x="85.0" y="104.0" text-anchor="end" font-family="Space Grotesk" font-size="12" fill="#888" font-weight="500">平均 2.21</text>
+      <line x1="122.2" y1="76.0" x2="150.3" y2="76.0" stroke="#A8B200" stroke-width="1.5"/>
+      <line x1="179.6" y1="76.0" x2="215.2" y2="76.0" stroke="#A8B200" stroke-width="1.5"/>
+      <line x1="122.2" y1="69.0" x2="122.2" y2="83.0" stroke="#A8B200" stroke-width="2"/>
+      <line x1="215.2" y1="69.0" x2="215.2" y2="83.0" stroke="#A8B200" stroke-width="2"/>
+      <rect x="150.3" y="60.0" width="29.3" height="32" fill="#A8B200" opacity="0.25" stroke="#A8B200" stroke-width="1.5"/>
+      <line x1="162.8" y1="60.0" x2="162.8" y2="92.0" stroke="#A8B200" stroke-width="3"/>
+      <circle cx="162.1" cy="106.0" r="5" fill="#A8B200" opacity="1.0"/>
+      <circle cx="181.4" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="202.3" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="150.3" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="185.8" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="172.3" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="167.5" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="177.9" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="171.7" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="158.4" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="140.4" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="145.2" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="122.2" cy="106.0" r="5" fill="#A8B200" opacity="1.0"/>
+      <circle cx="133.3" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="164.6" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="174.0" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="179.6" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="215.2" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="193.8" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="157.6" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="175.0" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="147.1" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="141.1" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="186.4" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="172.8" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="144.7" cy="117.0" r="5" fill="#A8B200" opacity="1.0"/>
+      <circle cx="129.8" cy="128.0" r="5" fill="#A8B200" opacity="1.0"/>
+      <circle cx="140.7" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="162.4" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="183.3" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="167.1" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="162.6" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="161.1" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="146.4" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="160.7" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="190.4" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="188.0" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="188.7" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="197.8" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="142.4" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="168.4" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="158.6" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="157.1" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="157.7" cy="117.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="171.5" cy="128.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="162.8" cy="106.0" r="3" fill="#A8B200" opacity="0.4"/>
+      <circle cx="157.5" cy="117.0" r="5" fill="#A8B200" opacity="1.0"/>
+      <text x="162.1" y="120.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#A8B200" font-weight="600">北海道</text>
+      <text x="122.2" y="120.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#A8B200" font-weight="600">東京</text>
+      <text x="144.7" y="131.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#A8B200" font-weight="600">京都</text>
+      <text x="129.8" y="142.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#A8B200" font-weight="600">大阪</text>
+      <text x="157.5" y="131.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#A8B200" font-weight="600">沖繩</text>
+      <text x="215.2" y="63.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#A8B200" font-weight="700">福井縣</text>
+      <text x="85.0" y="215.0" text-anchor="end" font-family="Noto Sans TC, Space Grotesk" font-size="22" fill="#4A4A4A" font-weight="700">韓國</text>
+      <text x="85.0" y="234.0" text-anchor="end" font-family="Space Grotesk" font-size="12" fill="#888" font-weight="500">平均 4.88</text>
+      <line x1="153.0" y1="206.0" x2="170.1" y2="206.0" stroke="#4A4A4A" stroke-width="1.5"/>
+      <line x1="307.2" y1="206.0" x2="355.3" y2="206.0" stroke="#4A4A4A" stroke-width="1.5"/>
+      <line x1="153.0" y1="199.0" x2="153.0" y2="213.0" stroke="#4A4A4A" stroke-width="2"/>
+      <line x1="355.3" y1="199.0" x2="355.3" y2="213.0" stroke="#4A4A4A" stroke-width="2"/>
+      <rect x="170.1" y="190.0" width="137.1" height="32" fill="#888888" opacity="0.25" stroke="#4A4A4A" stroke-width="1.5"/>
+      <line x1="187.7" y1="190.0" x2="187.7" y2="222.0" stroke="#4A4A4A" stroke-width="3"/>
+      <circle cx="153.0" cy="236.0" r="5" fill="#4A4A4A" opacity="1.0"/>
+      <circle cx="173.6" cy="247.0" r="5" fill="#4A4A4A" opacity="1.0"/>
+      <circle cx="172.2" cy="258.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="169.0" cy="236.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="166.2" cy="247.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="171.2" cy="258.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="160.1" cy="236.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="176.3" cy="247.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="187.7" cy="258.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="306.5" cy="236.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="307.8" cy="247.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="311.4" cy="258.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="276.4" cy="236.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="347.2" cy="247.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="355.3" cy="258.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="251.1" cy="236.0" r="3" fill="#4A4A4A" opacity="0.4"/>
+      <circle cx="262.8" cy="247.0" r="5" fill="#4A4A4A" opacity="1.0"/>
+      <text x="153.0" y="250.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#4A4A4A" font-weight="600">首爾</text>
+      <text x="173.6" y="261.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#4A4A4A" font-weight="600">釜山</text>
+      <text x="262.8" y="261.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#4A4A4A" font-weight="600">濟州</text>
+      <text x="355.3" y="193.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#4A4A4A" font-weight="700">慶尚北道</text>
+      <text x="85.0" y="345.0" text-anchor="end" font-family="Noto Sans TC, Space Grotesk" font-size="22" fill="#1A1A1A" font-weight="700">臺灣</text>
+      <text x="85.0" y="364.0" text-anchor="end" font-family="Space Grotesk" font-size="12" fill="#888" font-weight="500">平均 11.84</text>
+      <line x1="100.0" y1="336.0" x2="318.3" y2="336.0" stroke="#1A1A1A" stroke-width="1.5"/>
+      <line x1="536.3" y1="336.0" x2="645.3" y2="336.0" stroke="#1A1A1A" stroke-width="1.5"/>
+      <line x1="100.0" y1="329.0" x2="100.0" y2="343.0" stroke="#1A1A1A" stroke-width="2"/>
+      <line x1="645.3" y1="329.0" x2="645.3" y2="343.0" stroke="#1A1A1A" stroke-width="2"/>
+      <rect x="318.3" y="320.0" width="218.0" height="32" fill="#1A1A1A" opacity="0.25" stroke="#1A1A1A" stroke-width="1.5"/>
+      <line x1="437.4" y1="320.0" x2="437.4" y2="352.0" stroke="#1A1A1A" stroke-width="3"/>
+      <circle cx="319.8" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="204.2" cy="377.0" r="5" fill="#1A1A1A" opacity="1.0"/>
+      <circle cx="257.8" cy="388.0" r="5" fill="#1A1A1A" opacity="1.0"/>
+      <circle cx="337.0" cy="366.0" r="5" fill="#1A1A1A" opacity="1.0"/>
+      <circle cx="313.7" cy="377.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="373.0" cy="388.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="459.0" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="332.5" cy="377.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="490.2" cy="388.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="510.8" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="622.7" cy="377.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="498.5" cy="388.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="595.6" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="474.1" cy="377.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="356.9" cy="388.0" r="5" fill="#1A1A1A" opacity="1.0"/>
+      <circle cx="645.3" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="530.9" cy="377.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="552.3" cy="388.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="591.2" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="415.8" cy="377.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="163.8" cy="388.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <circle cx="100.0" cy="366.0" r="3" fill="#1A1A1A" opacity="0.4"/>
+      <text x="204.2" y="391.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="600">臺北</text>
+      <text x="257.8" y="402.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="600">新北</text>
+      <text x="337.0" y="380.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="600">桃園</text>
+      <text x="356.9" y="402.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="10" fill="#1A1A1A" font-weight="600">高雄</text>
+      <text x="100.0" y="323.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#1A1A1A" font-weight="700">連江縣</text>
+      <text x="645.3" y="323.0" text-anchor="middle" font-family="Noto Sans TC, Space Grotesk" font-size="11" fill="#1A1A1A" font-weight="700">屏東縣</text>
+      <text x="385" y="548" text-anchor="middle" class="ax-label">每十萬人死亡率</text>
+    </svg>
+    <div class="legend-li"><div class="leg-item-li"><span class="leg-dash-lm"></span>中位數 · 四分位距 · 全距</div><div class="leg-item-li"><span class="leg-dot-dk"></span>個別行政區資料點</div></div>
+    <div class="note-li">註：方塊＝Q1-Q3 四分位距，中央粗線＝中位數，橫線＝全距。資料 2023-2024。</div>
+  </div>
+
+  <div class="foot-li">
+    <div class="foot-l-li"><strong>資料來源</strong> 交通部 · 韓國道路交通公團 · 日本警察廳交通局　·　<strong>整理製作</strong> Yun Ching Wu　·　<strong>聯合發起</strong> TCAN · VZT 還路於民</div>
+    <div class="foot-r-li">資料年度 2023–2024</div>
+  </div>
+</div>
+</body>
+</html>

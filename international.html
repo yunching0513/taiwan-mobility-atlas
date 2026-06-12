@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>國際比較:日本 × 韓國 × 臺灣 · Taiwan Mobility Atlas</title>
+<meta property="og:title" content="日本 × 韓國 × 臺灣:86 個行政區的死亡率比較">
+<meta property="og:description" content="東京 0.97 vs 屏東 23.92 — 每十萬人交通死亡率差距 24 倍。差異不在地理,而在基礎設施投資。Vision Zero Taiwan × TCAN">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#888; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
+  --lime:#C8D400; --lime-dk:#A8B200; --lime-lt:#E8F000;
+  --red:#D94F3D; --gold:#E8A825; --blue:#3A7CC3;
+  --font-zh:'Noto Sans TC',sans-serif;
+  --font-en:'Space Grotesk',sans-serif;
+}
+body { font-family: var(--font-zh); background: var(--grey-4); color: var(--black); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+
+.t-en { display: none; }
+body.lang-en .t-zh { display: none; }
+body.lang-en .t-en { display: inline; }
+.lang-toggle {
+  position: fixed; top: 14px; right: 14px; z-index: 1600;
+  display: flex; background: var(--white); border: 1px solid var(--grey-3);
+  font-family: var(--font-en); font-size: 12px; font-weight: 600;
+}
+.lang-toggle .lt-opt { padding: 6px 12px; cursor: pointer; letter-spacing: 0.08em; color: var(--grey-2); }
+.lang-toggle .lt-opt.active { background: var(--black); color: var(--white); }
+
+/* hero */
+.hero { background: var(--black); color: var(--white); padding: 68px 24px 76px; text-align: center; }
+.hero .tag {
+  display: inline-block; font-family: var(--font-en); font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  border: 1.5px solid var(--lime); color: var(--lime);
+  padding: 5px 14px; font-weight: 600; margin-bottom: 30px;
+}
+.hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 900; letter-spacing: 0.05em; line-height: 1.35; }
+.hero h1 em { font-style: normal; color: var(--lime); }
+.hero .rates {
+  display: flex; justify-content: center; gap: clamp(18px, 5vw, 64px);
+  margin-top: 44px; flex-wrap: wrap; align-items: flex-end;
+}
+.hero .rate { text-align: center; }
+.hero .rate .rn { font-family: var(--font-en); font-weight: 300; line-height: 1; }
+.hero .rate.jp .rn { font-size: clamp(40px, 6vw, 64px); color: var(--lime); }
+.hero .rate.kr .rn { font-size: clamp(48px, 7.4vw, 80px); color: var(--gold); }
+.hero .rate.tw .rn { font-size: clamp(64px, 10vw, 116px); color: var(--red); }
+.hero .rate .rl { margin-top: 10px; font-size: 14px; letter-spacing: 0.1em; color: var(--grey-3); }
+.hero .rate .re { font-family: var(--font-en); font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-2); margin-top: 4px; }
+.hero .sub {
+  font-size: 15px; font-weight: 300; color: var(--grey-3);
+  margin-top: 42px; line-height: 1.9; letter-spacing: 0.03em;
+  max-width: 740px; margin-left: auto; margin-right: auto;
+}
+.hero .sub strong { color: var(--white); font-weight: 700; }
+.hero .sub em { font-style: normal; color: var(--lime); font-weight: 500; }
+
+.shell { max-width: 1180px; margin: 0 auto; padding: 56px 20px 40px; }
+.section { margin-bottom: 56px; }
+.section-label {
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--font-en); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.26em; text-transform: uppercase; color: var(--grey-2);
+  margin-bottom: 24px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--grey-3); }
+
+/* findings cards */
+.find-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 880px) { .find-grid { grid-template-columns: 1fr; } }
+.find {
+  background: var(--white); padding: 28px 26px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 4px solid var(--lime);
+}
+.find .f-l { font-family: var(--font-en); font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-2); font-weight: 600; margin-bottom: 12px; }
+.find .f-n { font-family: var(--font-en); font-size: 46px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; }
+.find .f-n small { font-size: 17px; font-weight: 500; color: var(--grey-1); }
+.find .f-t { font-size: 13.5px; line-height: 1.75; color: var(--grey-1); font-weight: 300; margin-top: 12px; letter-spacing: 0.02em; }
+.find .f-t b { color: var(--black); font-weight: 700; }
+.find.red { border-top-color: var(--red); }
+.find.red .f-n { color: var(--red); }
+.find.gold { border-top-color: var(--gold); }
+
+/* figure viewer */
+.viewer { background: var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 26px 26px 20px; }
+.v-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.v-tab {
+  border: 1px solid var(--grey-3); background: var(--grey-4); cursor: pointer;
+  padding: 9px 15px; font-family: var(--font-zh); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.04em; transition: all .12s;
+}
+.v-tab small { font-family: var(--font-en); font-size: 10px; color: var(--grey-2); letter-spacing: 0.1em; margin-right: 6px; font-weight: 600; }
+.v-tab:hover { background: var(--white); border-color: var(--black); }
+.v-tab.active { background: var(--black); color: var(--white); border-color: var(--black); }
+.v-tab.active small { color: var(--lime); }
+.v-stage { position: relative; width: 100%; overflow: hidden; background: var(--grey-4); }
+.v-stage iframe {
+  width: 1200px; height: 900px; border: none; display: block;
+  transform-origin: top left;
+}
+.v-note {
+  margin-top: 14px; font-size: 11.5px; color: var(--grey-2);
+  letter-spacing: 0.04em; line-height: 1.7;
+}
+
+/* method note */
+.method {
+  background: var(--white); padding: 28px 30px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  font-size: 13px; line-height: 1.85; color: var(--grey-1); font-weight: 300;
+}
+.method b { color: var(--black); font-weight: 700; }
+.method .m-warn {
+  margin-top: 14px; padding: 14px 18px; background: var(--grey-4);
+  border-left: 4px solid var(--gold); font-size: 12.5px;
+}
+
+.partner-logos {
+  background: var(--white); padding: 30px; text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-top: 56px;
+}
+.partner-logos .pl-label {
+  font-family: var(--font-en); font-size: 9px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--grey-2); margin-bottom: 18px;
+}
+.partner-logos img { max-width: 560px; width: 100%; height: auto; }
+.back-link {
+  display: inline-block; margin: 18px 0 0;
+  font-family: var(--font-en); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--grey-2); text-decoration: none;
+}
+.back-link:hover { color: var(--black); }
+</style>
+</head>
+<body>
+<div class="lang-toggle" id="langToggle"><span class="lt-opt" data-lang="zh">中</span><span class="lt-opt" data-lang="en">EN</span></div>
+
+<div class="hero">
+  <div class="tag">Taiwan Mobility Atlas · International Comparison</div>
+  <h1><span class="t-zh">同樣的東亞,<em>不一樣</em>的回家路</span><span class="t-en">Same East Asia, a <em>very different</em> way home</span></h1>
+  <div class="rates">
+    <div class="rate jp">
+      <div class="rn">2.21</div>
+      <div class="rl"><span class="t-zh">日本 · 47 都道府縣</span><span class="t-en">Japan · 47 prefectures</span></div>
+      <div class="re">deaths / 100k</div>
+    </div>
+    <div class="rate kr">
+      <div class="rn">4.88</div>
+      <div class="rl"><span class="t-zh">韓國 · 17 廣域市道</span><span class="t-en">South Korea · 17 regions</span></div>
+      <div class="re">deaths / 100k</div>
+    </div>
+    <div class="rate tw">
+      <div class="rn">11.84</div>
+      <div class="rl"><span class="t-zh">臺灣 · 22 縣市</span><span class="t-en">Taiwan · 22 counties</span></div>
+      <div class="re">deaths / 100k</div>
+    </div>
+  </div>
+  <div class="sub">
+    <span class="t-zh">每十萬人交通死亡率,臺灣是日本的 <strong>5.4 倍</strong>、韓國的 <strong>2.4 倍</strong>。
+    <em>日本最危險的福井縣(5.05),仍然比臺灣全國平均安全一倍以上。</em><br>
+    差異不在地理、不在文化 — 在基礎設施投資與制度選擇。</span>
+    <span class="t-en">Per 100k population, Taiwan's road deaths run <strong>5.4×</strong> Japan's and <strong>2.4×</strong> Korea's.
+    <em>Japan's most dangerous prefecture, Fukui (5.05), is still twice as safe as Taiwan's national average.</em><br>
+    The difference is not geography or culture — it is infrastructure investment and policy choice.</span>
+  </div>
+</div>
+
+<div class="shell">
+
+<!-- 01 — Key findings -->
+<div class="section">
+  <div class="section-label"><span class="t-zh">01 — Key Findings 關鍵發現</span><span class="t-en">01 — Key Findings</span></div>
+  <div class="find-grid">
+    <div class="find red">
+      <div class="f-l">Widest Gap · 最大落差</div>
+      <div class="f-n">24.7<small>×</small></div>
+      <div class="f-t">
+        <span class="t-zh"><b>屏東縣(23.92)vs 東京都(0.97)</b>。同在東亞、同樣高度都市化的世界裡,住在哪裡決定你回家路上的生死機率差 24 倍。</span>
+        <span class="t-en"><b>Pingtung (23.92) vs Tokyo (0.97)</b>. In the same East Asia, where you live changes your odds of dying on the way home by a factor of 24.</span>
+      </div>
+    </div>
+    <div class="find">
+      <div class="f-l">No Overlap · 分佈不重疊</div>
+      <div class="f-n">0<small>/22</small></div>
+      <div class="f-t">
+        <span class="t-zh"><b>沒有任何一個臺灣縣市</b>達到日本全國平均(2.21)。臺灣最安全的縣市,放到日本仍是最危險的一端。這不是個別縣市的失敗,是系統性的。</span>
+        <span class="t-en"><b>Not one Taiwanese county</b> reaches Japan's national average (2.21). Taiwan's safest county would still rank among Japan's most dangerous. The failure is systemic, not local.</span>
+      </div>
+    </div>
+    <div class="find gold">
+      <div class="f-l">Korea's Lesson · 韓國的啟示</div>
+      <div class="f-n">2.4<small>×</small></div>
+      <div class="f-t">
+        <span class="t-zh">臺灣死亡率仍是韓國的 2.4 倍。韓國以<b>行人優先改革、市區降速、路口重建</b>把自己帶到日臺之間的 4.88 — 證明東亞機車社會也能在一個世代內變安全。</span>
+        <span class="t-en">Taiwan still runs 2.4× Korea's rate. Pedestrian-first reforms, urban speed cuts and intersection redesigns took Korea to 4.88, between Japan and Taiwan — proof that an East Asian scooter society can get safer within a generation.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 02 — Figures -->
+<div class="section">
+  <div class="section-label"><span class="t-zh">02 — 86 Districts 六種視角看 86 個行政區</span><span class="t-en">02 — 86 Districts · Six Views</span></div>
+  <div class="viewer">
+    <div class="v-tabs" id="vTabs">
+      <button class="v-tab active" data-fig="10A"><small>A</small><span class="t-zh">帶狀分佈</span><span class="t-en">Strip</span></button>
+      <button class="v-tab" data-fig="10B"><small>B</small><span class="t-zh">箱型圖</span><span class="t-en">Box plot</span></button>
+      <button class="v-tab" data-fig="10C"><small>C</small><span class="t-zh">直方圖</span><span class="t-en">Histogram</span></button>
+      <button class="v-tab" data-fig="10D"><small>D</small><span class="t-zh">全距比較</span><span class="t-en">Range</span></button>
+      <button class="v-tab" data-fig="10E"><small>E</small><span class="t-zh">氣泡圖</span><span class="t-en">Bubbles</span></button>
+      <button class="v-tab" data-fig="10F"><small>F</small><span class="t-zh">排行榜</span><span class="t-en">Ranking</span></button>
+    </div>
+    <div class="v-stage" id="vStage">
+      <iframe id="vFrame" src="intl/FIG10A_LI_zh.html" title="comparison figure"></iframe>
+    </div>
+    <div class="v-note">
+      <span class="t-zh">滑鼠移過資料點可顯示行政區名稱與數值(帶狀/箱型/氣泡圖)。切換右上角 中/EN 圖表語言同步切換。</span>
+      <span class="t-en">Hover data points for district names and values (strip / box / bubble). The figures follow the 中/EN toggle.</span>
+    </div>
+  </div>
+</div>
+
+<!-- 03 — Method -->
+<div class="section">
+  <div class="section-label"><span class="t-zh">03 — Method 方法論與資料來源</span><span class="t-en">03 — Method &amp; Sources</span></div>
+  <div class="method">
+    <span class="t-zh">
+      <b>指標</b>:每十萬人死亡率 =(道路交通 30 日內死亡 ÷ 戶籍人口)× 100,000;資料年度 2023–2024。
+      <b>行政區單位</b>:日本 47 都道府縣、韓國 17 廣域市道、臺灣 22 縣市,共 86 個一級行政區。
+      <b>資料來源</b>:交通部(臺灣)、韓國道路交通公團(KoROAD)、日本警察廳交通局。
+      整理製作:吳昀慶 · 聯合發起:TCAN 台灣氣候行動網絡 × 還路於民 VISION ZERO TAIWAN。
+    </span>
+    <span class="t-en">
+      <b>Metric</b>: deaths per 100k = (30-day road deaths ÷ registered population) × 100,000; data years 2023–2024.
+      <b>Units</b>: Japan's 47 prefectures, Korea's 17 regions, Taiwan's 22 counties — 86 first-level divisions.
+      <b>Sources</b>: MOTC (Taiwan), KoROAD (Korea), National Police Agency Traffic Bureau (Japan).
+      Compiled by Yun-Ching Wu · TCAN × Vision Zero Taiwan.
+    </span>
+    <div class="m-warn">
+      <span class="t-zh">⚠ <b>定義差異提醒</b>:本頁採國際通用的「30 日內死亡」定義以利跨國比較;Atlas 其他章節的 A1 為「24 小時內死亡」,數值不可直接互比。臺灣 30 日死亡約為 24 小時死亡的 1.5 倍。</span>
+      <span class="t-en">⚠ <b>Definition note</b>: this page uses the international "death within 30 days" definition for comparability; the A1 figures elsewhere in the Atlas count deaths within 24 hours. The two are not directly comparable — Taiwan's 30-day count runs ≈1.5× its 24-hour count.</span>
+    </div>
+  </div>
+</div>
+
+<div class="partner-logos">
+  <div class="pl-label t-zh">資料夥伴 · 合作單位</div>
+  <div class="pl-label t-en">In partnership with</div>
+  <img src="assets/tcan_vzt_logo.png" alt="TCAN 台灣氣候行動網路 · Vision Zero Taiwan 還路於民行人路權促進會">
+</div>
+
+<a class="back-link" href="index.html">← Taiwan Mobility Atlas</a>
+
+</div>
+
+<script>
+window.__LANG = (function(){ try { return localStorage.getItem('lang') || 'zh'; } catch(e){ return 'zh'; } })();
+function setLang(l) {
+  window.__LANG = l;
+  document.body.classList.toggle('lang-en', l === 'en');
+  document.documentElement.lang = l === 'en' ? 'en' : 'zh-TW';
+  try { localStorage.setItem('lang', l); } catch(e) {}
+  document.querySelectorAll('#langToggle .lt-opt').forEach(o => o.classList.toggle('active', o.dataset.lang === l));
+  updateFrame();
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#langToggle .lt-opt').forEach(o =>
+    o.addEventListener('click', () => setLang(o.dataset.lang)));
+  setLang(window.__LANG);
+});
+
+/* figure viewer */
+let curFig = '10A';
+function updateFrame() {
+  const f = document.getElementById('vFrame');
+  if (!f) return;
+  f.src = 'intl/FIG' + curFig + '_LI_' + (window.__LANG === 'en' ? 'en' : 'zh') + '.html';
+  scaleFrame();
+}
+function scaleFrame() {
+  const stage = document.getElementById('vStage');
+  const frame = document.getElementById('vFrame');
+  if (!stage || !frame) return;
+  const s = Math.min(stage.clientWidth / 1200, 1);
+  frame.style.transform = 'scale(' + s + ')';
+  stage.style.height = (900 * s) + 'px';
+}
+document.querySelectorAll('.v-tab').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.v-tab').forEach(x => x.classList.toggle('active', x === b));
+  curFig = b.dataset.fig;
+  updateFrame();
+}));
+window.addEventListener('resize', scaleFrame);
+window.addEventListener('load', scaleFrame);
+</script>
+</body>
+</html>
