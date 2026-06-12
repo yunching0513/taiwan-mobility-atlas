@@ -1420,6 +1420,11 @@ body.lang-en #hdrTitleZh { display: none; }
       <span class="cat-pill active" data-hwy="on"><span class="t-zh">顯示</span><span class="t-en">Show</span></span>
       <span class="cat-pill" data-hwy="off"><span class="t-zh">隱藏</span><span class="t-en">Hide</span></span>
     </div>
+    <div class="filter-group" id="swGroup" style="display:none">
+      <span class="filter-group-label" id="swLabel">人行道 Sidewalks</span>
+      <span class="cat-pill" data-sw="on"><span class="t-zh">顯示</span><span class="t-en">Show</span></span>
+      <span class="cat-pill active" data-sw="off"><span class="t-zh">隱藏</span><span class="t-en">Hide</span></span>
+    </div>
     <div class="filter-group" style="margin-left:auto">
       <span class="filter-group-label" id="filterCount">Showing — / —</span>
     </div>
@@ -1675,7 +1680,7 @@ function __main() {
   DATA.forEach((e, i) => { e._id = i; });
 
   // ---------- Filter state ----------
-  const state = { year: 'all', mode: 'all', view: 'points', hwy: 'on', selectedId: null };
+  const state = { year: 'all', mode: 'all', view: 'points', hwy: 'on', sw: 'off', selectedId: null };
 
   function filteredAll() {
     return DATA.filter(e =>
@@ -1923,6 +1928,49 @@ const markerLayer = L.layerGroup().addTo(map);
       if (state.hwy === 'on') highwayLayer.addTo(map);
     })
     .catch(err => console.warn('highways.geojson not loaded:', err));
+
+  // ── Sidewalk overlay — MOTC 113-H1 inventory (MultiPolygon footprints).
+  //    Coverage as of 2024-06: Taipei / New Taipei / Taoyuan only, so the
+  //    toggle is shown just for those slugs. Lazy-loaded on first 顯示
+  //    (3.5–6 MB per county) and drawn on a canvas renderer — 10–18k
+  //    polygons per county would crush the default SVG renderer.
+  const SW_SLUGS = ['taipei', 'newtaipei', 'taoyuan'];
+  let sidewalkLayer = null, swLoading = false;
+  map.createPane('sidewalkPane');
+  map.getPane('sidewalkPane').style.zIndex = 370;
+  const swRenderer = L.canvas({ pane: 'sidewalkPane', padding: 0.3 });
+  function loadSidewalks() {
+    if (sidewalkLayer) { if (!map.hasLayer(sidewalkLayer)) sidewalkLayer.addTo(map); return; }
+    if (swLoading) return;
+    swLoading = true;
+    const lbl = document.getElementById('swLabel');
+    if (lbl) lbl.textContent = TT('人行道 載入中…', 'Sidewalks loading…');
+    fetch('data/sidewalks/' + (window.__SLUG || '') + '.geojson')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(geo => {
+        sidewalkLayer = L.geoJSON(geo, {
+          pane: 'sidewalkPane',
+          renderer: swRenderer,
+          style: { color: '#2C7A7B', weight: 0.6, opacity: 0.85, fillColor: '#2C7A7B', fillOpacity: 0.45 },
+          onEachFeature: (f, layer) => {
+            const p = f.properties || {};
+            const parts = [p.n, p.v, p.w ? TT('寬 ', 'width ') + p.w + ' m' : ''].filter(Boolean);
+            if (parts.length) layer.bindTooltip(parts.join(' · '), { sticky: true, className: 'taitung-tt' });
+          },
+        });
+        if (state.sw === 'on') sidewalkLayer.addTo(map);
+        if (lbl) lbl.textContent = TT('人行道 Sidewalks', 'Sidewalks');
+      })
+      .catch(err => {
+        console.warn('sidewalks not loaded:', err);
+        swLoading = false;
+        if (lbl) lbl.textContent = TT('人行道(載入失敗)', 'Sidewalks (failed)');
+      });
+  }
+  if (SW_SLUGS.includes(window.__SLUG)) {
+    const g = document.getElementById('swGroup');
+    if (g) g.style.display = '';
+  }
 
   // Heat layer — VZT gradient: lime → gold → red. Weight by deaths.
   const heatLayer = L.heatLayer([], {
@@ -2397,6 +2445,16 @@ const markerLayer = L.layerGroup().addTo(map);
       } else {
         if (map.hasLayer(highwayLayer)) map.removeLayer(highwayLayer);
       }
+    });
+  });
+
+  document.querySelectorAll('[data-sw]').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('[data-sw]').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      state.sw = el.dataset.sw;
+      if (state.sw === 'on') loadSidewalks();
+      else if (sidewalkLayer && map.hasLayer(sidewalkLayer)) map.removeLayer(sidewalkLayer);
     });
   });
 
