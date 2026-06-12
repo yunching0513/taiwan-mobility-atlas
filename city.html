@@ -1153,6 +1153,38 @@ body.lang-en #hdrTitleZh { display: none; }
   font-weight: 400;
 }
 
+/* ── Local Compound Effect (section 08) ── */
+.cf-wrap { background: var(--white); padding: 36px 32px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.cf-lead { font-size: 15px; font-weight: 300; line-height: 1.85; color: var(--grey-1); max-width: 860px; letter-spacing: 0.03em; }
+.cf-lead strong { color: var(--black); font-weight: 700; }
+.cf-lead em { font-style: normal; background: linear-gradient(transparent 62%, var(--lime-lt) 62%); font-weight: 500; }
+.cf-slider-row { display: flex; align-items: center; gap: 22px; margin: 30px 0 8px; flex-wrap: wrap; }
+.cf-year { font-family: var(--font-en); font-size: 50px; font-weight: 700; letter-spacing: -0.01em; min-width: 140px; line-height: 1; }
+.cf-days { font-size: 13px; color: var(--grey-1); letter-spacing: 0.04em; }
+.cf-days b { color: var(--black); font-family: var(--font-en); font-size: 17px; }
+.cf-slider { flex: 1; min-width: 200px; -webkit-appearance: none; appearance: none; height: 6px; background: var(--grey-3); outline: none; }
+.cf-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 26px; height: 26px; background: var(--lime); border: 3px solid var(--black); cursor: pointer; border-radius: 0; }
+.cf-slider::-moz-range-thumb { width: 26px; height: 26px; background: var(--lime); border: 3px solid var(--black); cursor: pointer; border-radius: 0; }
+.cf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 24px 0; }
+@media (max-width: 900px) { .cf-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .cf-grid { grid-template-columns: 1fr; } }
+.cf-card { background: var(--grey-4); padding: 20px 18px 16px; border-top: 4px solid var(--grey-3); }
+.cf-card.green { border-top-color: var(--lime); }
+.cf-card.rate { border-top-color: var(--gold); }
+.cf-card.saved { border-top-color: #3A7CC3; }
+.cf-card.lives { border-top-color: var(--red); }
+.cf-card .l { font-family: var(--font-en); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-2); font-weight: 600; }
+.cf-card .zh { font-size: 12.5px; font-weight: 700; margin: 3px 0 9px; letter-spacing: 0.04em; }
+.cf-card .n { font-family: var(--font-en); font-size: 36px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; }
+.cf-card .n small { font-size: 15px; font-weight: 500; color: var(--grey-1); margin-left: 2px; }
+.cf-card .eq { font-size: 11.5px; color: var(--grey-1); margin-top: 8px; line-height: 1.55; letter-spacing: 0.02em; }
+.cf-card .eq b { color: var(--black); }
+.cf-chart-wrap { margin-top: 6px; }
+.cf-chart-wrap svg { width: 100%; height: auto; display: block; }
+.cf-note { margin-top: 22px; padding: 16px 20px; background: var(--grey-4); font-size: 12px; line-height: 1.8; color: var(--grey-1); letter-spacing: 0.02em; }
+.cf-note b { color: var(--black); }
+.cf-note a { color: var(--lime-dk); font-weight: 700; }
+
 /* ── Share-card generator ── */
 .share-btn {
   margin-top: 10px; background: var(--black); color: var(--lime);
@@ -1596,6 +1628,54 @@ body.lang-en #hdrTitleZh { display: none; }
     <p style="font-size:11px;color:var(--grey-2);font-weight:300;line-height:1.8;margin-top:14px;font-family:var(--font-en);letter-spacing:0.05em">
       A1 = Fatal crash (death within 24 h). Older years (2016–2017, 2021) use a simplified schema. Coordinates absent for 2016–2017.
     </p>
+  </div>
+</div>
+
+<!-- ══ 08 — Local Compound Effect ══ -->
+<div class="section" id="lcfSection" style="display:none">
+  <div class="section-label"><span class="t-zh">08 — The Compound Effect 在地的複利效應</span><span class="t-en">08 — The Local Compound Effect</span></div>
+  <div class="cf-wrap">
+    <div class="cf-lead" id="lcfLead"></div>
+
+    <div class="cf-slider-row">
+      <div class="cf-year" id="lcfYear">2035</div>
+      <div class="cf-days"><span class="t-zh">每人每月 <b id="lcfDays">10</b> 天綠運輸</span><span class="t-en"><b id="lcfDaysEn">10</b> green days / person / month</span></div>
+      <input type="range" class="cf-slider" id="lcfSlider" min="2026" max="2050" step="1" value="2035" aria-label="年份">
+    </div>
+
+    <div class="cf-grid">
+      <div class="cf-card green">
+        <div class="l">Green Mode Share</div>
+        <div class="zh"><span class="t-zh">綠運輸比率</span><span class="t-en">Green mode share</span></div>
+        <div class="n" id="lcfShare">—</div>
+        <div class="eq" id="lcfShareEq"></div>
+      </div>
+      <div class="cf-card rate">
+        <div class="l">Casualty Rate</div>
+        <div class="zh"><span class="t-zh">每千人死傷率</span><span class="t-en">Casualties / 1k pop.</span></div>
+        <div class="n" id="lcfRate">—</div>
+        <div class="eq" id="lcfRateEq"></div>
+      </div>
+      <div class="cf-card saved">
+        <div class="l">Casualties Avoided</div>
+        <div class="zh"><span class="t-zh">每年避免死傷</span><span class="t-en">Casualties avoided / yr</span></div>
+        <div class="n" id="lcfSaved">—</div>
+        <div class="eq" id="lcfSavedEq"></div>
+      </div>
+      <div class="cf-card lives">
+        <div class="l">A1 Deaths</div>
+        <div class="zh"><span class="t-zh">A1 死亡(vs 不積極作為情境)</span><span class="t-en">A1 deaths vs no-action</span></div>
+        <div class="n" id="lcfDeaths">—</div>
+        <div class="eq" id="lcfDeathsEq"></div>
+      </div>
+    </div>
+
+    <div class="cf-chart-wrap"><svg id="lcfChart" viewBox="0 0 900 240"></svg></div>
+
+    <div class="cf-note">
+      <span class="t-zh">⚙ <b>模型</b>:與<a href="vision.html">雙齊零願景的全國版</a>同一套方法 — 第 N 年 = 每月 N 天綠運輸,轉移率 = N ÷ 30.4;本頁以<b>本縣市 2025 年實際私人運具市佔與每千人死傷率</b>(街道願景白皮書資料庫)為起點;綠運輸基準以「1 − 私人運具市佔」近似;死傷與死亡傳導係數 0.7;A1 死亡以 2024 年為基準。情境推估,非預測。</span>
+      <span class="t-en">⚙ <b>Model</b>: same method as the <a href="vision.html">national Dual-Zero version</a> — year N = N green days/month, shift = N ÷ 30.4; seeded with <b>this county's actual 2025 private-mode share and casualty rate</b> (Street Vision whitepaper database); green baseline ≈ 1 − private share; casualty/death pass-through 0.7; A1 deaths anchored at 2024. A scenario, not a forecast.</span>
+    </div>
   </div>
 </div>
 
@@ -3174,6 +3254,124 @@ const markerLayer = L.layerGroup().addTo(map);
   })();
 
   // ====================================================================
+  //  LOCAL COMPOUND EFFECT (Section 08)
+  //  Same habit-shift scenario as vision.html, seeded with THIS
+  //  county's actual 2025 private-mode share + casualty rate
+  //  (whitepaper.json, sheet 7). Green baseline ≈ 1 − private share.
+  // ====================================================================
+  const LCF = { DAYS: 30.4, PASS: 0.7 };
+  let lcfData = null;
+
+  function lcfModel(year) {
+    const N = Math.min(year - 2025, 30);
+    const shift = Math.min(N / LCF.DAYS, 1);
+    const P0 = lcfData.share / 100;
+    const g0 = 1 - P0;
+    const g = 1 - P0 * (1 - shift);
+    const rate = lcfData.rate * (1 - shift * LCF.PASS);
+    const saved = lcfData.pop * lcfData.rate / 1000 * shift * LCF.PASS;
+    const deathsPct = shift * LCF.PASS;
+    const livesYr = lcfData.base24 * deathsPct;
+    return { N, shift, g0, g, rate, saved, deathsPct, livesYr };
+  }
+
+  function lcfRender(year) {
+    if (!lcfData) return;
+    const m = lcfModel(year);
+    const zh = (window.__META && window.__META.zh) || '';
+    const en = (window.__META && window.__META.en) || '';
+    document.getElementById('lcfYear').textContent = year;
+    document.getElementById('lcfDays').textContent = m.N;
+    const dEn = document.getElementById('lcfDaysEn'); if (dEn) dEn.textContent = m.N;
+
+    document.getElementById('lcfLead').innerHTML = TT(
+      zh + '目前 <strong>' + lcfData.share.toFixed(0) + '%</strong> 的旅次依賴私人汽機車(綠運輸僅 <strong>' +
+      (100 - lcfData.share).toFixed(0) + '%</strong>),每千人死傷率 <strong>' + lcfData.rate + '</strong>。' +
+      '套用<em>每年每月多一天綠運輸</em>的最小承諾(2026 年 1 天、2027 年 2 天⋯⋯),以下是' + zh + '的在地推估:',
+      en + ' currently runs <strong>' + lcfData.share.toFixed(0) + '%</strong> of trips on private cars and scooters (green modes: <strong>' +
+      (100 - lcfData.share).toFixed(0) + '%</strong>), with <strong>' + lcfData.rate + '</strong> casualties per 1k. ' +
+      'Apply the <em>one-more-green-day-per-month-each-year</em> commitment and this is the local estimate:');
+
+    document.getElementById('lcfShare').innerHTML = Math.round(m.g * 100) + '<small>%</small>';
+    document.getElementById('lcfShareEq').innerHTML = TT(
+      '自 <b>' + Math.round(m.g0 * 100) + '%</b> 提升 <b>+' + Math.round((m.g - m.g0) * 100) + ' 個百分點</b>',
+      'up from <b>' + Math.round(m.g0 * 100) + '%</b> — <b>+' + Math.round((m.g - m.g0) * 100) + ' pp</b>');
+
+    document.getElementById('lcfRate').innerHTML = m.rate.toFixed(1);
+    document.getElementById('lcfRateEq').innerHTML = TT(
+      '自 <b>' + lcfData.rate + '</b> 降 <b>−' + Math.round(m.shift * LCF.PASS * 100) + '%</b>',
+      'down from <b>' + lcfData.rate + '</b> — <b>−' + Math.round(m.shift * LCF.PASS * 100) + '%</b>');
+
+    document.getElementById('lcfSaved').innerHTML = _vzFmt(m.saved) + '<small>' + TT('人', '') + '</small>';
+    document.getElementById('lcfSavedEq').innerHTML = TT(
+      '以 ' + _vzFmt(lcfData.pop) + ' 人口與 2025 死傷率推算',
+      'based on ' + _vzFmt(lcfData.pop) + ' residents at the 2025 rate');
+
+    document.getElementById('lcfDeaths').innerHTML = '−' + Math.round(m.deathsPct * 100) + '<small>%</small>';
+    document.getElementById('lcfDeathsEq').innerHTML = TT(
+      '每年少 <b>' + _vzRate(m.livesYr) + ' 死</b>(2024 基準 ' + lcfData.base24 + ')',
+      '<b>' + _vzRate(m.livesYr) + ' lives/yr</b> (2024 baseline ' + lcfData.base24 + ')');
+
+    lcfChart(year);
+  }
+
+  function lcfChart(markYear) {
+    const svg = document.getElementById('lcfChart');
+    if (!svg) return;
+    const W = 900, H = 240, padL = 52, padR = 24, padT = 18, padB = 30;
+    const x = yr => padL + (yr - 2025) / 25 * (W - padL - padR);
+    const y = v => padT + (1 - v) * (H - padT - padB);
+    const g0 = 1 - lcfData.share / 100;
+    let s = '';
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+      s += '<line x1="' + padL + '" y1="' + y(v) + '" x2="' + (W - padR) + '" y2="' + y(v) + '" stroke="#F2F2F2" stroke-width="1"/>';
+      s += '<text x="' + (padL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">' + (v * 100) + '%</text>';
+    });
+    [2025, 2030, 2035, 2040, 2045, 2050].forEach(yr => {
+      s += '<text x="' + x(yr) + '" y="' + (H - 8) + '" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#888">' + yr + '</text>';
+    });
+    s += '<line x1="' + padL + '" y1="' + y(g0) + '" x2="' + (W - padR) + '" y2="' + y(g0) + '" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4"/>';
+    s += '<text x="' + (W - padR - 4) + '" y="' + (y(g0) - 6) + '" text-anchor="end" font-family="Noto Sans TC, Space Grotesk, sans-serif" font-size="11" fill="#888">' + TT('不積極作為情境 ', 'No-action baseline ') + Math.round(g0 * 100) + '%</text>';
+    let area = 'M' + x(2025) + ',' + y(g0), line = 'M' + x(2025) + ',' + y(g0);
+    for (let yr = 2026; yr <= 2050; yr++) {
+      const g = lcfModel(yr).g;
+      area += 'L' + x(yr) + ',' + y(g);
+      line += 'L' + x(yr) + ',' + y(g);
+    }
+    area += 'L' + x(2050) + ',' + y(g0) + 'Z';
+    s += '<path d="' + area + '" fill="#C8D400" fill-opacity="0.22"/>';
+    s += '<path d="' + line + '" fill="none" stroke="#A8B200" stroke-width="3"/>';
+    const mv = lcfModel(markYear).g;
+    s += '<line x1="' + x(markYear) + '" y1="' + padT + '" x2="' + x(markYear) + '" y2="' + (H - padB) + '" stroke="#1A1A1A" stroke-width="1" stroke-dasharray="3,3"/>';
+    s += '<circle cx="' + x(markYear) + '" cy="' + y(mv) + '" r="7" fill="#C8D400" stroke="#1A1A1A" stroke-width="2.5"/>';
+    s += '<text x="' + x(markYear) + '" y="' + (y(mv) - 14) + '" text-anchor="middle" font-family="Space Grotesk" font-size="14" font-weight="700" fill="#1A1A1A">' + Math.round(mv * 100) + '%</text>';
+    svg.innerHTML = s;
+  }
+
+  function renderLocalCF() {
+    const sl = document.getElementById('lcfSlider');
+    if (sl && lcfData) lcfRender(+sl.value);
+  }
+
+  (function initLocalCF() {
+    const sl = document.getElementById('lcfSlider');
+    if (!sl) return;
+    fetch('data/whitepaper.json')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(db => {
+        const entry = (db.scatter || []).find(d => d.slug === window.__SLUG);
+        if (!entry) return;
+        const pop = Object.values(window.DISTRICT_POP || {}).reduce((s, v) => s + (+v || 0), 0);
+        const base24 = (YEARLY.find(r => String(r.year) === '2024') || {}).deaths || 0;
+        lcfData = { share: entry.share, rate: entry.rate, pop, base24 };
+        document.getElementById('lcfSection').style.display = '';
+        sl.addEventListener('input', () => lcfRender(+sl.value));
+        lcfRender(+sl.value);
+      })
+      .catch(e => console.warn('local CF not loaded:', e));
+  })();
+
+  // ====================================================================
   //  INITIAL RENDER
   // ====================================================================
   renderTrend();
@@ -3189,6 +3387,7 @@ const markerLayer = L.layerGroup().addTo(map);
     renderTrend(); renderYearStacks(); renderSnapshot(); renderHeatmap();
     renderMap(); renderBreakdowns(); renderHotspots(); genInsight();
     renderVisionZero();
+    renderLocalCF();
     if (window.__scRedraw) window.__scRedraw();
   };
   genInsight();
