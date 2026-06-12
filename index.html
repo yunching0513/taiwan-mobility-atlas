@@ -683,6 +683,47 @@ body.lang-en .t-en-b { display: block; }
   text-transform: uppercase; color: var(--grey-2); margin-bottom: 18px;
 }
 .partner-logos img { max-width: 560px; width: 100%; height: auto; }
+
+/* ── 07 · Compound Effect 複利效應 ── */
+.cf-wrap { background: var(--white); padding: 40px 36px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.cf-lead { font-size: 17px; font-weight: 300; line-height: 1.9; color: var(--grey-1); max-width: 860px; letter-spacing: 0.03em; }
+.cf-lead strong { color: var(--black); font-weight: 700; }
+.cf-lead em { font-style: normal; background: linear-gradient(transparent 62%, var(--lime-lt) 62%); font-weight: 500; }
+.cf-slider-row { display: flex; align-items: center; gap: 22px; margin: 34px 0 8px; flex-wrap: wrap; }
+.cf-year {
+  font-family: var(--font-en); font-size: 56px; font-weight: 700;
+  letter-spacing: -0.01em; min-width: 150px; line-height: 1;
+}
+.cf-days { font-size: 13px; color: var(--grey-1); letter-spacing: 0.04em; }
+.cf-days b { color: var(--black); font-family: var(--font-en); font-size: 18px; }
+.cf-slider { flex: 1; min-width: 220px; -webkit-appearance: none; appearance: none; height: 6px; background: var(--grey-3); outline: none; }
+.cf-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 26px; height: 26px;
+  background: var(--lime); border: 3px solid var(--black); cursor: pointer; border-radius: 0;
+}
+.cf-slider::-moz-range-thumb { width: 26px; height: 26px; background: var(--lime); border: 3px solid var(--black); cursor: pointer; border-radius: 0; }
+.cf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 26px 0; }
+@media (max-width: 900px) { .cf-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .cf-grid { grid-template-columns: 1fr; } }
+.cf-card { background: var(--grey-4); padding: 22px 20px 18px; border-top: 4px solid var(--grey-3); }
+.cf-card.green { border-top-color: var(--lime); }
+.cf-card.co2 { border-top-color: #3A7CC3; }
+.cf-card.space { border-top-color: var(--gold, #E8A825); }
+.cf-card.lives { border-top-color: var(--red, #D94F3D); }
+.cf-card .l { font-family: var(--font-en); font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-2); font-weight: 600; }
+.cf-card .zh { font-size: 13px; font-weight: 700; margin: 3px 0 10px; letter-spacing: 0.04em; }
+.cf-card .n { font-family: var(--font-en); font-size: 40px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; }
+.cf-card .n small { font-size: 16px; font-weight: 500; color: var(--grey-1); margin-left: 2px; }
+.cf-card .eq { font-size: 12px; color: var(--grey-1); margin-top: 9px; line-height: 1.55; letter-spacing: 0.02em; }
+.cf-card .eq b { color: var(--black); }
+.cf-chart-wrap { margin-top: 8px; }
+.cf-chart-wrap svg { width: 100%; height: 240px; display: block; }
+.cf-note {
+  margin-top: 26px; padding: 18px 22px; background: var(--grey-4);
+  font-size: 12px; line-height: 1.8; color: var(--grey-1); letter-spacing: 0.02em;
+}
+.cf-note b { color: var(--black); }
+.cf-note summary { cursor: pointer; font-weight: 700; color: var(--black); font-size: 13px; letter-spacing: 0.05em; }
 </style>
 </head>
 <body>
@@ -983,9 +1024,77 @@ body.lang-en .t-en-b { display: block; }
   </div>
 </div>
 
-<!-- 06 — Five Demands -->
+<!-- 07 — Compound Effect -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">07 — Five Demands 五大訴求</span><span class="t-en">07 — Five Demands</span></div>
+  <div class="section-label"><span class="t-zh">07 — The Compound Effect 交通習慣移轉的複利效應</span><span class="t-en">07 — The Compound Effect</span></div>
+  <div class="cf-wrap">
+    <div class="cf-lead">
+      <span class="t-zh">想像一個最小的承諾:<strong>從 2026 年起,每人每月選一天</strong>,把私人汽機車留在家,改用步行、自行車、大眾運輸或共享運具。<em>第二年,每月兩天;第三年,三天</em>——每年只增加一天。聽起來微不足道,但習慣的複利會在 25 年內改寫台灣的街道:這不是科技問題,是 2,300 萬人的選擇問題。以下是這個情境的推估。</span>
+      <span class="t-en">Imagine the smallest possible commitment: <strong>starting 2026, every person picks one day a month</strong> to leave the car or scooter at home — walk, cycle, ride transit or shared mobility. <em>Year two: two days. Year three: three</em> — just one more day each year. It sounds negligible, but compounding habits rewrite Taiwan's streets within 25 years. A scenario estimate:</span>
+    </div>
+
+    <div class="cf-slider-row">
+      <div class="cf-year" id="cfYear">2035</div>
+      <div class="cf-days"><span class="t-zh">每人每月 <b id="cfDays">10</b> 天綠運輸</span><span class="t-en"><b id="cfDaysEn">10</b> green days / person / month</span></div>
+      <input type="range" class="cf-slider" id="cfSlider" min="2026" max="2050" step="1" value="2035" aria-label="年份">
+    </div>
+
+    <div class="cf-grid">
+      <div class="cf-card green">
+        <div class="l">Green Mode Share</div>
+        <div class="zh"><span class="t-zh">綠運輸比率</span><span class="t-en">Green mode share</span></div>
+        <div class="n" id="cfShare">—</div>
+        <div class="eq" id="cfShareEq"></div>
+      </div>
+      <div class="cf-card co2">
+        <div class="l">CO₂ Avoided / yr</div>
+        <div class="zh"><span class="t-zh">年減碳量</span><span class="t-en">CO₂ avoided per year</span></div>
+        <div class="n" id="cfCo2">—</div>
+        <div class="eq" id="cfCo2Eq"></div>
+      </div>
+      <div class="cf-card space">
+        <div class="l">Urban Space Freed</div>
+        <div class="zh"><span class="t-zh">釋出都市空間</span><span class="t-en">Urban space freed</span></div>
+        <div class="n" id="cfSpace">—</div>
+        <div class="eq" id="cfSpaceEq"></div>
+      </div>
+      <div class="cf-card lives">
+        <div class="l">Road Deaths</div>
+        <div class="zh"><span class="t-zh">道路死亡(vs 不作為)</span><span class="t-en">Road deaths vs BAU</span></div>
+        <div class="n" id="cfDeaths">—</div>
+        <div class="eq" id="cfDeathsEq"></div>
+      </div>
+    </div>
+
+    <div class="cf-chart-wrap"><svg id="cfChart" viewBox="0 0 900 240" preserveAspectRatio="none"></svg></div>
+
+    <details class="cf-note">
+      <summary><span class="t-zh">⚙ 模型假設(情境推估,非預測——所有參數公開供檢驗)</span><span class="t-en">⚙ Model assumptions (a scenario, not a forecast — all parameters open for review)</span></summary>
+      <div style="margin-top:12px">
+        <span class="t-zh">
+          <b>轉移率</b>:第 N 年 = 每月 N 天 ÷ 30.4 天,即私人運具人日的轉移比例(2035 年 32.9%、2050 年 82.2%)。
+          <b>綠運輸基準</b>:2025 年佔比 30%(步行+自行車+公共運輸,交通部綠運輸定義),情境僅轉移其餘 70% 私人運具日。
+          <b>減碳</b>:私人汽機車客運年排碳以 22 MtCO₂e 計(運輸部門 ~37 Mt × 公路客運私人占比),每轉移日淨減排 80%(綠運輸仍有少量排放);樹木換算 12 kg CO₂/棵·年。
+          <b>空間</b>:汽車 850 萬輛 × 18.75 m²(1.5 格停車位)、機車 1,450 萬輛 × 4 m²;使用減少傳導至持有的彈性 0.6;大安森林公園 = 0.259 km²。
+          <b>死亡</b>:死亡與私人機動運具暴露成正比,傳導係數 0.7(部分風險移轉至行人/自行車,並考慮 safety-in-numbers 效應);BAU 以年 1,600 死保守持平計。
+          所有參數見原始碼,歡迎以不同假設重算。
+        </span>
+        <span class="t-en">
+          <b>Shift rate</b>: year N = N days/month ÷ 30.4 = fraction of private-vehicle person-days shifted (32.9% by 2035, 82.2% by 2050).
+          <b>Baseline</b>: green modes already carry 30% of trips (2025); the scenario shifts only the remaining 70%.
+          <b>CO₂</b>: private cars + motorcycles ≈ 22 MtCO₂e/yr; each shifted day nets −80%; tree equivalence 12 kg CO₂/tree·yr.
+          <b>Space</b>: 8.5M cars × 18.75 m² (1.5 parking stalls) + 14.5M motorcycles × 4 m²; usage→ownership elasticity 0.6; Daan Forest Park = 0.259 km².
+          <b>Deaths</b>: proportional to private motorized exposure, pass-through 0.7 (some risk shifts to active modes; safety-in-numbers applies); BAU held flat at 1,600 deaths/yr, conservatively.
+          All parameters are in the source — rerun with your own assumptions.
+        </span>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- 08 — Five Demands -->
+<div class="section">
+  <div class="section-label"><span class="t-zh">08 — Five Demands 五大訴求</span><span class="t-en">08 — Five Demands</span></div>
   <div class="petition-card">
     <div class="petition-hero">
       <div>
@@ -1080,7 +1189,7 @@ body.lang-en .t-en-b { display: block; }
 
 <!-- 07 — Notes -->
 <div class="section">
-  <div class="section-label"><span class="t-zh">08 — Notes 資料說明</span><span class="t-en">08 — Notes</span></div>
+  <div class="section-label"><span class="t-zh">09 — Notes 資料說明</span><span class="t-en">09 — Notes</span></div>
   <div class="county-card">
     <div class="card-zh"><span class="t-zh">關於本面量圖</span><span class="t-en">About this choropleth</span></div>
     <p class="t-zh-b" style="font-size:13px;font-weight:300;line-height:1.85;color:var(--grey-1);max-width:780px">
@@ -1932,6 +2041,119 @@ document.addEventListener('DOMContentLoaded', () => {
   recomputeCounty();
   // County map needs a size invalidation once laid out
   setTimeout(() => countyMap.invalidateSize(), 200);
+})();
+</script>
+<script>
+/* ── 07 · Compound Effect model ──
+   A transparent scenario calculator. Every parameter is here, on
+   purpose — change them and the chapter recomputes. */
+(function () {
+  const CF = {
+    S0: 0.30,           // green mode share baseline (2025)
+    DAYS: 30.4,         // days per month
+    CO2_PRIVATE: 22,    // MtCO2e/yr from private cars + motorcycles
+    CO2_CUT: 0.8,       // net emission cut per shifted day
+    CARS: 8.5e6, MOTOS: 14.5e6,
+    CAR_M2: 18.75, MOTO_M2: 4,   // space per vehicle (parking stalls)
+    ELASTICITY: 0.6,    // usage decline -> ownership decline
+    DEATH_PASS: 0.7,    // exposure -> deaths pass-through
+    BAU_DEATHS: 1600,   // flat conservative national A1 baseline
+    DAAN_KM2: 0.259,    // Daan Forest Park
+    TREE_KG: 12,        // kg CO2 absorbed per tree per year
+  };
+
+  const isEn = () => document.body.classList.contains('lang-en');
+
+  function model(year) {
+    const N = Math.min(year - 2025, 30);          // green days per month
+    const shift = Math.min(N / CF.DAYS, 1);       // private person-days shifted
+    const share = CF.S0 + (1 - CF.S0) * shift;
+    const co2 = CF.CO2_PRIVATE * shift * CF.CO2_CUT;            // Mt/yr
+    const trees = co2 * 1e9 / CF.TREE_KG;                        // trees
+    const space = (CF.CARS * CF.CAR_M2 + CF.MOTOS * CF.MOTO_M2)
+                  * shift * CF.ELASTICITY / 1e6;                 // km²
+    const deathsPct = shift * CF.DEATH_PASS;
+    const livesYr = CF.BAU_DEATHS * deathsPct;
+    let cum = 0;
+    for (let y = 2026; y <= year; y++) {
+      cum += CF.BAU_DEATHS * Math.min((y - 2025) / CF.DAYS, 1) * CF.DEATH_PASS;
+    }
+    return { N, shift, share, co2, trees, space, deathsPct, livesYr, cum };
+  }
+
+  function fmt(v, d) { return v.toLocaleString(undefined, { maximumFractionDigits: d == null ? 0 : d, minimumFractionDigits: d == null ? 0 : d }); }
+
+  function render(year) {
+    const m = model(year);
+    document.getElementById('cfYear').textContent = year;
+    document.getElementById('cfDays').textContent = m.N;
+    const dEn = document.getElementById('cfDaysEn'); if (dEn) dEn.textContent = m.N;
+
+    document.getElementById('cfShare').innerHTML = Math.round(m.share * 100) + '<small>%</small>';
+    document.getElementById('cfShareEq').innerHTML = isEn()
+      ? 'up from <b>30%</b> today — <b>+' + Math.round((m.share - CF.S0) * 100) + ' pp</b>'
+      : '自現況 <b>30%</b> 提升 <b>+' + Math.round((m.share - CF.S0) * 100) + ' 個百分點</b>';
+
+    document.getElementById('cfCo2').innerHTML = fmt(m.co2, 1) + '<small>Mt</small>';
+    document.getElementById('cfCo2Eq').innerHTML = isEn()
+      ? '≈ the annual uptake of <b>' + fmt(m.trees / 1e6, 0) + 'M trees</b>'
+      : '≈ <b>' + fmt(m.trees / 1e8, 1) + ' 億棵樹</b>一年的吸碳量';
+
+    document.getElementById('cfSpace').innerHTML = fmt(m.space, 0) + '<small>km²</small>';
+    document.getElementById('cfSpaceEq').innerHTML = isEn()
+      ? '≈ <b>' + fmt(m.space / CF.DAAN_KM2, 0) + '×</b> Daan Forest Park'
+      : '≈ <b>' + fmt(m.space / CF.DAAN_KM2, 0) + ' 座</b>大安森林公園';
+
+    document.getElementById('cfDeaths').innerHTML = '−' + Math.round(m.deathsPct * 100) + '<small>%</small>';
+    document.getElementById('cfDeathsEq').innerHTML = isEn()
+      ? '<b>' + fmt(m.livesYr, 0) + ' lives/yr</b> · <b>' + fmt(m.cum, 0) + '</b> cumulative since 2026'
+      : '每年少 <b>' + fmt(m.livesYr, 0) + ' 死</b> · 2026 起累計挽回 <b>' + fmt(m.cum, 0) + '</b> 命';
+
+    drawChart(year);
+  }
+
+  function drawChart(markYear) {
+    const svg = document.getElementById('cfChart');
+    const W = 900, H = 240, padL = 52, padR = 24, padT = 18, padB = 30;
+    const x = yr => padL + (yr - 2025) / 25 * (W - padL - padR);
+    const y = v => padT + (1 - v) * (H - padT - padB);
+    let s = '';
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+      s += '<line x1="' + padL + '" y1="' + y(v) + '" x2="' + (W - padR) + '" y2="' + y(v) + '" stroke="#F2F2F2" stroke-width="1"/>';
+      s += '<text x="' + (padL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">' + (v * 100) + '%</text>';
+    });
+    [2025, 2030, 2035, 2040, 2045, 2050].forEach(yr => {
+      s += '<text x="' + x(yr) + '" y="' + (H - 8) + '" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#888">' + yr + '</text>';
+    });
+    // baseline 30% dashed
+    s += '<line x1="' + padL + '" y1="' + y(0.30) + '" x2="' + (W - padR) + '" y2="' + y(0.30) + '" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4"/>';
+    s += '<text x="' + (W - padR - 4) + '" y="' + (y(0.30) - 6) + '" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">BAU 30%</text>';
+    // scenario area + line
+    let area = 'M' + x(2025) + ',' + y(0.30), line = 'M' + x(2025) + ',' + y(0.30);
+    for (let yr = 2026; yr <= 2050; yr++) {
+      const sh = model(yr).share;
+      area += 'L' + x(yr) + ',' + y(sh);
+      line += 'L' + x(yr) + ',' + y(sh);
+    }
+    area += 'L' + x(2050) + ',' + y(0.30) + 'Z';
+    s += '<path d="' + area + '" fill="#C8D400" fill-opacity="0.22"/>';
+    s += '<path d="' + line + '" fill="none" stroke="#A8B200" stroke-width="3"/>';
+    // marker
+    const mv = model(markYear).share;
+    s += '<line x1="' + x(markYear) + '" y1="' + padT + '" x2="' + x(markYear) + '" y2="' + (H - padB) + '" stroke="#1A1A1A" stroke-width="1" stroke-dasharray="3,3"/>';
+    s += '<circle cx="' + x(markYear) + '" cy="' + y(mv) + '" r="7" fill="#C8D400" stroke="#1A1A1A" stroke-width="2.5"/>';
+    s += '<text x="' + x(markYear) + '" y="' + (y(mv) - 14) + '" text-anchor="middle" font-family="Space Grotesk" font-size="14" font-weight="700" fill="#1A1A1A">' + Math.round(mv * 100) + '%</text>';
+    svg.innerHTML = s;
+  }
+
+  const sl = document.getElementById('cfSlider');
+  if (!sl) return;
+  sl.addEventListener('input', () => render(+sl.value));
+  render(+sl.value);
+
+  // re-render on language toggle (piggyback on the existing hook)
+  const prev = window.__rerender;
+  window.__rerender = function () { if (prev) prev(); render(+sl.value); };
 })();
 </script>
 </body>
