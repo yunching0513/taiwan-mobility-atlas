@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>臺灣升溫的真相 — 從統計到行動 | VZT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --lime:    #C8D400;
+  --lime-dk: #A8B200;
+  --black:   #1A1A1A;
+  --g1:      #4A4A4A;
+  --g2:      #888888;
+  --g3:      #D0D0D0;
+  --g4:      #F5F5F3;
+  --white:   #FFFFFF;
+  --red:     #C53030;
+  --orange:  #DD6B20;
+  --teal:    #2C7A7B;
+  --zh:      'Noto Sans TC', sans-serif;
+  --en:      'Space Grotesk', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--zh);
+  background: var(--white);
+  color: var(--black);
+  line-height: 1.85;
+  font-weight: 300;
+  font-feature-settings: "palt";
+}
+.wrap { max-width: 1200px; margin: 0 auto; padding: 80px; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--black);
+  color: var(--white);
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.hero-top { display: flex; justify-content: space-between; align-items: flex-start; z-index: 3; position: relative; }
+.hero-logo {
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 8px 16px;
+  font-family: var(--en);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+.hero-tag { font-family: var(--en); font-size: 10px; letter-spacing: 0.18em; color: rgba(255,255,255,0.4); text-align: right; line-height: 1.8; }
+
+/* 大數字背景 */
+.hero-bg-num {
+  position: absolute;
+  bottom: -50px;
+  right: -40px;
+  font-family: var(--en);
+  font-size: 360px;
+  font-weight: 100;
+  line-height: 0.82;
+  color: rgba(200, 212, 0, 0.18);
+  letter-spacing: -0.04em;
+  user-select: none;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-bg-num sup { font-size: 0.35em; vertical-align: super; font-weight: 300; }
+
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+  margin-top: 80px;
+}
+.hero-en {
+  font-family: var(--en);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 20px;
+}
+.hero-zh {
+  font-size: 72px;
+  font-weight: 100;
+  letter-spacing: 0.06em;
+  line-height: 1.22;
+  max-width: 900px;
+}
+.hero-zh strong {
+  font-weight: 700;
+  background: linear-gradient(180deg, transparent 60%, rgba(200,212,0,0.4) 60%);
+}
+.hero-sub {
+  margin-top: 40px;
+  font-size: 19px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.9;
+  border-left: 3px solid var(--lime);
+  padding-left: 24px;
+  max-width: 720px;
+  font-weight: 300;
+}
+
+.hero-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 60px;
+  z-index: 3;
+  position: relative;
+}
+.hero-meta { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.9; }
+.hero-meta strong { color: rgba(255,255,255,0.9); font-weight: 400; }
+.hero-stats { font-family: var(--en); font-size: 10px; letter-spacing: 0.18em; color: rgba(255,255,255,0.35); text-align: right; line-height: 2; }
+
+/* ── SECTION ── */
+section { padding: 120px 0; border-top: 1px solid var(--g3); }
+section:first-of-type { border-top: none; }
+.sec-label { display: flex; align-items: baseline; gap: 28px; margin-bottom: 56px; }
+.sec-num { font-family: var(--en); font-size: 96px; font-weight: 300; line-height: 0.9; color: var(--lime); letter-spacing: -0.02em; }
+.sec-title-block { flex: 1; padding-bottom: 14px; border-bottom: 1px solid var(--g3); }
+.sec-en { font-family: var(--en); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--g2); margin-bottom: 6px; }
+.sec-title { font-size: 48px; font-weight: 100; letter-spacing: 0.04em; line-height: 1.3; }
+.sec-title strong { font-weight: 700; }
+
+.lead { font-size: 22px; font-weight: 300; line-height: 1.95; color: var(--g1); max-width: 900px; margin-bottom: 60px; text-wrap: pretty; }
+.lead strong { font-weight: 700; color: var(--black); }
+
+.sub-h { display: flex; align-items: baseline; gap: 16px; margin: 64px 0 28px; }
+.sub-h-n { font-family: var(--en); font-size: 13px; font-weight: 600; color: var(--lime-dk); letter-spacing: 0.12em; }
+.sub-h-t { font-size: 26px; font-weight: 700; letter-spacing: 0.04em; }
+
+/* ── STAT CARDS ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin: 40px 0 24px;
+}
+.stat-card {
+  background: var(--white);
+  border-top: 3px solid var(--black);
+  padding: 28px 0 24px;
+  position: relative;
+}
+.stat-card.lime { border-top-color: var(--lime); }
+.stat-tag {
+  font-family: var(--en);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--g2);
+  margin-bottom: 18px;
+}
+.stat-city {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 14px;
+  letter-spacing: 0.06em;
+}
+.stat-num {
+  font-family: var(--en);
+  font-size: 84px;
+  font-weight: 100;
+  line-height: 1;
+  color: var(--black);
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+}
+.stat-num .unit {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--g1);
+  letter-spacing: 0;
+}
+.stat-num .plus {
+  color: var(--lime-dk);
+  font-weight: 500;
+}
+.stat-desc {
+  font-size: 14px;
+  color: var(--g1);
+  line-height: 1.7;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--g3);
+}
+.stat-pval {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--lime-dk);
+  background: var(--g4);
+  padding: 3px 8px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+/* ── KEY FINDING ── */
+.key-finding {
+  background: var(--black);
+  color: var(--white);
+  padding: 64px 56px;
+  margin: 56px 0;
+  position: relative;
+}
+.key-finding::before {
+  content: "KEY FINDING";
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-family: var(--en);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--lime);
+  font-weight: 600;
+}
+.key-finding h3 {
+  font-size: 36px;
+  font-weight: 100;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  max-width: 880px;
+}
+.key-finding h3 strong { font-weight: 700; color: var(--lime); }
+.key-finding p {
+  margin-top: 24px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  max-width: 760px;
+  line-height: 1.9;
+}
+
+/* ── CHART CONTAINER ── */
+.chart-block {
+  background: var(--g4);
+  padding: 48px;
+  margin: 40px 0;
+}
+.chart-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.chart-sub {
+  font-family: var(--en);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--g2);
+  margin-bottom: 28px;
+}
+.bar-chart { display: flex; flex-direction: column; gap: 20px; }
+.bar-row { display: grid; grid-template-columns: 80px 1fr 110px; gap: 20px; align-items: center; }
+.bar-label { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; }
+.bar-track {
+  position: relative;
+  height: 44px;
+  background: var(--white);
+  border: 1px solid var(--g3);
+}
+.bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--lime);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 14px;
+  font-family: var(--en);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black);
+}
+.bar-fill.dark { background: var(--black); color: var(--lime); }
+.bar-fill.compare { background: var(--g3); }
+.bar-meta { font-family: var(--en); font-size: 13px; color: var(--g1); }
+.bar-meta strong { color: var(--lime-dk); font-weight: 600; }
+
+/* 十年代比較 */
+.decade-bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+.decade-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.decade-label { font-family: var(--en); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; color: var(--g2); }
+.decade-bar-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 280px;
+  width: 100%;
+  justify-content: center;
+  border-bottom: 2px solid var(--black);
+  padding: 0 8px;
+  position: relative;
+}
+.decade-bar {
+  width: 28px;
+  background: var(--g3);
+  position: relative;
+  transition: all 0.3s;
+}
+.decade-bar.tp { background: linear-gradient(180deg, #C53030 0%, #9B2C2C 100%); }
+.decade-bar.tc { background: linear-gradient(180deg, #DD6B20 0%, #C05621 100%); }
+.decade-bar.kh { background: linear-gradient(180deg, #2C7A7B 0%, #285E61 100%); }
+.decade-bar-val {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--en);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--g1);
+  white-space: nowrap;
+}
+
+/* ── MECHANISM CARDS ── */
+.mech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 48px 0;
+}
+.mech {
+  border: 1px solid var(--g3);
+  padding: 36px 28px;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  min-height: 380px;
+  position: relative;
+  overflow: hidden;
+}
+.mech::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--lime);
+}
+.mech-n {
+  font-family: var(--en);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--lime-dk);
+  margin-bottom: 24px;
+}
+.mech-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 24px;
+}
+.mech h4 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  margin-bottom: 18px;
+}
+.mech p {
+  font-size: 14px;
+  color: var(--g1);
+  line-height: 1.85;
+  flex: 1;
+}
+.mech p strong { color: var(--black); font-weight: 700; }
+.mech-tag {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--g3);
+  font-family: var(--en);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--g2);
+  text-transform: uppercase;
+}
+
+/* ── COMMUNICATION STRATEGIES ── */
+.comm-list { display: flex; flex-direction: column; gap: 0; margin: 40px 0; }
+.comm-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 32px;
+  padding: 36px 0;
+  border-top: 1px solid var(--g3);
+  align-items: start;
+}
+.comm-row:last-child { border-bottom: 1px solid var(--g3); }
+.comm-n {
+  font-family: var(--en);
+  font-size: 38px;
+  font-weight: 100;
+  color: var(--lime-dk);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.comm-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+.comm-tag {
+  font-family: var(--en);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--g2);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.comm-content { font-size: 15px; color: var(--g1); line-height: 1.85; }
+.comm-content strong { color: var(--black); font-weight: 700; }
+.comm-example {
+  background: var(--g4);
+  padding: 18px 22px;
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--g1);
+  border-left: 3px solid var(--lime);
+  font-style: italic;
+}
+
+/* ── CALL OUT BIG NUMBER ── */
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 56px 0;
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+}
+.callout {
+  padding: 40px 36px;
+  border-right: 1px solid var(--g3);
+}
+.callout:last-child { border-right: none; }
+.callout-tag {
+  font-family: var(--en);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--g2);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.callout-num {
+  font-family: var(--en);
+  font-size: 64px;
+  font-weight: 100;
+  line-height: 1;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.callout-num strong { font-weight: 700; color: var(--lime-dk); }
+.callout-desc {
+  font-size: 14px;
+  color: var(--g1);
+  line-height: 1.7;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--g3);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 80px 80px 48px;
+  margin-top: 40px;
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 56px;
+}
+.foot-h {
+  font-family: var(--en);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 24px;
+}
+.foot-list { list-style: none; padding: 0; }
+.foot-list li {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  padding: 5px 0;
+  font-weight: 300;
+}
+.foot-bottom {
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--en);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── Mechanism SVG icons ── */
+.icon-svg { width: 64px; height: 64px; }
+
+/* ── 列印 ── */
+@media print {
+  body { padding: 0; }
+  section { page-break-inside: avoid; padding: 60px 0; }
+  .hero { min-height: auto; }
+}
+
+/* ── 響應式 ── */
+@media (max-width: 900px) {
+  .wrap { padding: 48px 32px; }
+  .hero { padding: 40px 32px; }
+  .hero-zh { font-size: 48px; }
+  .hero-bg-num { font-size: 240px; }
+  .sec-title { font-size: 32px; }
+  .sec-num { font-size: 64px; }
+  .stat-row, .mech-grid, .callout-grid { grid-template-columns: 1fr; }
+  .callout { border-right: none; border-bottom: 1px solid var(--g3); }
+  .decade-bars { grid-template-columns: repeat(2, 1fr); }
+  .stat-num { font-size: 56px; }
+  .key-finding h3 { font-size: 24px; }
+  .comm-row { grid-template-columns: 1fr; gap: 16px; }
+  .foot-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-top">
+    <div class="hero-logo">VZT INFOGRAPHIC · CLIMATE EVIDENCE</div>
+    <div class="hero-tag">
+      Vision Zero Taiwan<br>
+      氣候變遷 × 都市熱島
+    </div>
+  </div>
+
+  <div class="hero-bg-num">+0.5<sup>°C</sup></div>
+
+  <div class="hero-content">
+    <div class="hero-en">Climate Warming Evidence · Taiwan 1990–2025</div>
+    <h1 class="hero-zh">
+      臺灣<strong>真的</strong>變熱了<br>
+      三個城市 · 三十五年 · <strong>無可否認</strong>
+    </h1>
+    <p class="hero-sub">
+      臺北、臺中、高雄三大都市的夏季升溫趨勢，已通過嚴謹統計檢定（p &lt; 0.05）。這不是體感，這是無可迴避的科學事實。<br>本資料以中央氣象署 CODIS 測站歷史觀測為基礎，揭示升溫的真實規模、嚴重性、以及機動車輛的局部加劇機制。
+    </p>
+  </div>
+
+  <div class="hero-foot">
+    <div class="hero-meta">
+      資料來源：<strong>中央氣象署 CODIS</strong> · <strong>國家氣候變遷科學報告 2024</strong><br>
+      分析方法：線性迴歸 · Mann-Kendall 非參數趨勢檢定 · Sen 斜率
+    </div>
+    <div class="hero-stats">
+      01 — 升溫的證據<br>
+      02 — 嚴重性評估<br>
+      03 — 都市熱島機制<br>
+      04 — 大眾溝通策略
+    </div>
+  </div>
+</header>
+
+<!-- ═══ 01 升溫證據 ═══ -->
+<div class="wrap">
+<section id="s01">
+  <div class="sec-label">
+    <div class="sec-num">01</div>
+    <div class="sec-title-block">
+      <div class="sec-en">Statistical Evidence · Warming is Real</div>
+      <div class="sec-title">三大都市 · <strong>升溫的證據</strong></div>
+    </div>
+  </div>
+
+  <p class="lead">
+    以線性迴歸與 Mann-Kendall 非參數趨勢檢定，對 1990 至 2025 年的夏季平均日最高溫進行分析。三個城市的升溫趨勢都通過 <strong>5% 顯著水準</strong>的統計檢定——這意味著我們可以在 <strong>95% 的信心水準</strong>下排除「升溫只是隨機波動」的可能性。
+  </p>
+
+  <!-- 三都市升溫統計卡 -->
+  <div class="stat-row">
+    <div class="stat-card lime">
+      <div class="stat-tag">CITY · 01</div>
+      <div class="stat-city">臺 北</div>
+      <div class="stat-num"><span class="plus">+</span>0.57<span class="unit">℃</span></div>
+      <div class="stat-pval">p = 0.048 · 顯著 ✓</div>
+      <div class="stat-desc">
+        1990s 均溫 <strong>33.82℃</strong> → 2020s 均溫 <strong>34.39℃</strong><br>
+        每十年升溫 <strong>0.23℃</strong>
+      </div>
+    </div>
+    <div class="stat-card lime">
+      <div class="stat-tag">CITY · 02</div>
+      <div class="stat-city">臺 中</div>
+      <div class="stat-num"><span class="plus">+</span>0.44<span class="unit">℃</span></div>
+      <div class="stat-pval">p = 0.014 · 顯著 ✓</div>
+      <div class="stat-desc">
+        1990s 均溫 <strong>32.55℃</strong> → 2020s 均溫 <strong>32.99℃</strong><br>
+        每十年升溫 <strong>0.19℃</strong>
+      </div>
+    </div>
+    <div class="stat-card lime">
+      <div class="stat-tag">CITY · 03</div>
+      <div class="stat-city">高 雄</div>
+      <div class="stat-num"><span class="plus">+</span>0.55<span class="unit">℃</span></div>
+      <div class="stat-pval">p = 0.037 · 顯著 ✓</div>
+      <div class="stat-desc">
+        1990s 均溫 <strong>31.94℃</strong> → 2020s 均溫 <strong>32.49℃</strong><br>
+        每十年升溫 <strong>0.17℃</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 十年代比較長條圖 -->
+  <div class="chart-block">
+    <div class="chart-title">十年代平均比較 · 夏季平均日最高溫</div>
+    <div class="chart-sub">DECADAL AVERAGE · SUMMER MAX TEMPERATURE</div>
+    <div class="decade-bars">
+      <div class="decade-col">
+        <div class="decade-bar-group">
+          <div class="decade-bar tp" style="height:65%"><div class="decade-bar-val">33.82</div></div>
+          <div class="decade-bar tc" style="height:55%"><div class="decade-bar-val">32.55</div></div>
+          <div class="decade-bar kh" style="height:48%"><div class="decade-bar-val">31.94</div></div>
+        </div>
+        <div class="decade-label">1990s</div>
+      </div>
+      <div class="decade-col">
+        <div class="decade-bar-group">
+          <div class="decade-bar tp" style="height:65%"><div class="decade-bar-val">33.81</div></div>
+          <div class="decade-bar tc" style="height:55%"><div class="decade-bar-val">32.53</div></div>
+          <div class="decade-bar kh" style="height:55%"><div class="decade-bar-val">32.34</div></div>
+        </div>
+        <div class="decade-label">2000s</div>
+      </div>
+      <div class="decade-col">
+        <div class="decade-bar-group">
+          <div class="decade-bar tp" style="height:80%"><div class="decade-bar-val">34.30</div></div>
+          <div class="decade-bar tc" style="height:71%"><div class="decade-bar-val">33.03</div></div>
+          <div class="decade-bar kh" style="height:58%"><div class="decade-bar-val">32.41</div></div>
+        </div>
+        <div class="decade-label">2010s</div>
+      </div>
+      <div class="decade-col">
+        <div class="decade-bar-group">
+          <div class="decade-bar tp" style="height:83%"><div class="decade-bar-val">34.39</div></div>
+          <div class="decade-bar tc" style="height:70%"><div class="decade-bar-val">32.99</div></div>
+          <div class="decade-bar kh" style="height:60%"><div class="decade-bar-val">32.49</div></div>
+        </div>
+        <div class="decade-label">2020s</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:32px;margin-top:24px;font-size:13px;color:var(--g1)">
+      <div><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(180deg,#C53030,#9B2C2C);margin-right:8px;vertical-align:middle"></span>臺北</div>
+      <div><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(180deg,#DD6B20,#C05621);margin-right:8px;vertical-align:middle"></span>臺中</div>
+      <div><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(180deg,#2C7A7B,#285E61);margin-right:8px;vertical-align:middle"></span>高雄</div>
+    </div>
+  </div>
+
+  <div class="key-finding">
+    <h3>三個城市的升溫幅度，<strong>都遠超出年際標準差</strong>。<br>這是趨勢真實存在、而非統計噪音的關鍵證據。</h3>
+    <p>
+      若升溫只是隨機波動，十年代均值的變動應該被年際標準差所覆蓋。但實際觀察到的卻是均值的<strong style="color:white">單調上升</strong>，且幅度系統性地超越波動範圍。這個分析結果與《國家氣候變遷科學報告 2024》以六個百年測站、123 年觀測資料所得的「最高溫每十年上升至少 0.2℃」之長期趨勢，形成跨資料來源的<strong style="color:white">交叉驗證</strong>。
+    </p>
+  </div>
+</section>
+
+<!-- ═══ 02 嚴重性 ═══ -->
+<section id="s02">
+  <div class="sec-label">
+    <div class="sec-num">02</div>
+    <div class="sec-title-block">
+      <div class="sec-en">Why 0.5°C Matters · Beyond the Number</div>
+      <div class="sec-title">0.5℃ 為何<strong>很嚴重</strong>？</div>
+    </div>
+  </div>
+
+  <p class="lead">
+    「半度也沒多少嘛」——這是氣候溝通最常見的反應，也是最危險的誤解。從<strong>氣候科學的角度</strong>，這個數字非常嚴重。從<strong>體感經驗的角度</strong>，問題不在數字本身，而在於它如何被翻譯。
+  </p>
+
+  <div class="sub-h">
+    <div class="sub-h-n">02.1</div>
+    <div class="sub-h-t">嚴重性的三個科學視角</div>
+  </div>
+
+  <div class="callout-grid">
+    <div class="callout">
+      <div class="callout-tag">VIEW · 01 · DISTRIBUTION SHIFT</div>
+      <div class="callout-num">×<strong>3-5</strong></div>
+      <div style="font-size:15px;color:var(--g1);font-weight:400">35℃ 以上極端高溫日<br>頻率倍數增加</div>
+      <div class="callout-desc">
+        平均值位移 <strong>0.5℃</strong>，會徹底改變極端事件頻率。過去三十年一遇的酷熱，現在可能<strong>每三五年就出現一次</strong>。臺北 2020 年達 39.7℃、2013 年達 39.3℃，並非孤立偶發。
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-tag">VIEW · 02 · PACE OF WARMING</div>
+      <div class="callout-num"><strong>＞</strong>全球均值</div>
+      <div style="font-size:15px;color:var(--g1);font-weight:400">臺灣升溫速度<br>快於全球平均</div>
+      <div class="callout-desc">
+        全球地表溫度每十年升溫約 <strong>0.18℃</strong>，臺灣三大都市夏季最高溫每十年升 <strong>0.17–0.23℃</strong>，加上都市熱島效應疊加，市中心暖化速度更為顯著。
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-tag">VIEW · 03 · UNEQUAL BURDEN</div>
+      <div class="callout-num">+<strong>231</strong>%</div>
+      <div style="font-size:15px;color:var(--g1);font-weight:400">長者熱傷害就診<br>15 年間成長幅度</div>
+      <div class="callout-desc">
+        2011 年以來，全國熱傷害就診人次成長 <strong>165%</strong>，其中 <strong>65 歲以上長者</strong>成長 <strong>231%</strong>。升溫不是均勻分布，而是不成比例地壓在脆弱族群身上。
+      </div>
+    </div>
+  </div>
+
+  <div class="key-finding" style="background:var(--lime-dk);color:var(--black)">
+    <h3 style="color:var(--black)">夏季已從<strong style="color:var(--white);background:var(--black);padding:4px 12px">2 個月</strong>延長至<strong style="color:var(--white);background:var(--black);padding:4px 12px">4–5 個月</strong>。<br>我們正在失去過渡季節。</h3>
+    <p style="color:rgba(0,0,0,0.7)">
+      根據《國家氣候變遷科學報告 2024》分析，過去 120 年間，臺灣冬季已從 3 個多月縮短至 1–2 個月，夏季從 2 個月延長至 4–5 個月。全年承受高溫脅迫的時間大幅增加，這對能源消耗、戶外工作、農業生產與公共健康都構成系統性壓力。
+    </p>
+    <div style="position:absolute;top:24px;right:32px;font-family:var(--en);font-size:11px;letter-spacing:0.22em;color:var(--black);font-weight:600">SEASONAL SHIFT</div>
+  </div>
+</section>
+
+<!-- ═══ 03 都市熱島機制 ═══ -->
+<section id="s03">
+  <div class="sec-label">
+    <div class="sec-num">03</div>
+    <div class="sec-title-block">
+      <div class="sec-en">Urban Heat Island · Vehicle Contributions</div>
+      <div class="sec-title">機動車輛 · <strong>三大局部加熱機制</strong></div>
+    </div>
+  </div>
+
+  <p class="lead">
+    機動車輛在都市範圍內透過幾個直接機制加劇升溫，這些機制<strong>不依賴全球暖化的中介</strong>，是直接、局部、且可實證的。當我們討論「為什麼夏天的都市越來越難以承受」時，全球暖化是長期背景，而高度依賴機動車輛的都市運作模式，則是疊加其上、<strong>可被政策直接介入</strong>的局部加劇因素。
+  </p>
+
+  <div class="mech-grid">
+    <!-- 機制一 -->
+    <div class="mech">
+      <div class="mech-n">MECHANISM · 01</div>
+      <svg class="icon-svg" viewBox="0 0 64 64" fill="none" stroke="#1A1A1A" stroke-width="1.5">
+        <rect x="8" y="28" width="48" height="20" rx="2"/>
+        <circle cx="18" cy="48" r="4" fill="#1A1A1A"/>
+        <circle cx="46" cy="48" r="4" fill="#1A1A1A"/>
+        <path d="M14 28 L18 18 L46 18 L50 28" stroke="#1A1A1A"/>
+        <path d="M52 32 Q56 28, 60 32" stroke="#C8D400" stroke-width="2"/>
+        <path d="M54 26 Q58 22, 62 26" stroke="#C8D400" stroke-width="2"/>
+        <path d="M50 36 Q54 32, 58 36" stroke="#C8D400" stroke-width="2"/>
+      </svg>
+      <h4>車輛廢熱<br>直接加熱空氣</h4>
+      <p>
+        引擎運轉時將化學能轉換為動能，過程中產生的<strong>熱能</strong>與冷氣排放的熱量直接釋放到周邊空氣中，形成所謂的<strong>人為熱排放</strong>（anthropogenic heat）。在車流密集的都市路網中，這種廢熱在尖峰時段可達顯著的能量通量規模，<strong>直接墊高地表氣溫</strong>。
+      </p>
+      <div class="mech-tag">Anthropogenic Heat</div>
+    </div>
+
+    <!-- 機制二 -->
+    <div class="mech">
+      <div class="mech-n">MECHANISM · 02</div>
+      <svg class="icon-svg" viewBox="0 0 64 64" fill="none" stroke="#1A1A1A" stroke-width="1.5">
+        <rect x="4" y="40" width="56" height="16" fill="#1A1A1A"/>
+        <line x1="12" y1="48" x2="20" y2="48" stroke="#C8D400" stroke-width="2"/>
+        <line x1="28" y1="48" x2="36" y2="48" stroke="#C8D400" stroke-width="2"/>
+        <line x1="44" y1="48" x2="52" y2="48" stroke="#C8D400" stroke-width="2"/>
+        <path d="M16 32 L20 24 M24 32 L28 24 M32 32 L36 24 M40 32 L44 24 M48 32 L52 24" stroke="#C8D400" stroke-width="2"/>
+        <circle cx="32" cy="14" r="6" stroke="#1A1A1A" fill="none"/>
+      </svg>
+      <h4>不透水鋪面<br>蓄熱抑制散熱</h4>
+      <p>
+        道路擴張帶來大量<strong>柏油與混凝土路面</strong>——<strong>吸熱率高、反照率低</strong>，能在白天大量吸收太陽輻射並儲存熱量；又因不透水的特性，抑制了地表的蒸散冷卻效應，使得熱量在夜間難以散逸，形成<strong>持續的熱蓄積</strong>。
+      </p>
+      <div class="mech-tag">Impervious Surface</div>
+    </div>
+
+    <!-- 機制三 -->
+    <div class="mech">
+      <div class="mech-n">MECHANISM · 03</div>
+      <svg class="icon-svg" viewBox="0 0 64 64" fill="none" stroke="#1A1A1A" stroke-width="1.5">
+        <circle cx="20" cy="22" r="3" fill="#1A1A1A"/>
+        <circle cx="32" cy="14" r="2.5" fill="#1A1A1A"/>
+        <circle cx="44" cy="20" r="3.5" fill="#1A1A1A"/>
+        <circle cx="14" cy="34" r="2" fill="#1A1A1A"/>
+        <circle cx="28" cy="30" r="3" fill="#1A1A1A"/>
+        <circle cx="42" cy="34" r="2.5" fill="#1A1A1A"/>
+        <circle cx="52" cy="28" r="2" fill="#1A1A1A"/>
+        <path d="M8 50 Q16 46, 24 50 T40 50 T56 50" stroke="#C8D400" stroke-width="2"/>
+        <text x="24" y="60" font-family="Space Grotesk" font-size="8" fill="#C8D400" font-weight="600">PM · NOx</text>
+      </svg>
+      <h4>污染物改變<br>大氣輻射平衡</h4>
+      <p>
+        機動車輛排放的<strong>細懸浮微粒</strong>（PM）、氮氧化物（NOx）等污染物，會改變大氣的<strong>輻射平衡</strong>與邊界層結構，進一步影響局部熱環境。空氣品質劣化與都市熱島不是兩個獨立議題，而是<strong>同一個源頭的雙重後果</strong>。
+      </p>
+      <div class="mech-tag">Radiative Forcing</div>
+    </div>
+  </div>
+
+  <div class="key-finding">
+    <h3>三個機制相互疊加，<strong>共同構成都市熱島效應</strong>。<br>臺北 UHII 最高達 <strong>6.9℃</strong>。</h3>
+    <p>
+      臺北的都市熱島強度（Urban Heat Island Intensity, UHII）在 2023 年觀測到最高達 <strong style="color:white">6.9℃</strong>，相當於市中心比周邊郊區高出將近 7℃ 的溫差。這個量級遠超過全球暖化在同等時間尺度下的累計升幅，凸顯都市尺度上人為熱源與地表覆蓋變化的<strong style="color:white">決定性影響</strong>。
+    </p>
+  </div>
+</section>
+
+<!-- ═══ 04 大眾溝通策略 ═══ -->
+<section id="s04">
+  <div class="sec-label">
+    <div class="sec-num">04</div>
+    <div class="sec-title-block">
+      <div class="sec-en">Public Communication · From Data to Action</div>
+      <div class="sec-title">向大眾說明嚴重性 · <strong>三種轉譯策略</strong></div>
+    </div>
+  </div>
+
+  <p class="lead">
+    向大眾溝通升溫嚴重性的關鍵，<strong>不在於提供更精確的數據</strong>，而在於建立「<strong>氣候訊號 — 生活經驗 — 政策行動</strong>」三者的連結。
+  </p>
+
+  <div class="comm-list">
+    <div class="comm-row">
+      <div class="comm-n">01</div>
+      <div>
+        <div class="comm-tag">STRATEGY · EVENT FREQUENCY</div>
+        <div class="comm-title">事件頻率轉譯<br>把平均值翻譯成可驗證的生活經驗</div>
+      </div>
+      <div>
+        <div class="comm-content">
+          將抽象的平均值變化，翻譯成市民可以<strong>直接驗證</strong>的生活經驗：冷氣使用月份、可開窗夜晚的天數、戶外活動需取消的場合次數。具體可感的指標遠比小數點後兩位的溫度差更具說服力。
+        </div>
+        <div class="comm-example">
+          「過去你父母那一代，臺北一年大概只有兩三天會飆破 35℃；現在動輒一個夏天有二三十天。」
+        </div>
+      </div>
+    </div>
+
+    <div class="comm-row">
+      <div class="comm-n">02</div>
+      <div>
+        <div class="comm-tag">STRATEGY · HEALTH RISK</div>
+        <div class="comm-title">健康風險轉譯<br>從抽象環境變遷到具體家人安危</div>
+      </div>
+      <div>
+        <div class="comm-content">
+          訴諸熱傷害數字的成長倍數，將氣候議題與每個家庭都有的<strong>長輩、孩童</strong>連結。從抽象環境變遷轉為具體家人安危，能夠有效啟動風險感知。
+        </div>
+        <div class="comm-example">
+          「自 2011 年以來，因熱傷害送醫的長者增加了兩倍。每年六、七、八月，急診量是其他月份的數倍。」
+        </div>
+      </div>
+    </div>
+
+    <div class="comm-row">
+      <div class="comm-n">03</div>
+      <div>
+        <div class="comm-tag">STRATEGY · IRREVERSIBILITY</div>
+        <div class="comm-title">累積與不可逆轉譯<br>把個人選擇與三十年後連結</div>
+      </div>
+      <div>
+        <div class="comm-content">
+          氣候變遷最違反直覺的特性，是它的<strong>累積性與不可逆性</strong>。一般人習慣以年為單位思考，但升溫一旦發生，至少需要數十年的減排與政策調整才能穩定，更別說「逆轉」。用世代框架，將個人選擇與長遠後果直接連結。
+        </div>
+        <div class="comm-example">
+          「我們現在每多開一年的車、每多鋪一條柏油路，都是在替三十年後的孩子預訂一個更熱的夏天。」
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 三都市在地化提示 -->
+  <div class="sub-h">
+    <div class="sub-h-n">04.1</div>
+    <div class="sub-h-t">在地化敘事 · 三個城市的差異訴求</div>
+  </div>
+
+  <div class="mech-grid">
+    <div class="mech">
+      <div class="mech-n">CITY · 01 · TAIPEI</div>
+      <h4 style="color:#C53030">臺 北</h4>
+      <p style="margin-top:24px">
+        強調<strong>盆地地形與熱島效應的疊加</strong>。臺北 UHII 最高達 6.9℃，市中心夜間難以散熱、悶熱感倍增。萬華、信義、士林、內湖為城市熱島「四大天王」。
+      </p>
+      <div class="mech-tag">BASIN × UHI</div>
+    </div>
+    <div class="mech">
+      <div class="mech-n">CITY · 02 · TAICHUNG</div>
+      <h4 style="color:#DD6B20">臺 中</h4>
+      <p style="margin-top:24px">
+        凸顯<strong>空氣污染與熱島的雙重壓力</strong>。中部空品不良日數較高，PM2.5、臭氧與高溫相互疊加，戶外活動空間受限，影響市民日常生活品質。
+      </p>
+      <div class="mech-tag">AIR × HEAT</div>
+    </div>
+    <div class="mech">
+      <div class="mech-n">CITY · 03 · KAOHSIUNG</div>
+      <h4 style="color:#2C7A7B">高 雄</h4>
+      <p style="margin-top:24px">
+        訴諸<strong>寬闊道路與強日照下的鋪面蓄熱</strong>。大馬路、強烈日照、缺乏遮蔭，讓整個城市在夏天變成巨大的熱源。地面吸熱、車流排熱，行人幾乎無停留空間。
+      </p>
+      <div class="mech-tag">PAVEMENT × HEAT</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 05 行動倡議 ═══ -->
+<section id="s05">
+  <div class="sec-label">
+    <div class="sec-num">05</div>
+    <div class="sec-title-block">
+      <div class="sec-en">From Evidence to Action · Vision Zero × Net Zero</div>
+      <div class="sec-title">從證據到行動 · <strong>雙零交通</strong></div>
+    </div>
+  </div>
+
+  <p class="lead">
+    減少機動車輛依賴<strong>並非僅是減碳的長期承諾</strong>，更是緩解都市熱島、改善市民日常熱舒適度的<strong>近程行動</strong>。透過道路空間重分配、實體保護自行車道建置、人行環境改善與大眾運輸投資，城市能夠<strong>同時</strong>削減車輛廢熱、減少不透水鋪面、降低污染暴露——三條路徑同時作用於都市熱環境，產生<strong>協同的降溫效益</strong>。
+  </p>
+
+  <div class="key-finding" style="background:var(--lime);color:var(--black)">
+    <h3 style="color:var(--black)">
+      這是 <strong style="color:var(--white);background:var(--black);padding:4px 12px">Vision Zero</strong> 與 <strong style="color:var(--white);background:var(--black);padding:4px 12px">Net Zero</strong><br>
+      在街道層級得以匯流的具體場景。
+    </h3>
+    <p style="color:rgba(0,0,0,0.75)">
+      氣候訊號是真實的，嚴重性是科學事實，車輛的局部加劇機制是可介入的政策變項。<strong style="color:black">下一步</strong>，是讓每個市民理解：街道空間重分配、自行車道建設、大眾運輸投資，不是為了「環保」這個遙遠概念，而是為了自己家人的健康、為了夏天可以在街上行走、為了三十年後的孩子能擁有一個還能呼吸的城市。
+    </p>
+    <div style="position:absolute;top:24px;right:32px;font-family:var(--en);font-size:11px;letter-spacing:0.22em;color:var(--black);font-weight:600">CALL TO ACTION</div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-h">Climate Evidence Infographic · v1.0</div>
+      <div style="font-size:28px;font-weight:100;letter-spacing:0.04em;line-height:1.5;color:var(--white);margin-bottom:24px">
+        證據在這裡<br>
+        <span style="color:var(--lime)">行動該開始了。</span>
+      </div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.9">
+        本資訊圖表由<strong style="color:rgba(255,255,255,0.85);font-weight:400">還路於民行人路權促進會 · TCAN · VZT</strong>合作製作，<br>
+        作為《街道願景手冊》氣候章節之延伸視覺資料，<br>
+        提供公部門、媒體與一般市民理解臺灣升溫實況之依據。
+      </div>
+    </div>
+    <div>
+      <div class="foot-h">Data Sources</div>
+      <ul class="foot-list">
+        <li>中央氣象署 CODIS 測站</li>
+        <li>國家氣候變遷科學報告 2024</li>
+        <li>衛福部國民健康署</li>
+        <li>Lau & Hsu (2025), Urban Sci.</li>
+        <li>交通部公路局統計查詢網</li>
+        <li>IPCC AR6, WGI</li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-h">Methodology</div>
+      <ul class="foot-list">
+        <li>線性迴歸 (OLS)</li>
+        <li>Mann-Kendall 趨勢檢定</li>
+        <li>Sen's 斜率估計</li>
+        <li>5% 顯著水準</li>
+        <li>—</li>
+        <li>2026.05 · v1.0</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <div>VZT CLIMATE EVIDENCE INFOGRAPHIC · 2026 EDITION</div>
+    <div>VISION ZERO × NET ZERO · TAIWAN</div>
+  </div>
+
+  <div style="margin-top:22px">
+    <a href="index.html" style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#888;text-decoration:none">← Taiwan Mobility Atlas</a>
+  </div>
+</footer>
+
+</body>
+</html>
