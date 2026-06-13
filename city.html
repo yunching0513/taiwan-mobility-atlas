@@ -3350,9 +3350,11 @@ const markerLayer = L.layerGroup().addTo(map);
     lcfHeat(year);
   }
 
-  // pale-lime → deep-lime lerp for the cumulative-lives heatmap
+  // deep → pale lerp for the cumulative-lives heatmap: t = cum ratio,
+  // so few-lives-saved years are DARK and the cumulative future
+  // brightens year by year (lives "lit up" out of the dark).
   function lcfHeatColor(t) {
-    const stops = [[244,249,210], [232,240,0], [200,212,0], [168,178,0]];
+    const stops = [[58,64,0], [120,128,0], [168,178,0], [200,212,0], [232,240,0], [244,249,210]];
     t = Math.max(0, Math.min(1, t));
     const seg = t * (stops.length - 1);
     const i = Math.min(Math.floor(seg), stops.length - 2);
@@ -3376,12 +3378,15 @@ const markerLayer = L.layerGroup().addTo(map);
       }
     }
     const maxCum = lcfCumCache[lcfCumCache.length - 1].cum || 1;
-    host.innerHTML = lcfCumCache.map(d =>
-      `<div class="lcf-hcell${d.y === markYear ? ' cur' : ''}" data-y="${d.y}" data-cum="${d.cum.toFixed(1)}" data-an="${d.annual.toFixed(1)}"
-            style="background:${lcfHeatColor(d.cum / maxCum)}">
+    host.innerHTML = lcfCumCache.map(d => {
+      const t = d.cum / maxCum;
+      const txt = t < 0.42 ? '#FFFFFF' : '#1A1A1A';   // dark cell → white ink
+      return `<div class="lcf-hcell${d.y === markYear ? ' cur' : ''}" data-y="${d.y}" data-cum="${d.cum.toFixed(1)}" data-an="${d.annual.toFixed(1)}"
+            style="background:${lcfHeatColor(t)};color:${txt}">
          <span class="hc-y">'${String(d.y).slice(2)}</span>
          <span class="hc-n">${Math.round(d.cum)}</span>
-       </div>`).join('');
+       </div>`;
+    }).join('');
 
     const total = Math.round(maxCum);
     const te = document.getElementById('lcfHeatTotal'); if (te) te.textContent = total.toLocaleString();
