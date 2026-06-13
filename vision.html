@@ -78,7 +78,7 @@ body.lang-en .t-en { display: inline; }
 .back-link:hover { color: var(--black); }
 
 /* ── Compound Effect (ported from index) ── */
-.cf-wrap { background: var(--white); padding: 40px 36px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.cf-wrap { background: var(--white); padding: 40px 36px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); position: relative; }
 .cf-lead { font-size: 17px; font-weight: 300; line-height: 1.9; color: var(--grey-1); max-width: 860px; letter-spacing: 0.03em; }
 .cf-lead strong { color: var(--black); font-weight: 700; }
 .cf-lead em { font-style: normal; background: linear-gradient(transparent 62%, var(--lime-lt) 62%); font-weight: 500; }
@@ -108,6 +108,27 @@ body.lang-en .t-en { display: inline; }
 .cf-note { margin-top: 26px; padding: 18px 22px; background: var(--grey-4); font-size: 12px; line-height: 1.8; color: var(--grey-1); letter-spacing: 0.02em; }
 .cf-note b { color: var(--black); }
 .cf-note summary { cursor: pointer; font-weight: 700; color: var(--black); font-size: 13px; letter-spacing: 0.05em; }
+
+/* 2050 saved-lives calendar heatmap (deep → pale: lit up year by year) */
+.cf-heat-wrap { margin-top: 30px; position: relative; }
+.cf-heat-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.cf-heat-head .hh-t { font-weight: 700; font-size: 16px; letter-spacing: 0.04em; }
+.cf-heat-head .hh-big { font-family: var(--font-en); font-size: 13px; color: var(--grey-1); }
+.cf-heat-head .hh-big b { font-size: 30px; font-weight: 700; color: var(--lime-dk); letter-spacing: -0.01em; }
+.cf-heat { display: grid; grid-template-columns: repeat(13, 1fr); gap: 5px; }
+@media (max-width: 820px) { .cf-heat { grid-template-columns: repeat(7, 1fr); } }
+@media (max-width: 460px) { .cf-heat { grid-template-columns: repeat(5, 1fr); } }
+.cf-hcell {
+  aspect-ratio: 1 / 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; cursor: default;
+  border: 1.5px solid transparent; transition: transform .1s; min-height: 46px;
+}
+.cf-hcell:hover { transform: scale(1.08); border-color: var(--black); }
+.cf-hcell.cur { border-color: var(--black); border-width: 2.5px; }
+.cf-hcell .hc-y { font-family: var(--font-en); font-size: 9px; font-weight: 600; letter-spacing: 0.04em; opacity: 0.7; }
+.cf-hcell .hc-n { font-family: var(--font-en); font-size: 13px; font-weight: 700; line-height: 1; margin-top: 2px; }
+.cf-heat-legend { display: flex; align-items: center; gap: 3px; margin-top: 14px; font-size: 10.5px; color: var(--grey-2); letter-spacing: 0.04em; }
+.cf-heat-legend .lg-sw { width: 22px; height: 11px; }
 
 /* How-it-works: causal one-liner + 3-step explainer */
 .hiw { margin: 28px 0 6px; }
@@ -284,9 +305,9 @@ body.lang-en .t-en { display: inline; }
     </div>
 
     <div class="cf-slider-row">
-      <div class="cf-year" id="cfYear">2035</div>
-      <div class="cf-days"><span class="t-zh">每人每月 <b id="cfDays">10</b> 天綠運輸</span><span class="t-en"><b id="cfDaysEn">10</b> green days / person / month</span></div>
-      <input type="range" class="cf-slider" id="cfSlider" min="2026" max="2050" step="1" value="2035" aria-label="年份">
+      <div class="cf-year" id="cfYear">2026</div>
+      <div class="cf-days"><span class="t-zh">每人每月 <b id="cfDays">1</b> 天綠運輸</span><span class="t-en"><b id="cfDaysEn">1</b> green days / person / month</span></div>
+      <input type="range" class="cf-slider" id="cfSlider" min="2026" max="2050" step="1" value="2026" aria-label="年份">
     </div>
 
     <div class="cf-grid">
@@ -317,6 +338,16 @@ body.lang-en .t-en { display: inline; }
     </div>
 
     <div class="cf-chart-wrap"><svg id="cfChart" viewBox="0 0 900 240"></svg></div>
+
+    <div class="cf-heat-wrap">
+      <div class="cf-heat-head">
+        <div class="hh-t"><span class="t-zh">每一年,累計拯救的生命</span><span class="t-en">Lives saved, accumulating year by year</span></div>
+        <div class="hh-big"><span class="t-zh">到 2050 累計 <b id="cfHeatTotal">—</b> 條生命</span><span class="t-en"><b id="cfHeatTotalEn">—</b> lives by 2050</span></div>
+      </div>
+      <div class="cf-heat" id="cfHeat"></div>
+      <div class="cf-heat-legend" id="cfHeatLegend"></div>
+    </div>
+    <div id="cfHeatTip" style="position:absolute;pointer-events:none;display:none;z-index:6;background:rgba(26,26,26,0.95);color:#fff;padding:8px 12px;font-size:12px;line-height:1.55;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,0.3)"></div>
 
     <details class="cf-note">
       <summary><span class="t-zh">⚙ 模型假設(情境推估,非預測——所有參數公開供檢驗)</span><span class="t-en">⚙ Model assumptions (a scenario, not a forecast — all parameters open for review)</span></summary>
@@ -515,6 +546,60 @@ document.addEventListener('DOMContentLoaded', () => {
       ? '<b>' + fmt(m.livesYr, 0) + ' lives/yr</b> · <b>' + fmt(m.cum, 0) + '</b> cumulative since 2026'
       : '每年少 <b>' + fmt(m.livesYr, 0) + ' 死</b> · 2026 起累計挽回 <b>' + fmt(m.cum, 0) + '</b> 命';
     drawChart(year);
+    cfHeat(year);
+  }
+
+  // deep → pale ramp: dark early years brighten as lives accumulate
+  function cfHeatColor(t) {
+    const stops = [[58,64,0], [120,128,0], [168,178,0], [200,212,0], [232,240,0], [244,249,210]];
+    t = Math.max(0, Math.min(1, t));
+    const seg = t * (stops.length - 1);
+    const i = Math.min(Math.floor(seg), stops.length - 2);
+    const f = seg - i, a = stops[i], b = stops[i + 1];
+    return 'rgb(' + Math.round(a[0]+(b[0]-a[0])*f) + ',' + Math.round(a[1]+(b[1]-a[1])*f) + ',' + Math.round(a[2]+(b[2]-a[2])*f) + ')';
+  }
+  let cfCum = null;
+  function cfHeat(markYear) {
+    const host = document.getElementById('cfHeat');
+    if (!host) return;
+    if (!cfCum) {
+      cfCum = []; let c = 0;
+      for (let y = 2026; y <= 2050; y++) {
+        const an = CF.BAU_DEATHS * Math.min((y - 2025) / CF.DAYS, 1) * CF.DEATH_PASS;
+        c += an; cfCum.push({ y, an, cum: c });
+      }
+    }
+    const maxCum = cfCum[cfCum.length - 1].cum || 1;
+    host.innerHTML = cfCum.map(d => {
+      const t = d.cum / maxCum, txt = t < 0.42 ? '#FFFFFF' : '#1A1A1A';
+      return '<div class="cf-hcell' + (d.y === markYear ? ' cur' : '') + '" data-y="' + d.y + '" data-cum="' + d.cum.toFixed(0) + '" data-an="' + d.an.toFixed(0) + '" style="background:' + cfHeatColor(t) + ';color:' + txt + '"><span class="hc-y">\'' + String(d.y).slice(2) + '</span><span class="hc-n">' + Math.round(d.cum).toLocaleString() + '</span></div>';
+    }).join('');
+    const total = Math.round(maxCum).toLocaleString();
+    const te = document.getElementById('cfHeatTotal'); if (te) te.textContent = total;
+    const ten = document.getElementById('cfHeatTotalEn'); if (ten) ten.textContent = total;
+    const lg = document.getElementById('cfHeatLegend');
+    if (lg) {
+      let s = '<span style="margin-right:6px">' + (isEn() ? 'Cumulative lives' : '累計拯救生命') + '</span>';
+      [0, 0.33, 0.66, 1].forEach(t => { s += '<span class="lg-sw" style="background:' + cfHeatColor(t) + '"></span>'; });
+      s += '<span style="margin-left:6px">' + (isEn() ? 'few → many' : '少 → 多') + '</span>';
+      lg.innerHTML = s;
+    }
+    const tip = document.getElementById('cfHeatTip'), wrap = document.querySelector('.cf-wrap');
+    host.querySelectorAll('.cf-hcell').forEach(cell => {
+      cell.addEventListener('mousemove', e => {
+        if (!tip) return;
+        tip.innerHTML = "<b style='font-family:var(--font-en)'>" + cell.dataset.y + "</b><br>" +
+          (isEn() ? 'Saved by then ' : '累計拯救 ') + "<b style='font-family:var(--font-en)'>" + (+cell.dataset.cum).toLocaleString() + "</b> " + (isEn() ? 'lives' : '條生命') + "<br>" +
+          (isEn() ? 'that year ' : '當年 ') + "<b style='font-family:var(--font-en)'>+" + (+cell.dataset.an).toLocaleString() + "</b>";
+        tip.style.display = 'block';
+        const r = wrap.getBoundingClientRect();
+        let x = e.clientX - r.left + 14, y = e.clientY - r.top - 40;
+        if (x + 160 > r.width) x = e.clientX - r.left - 160;
+        if (y < 4) y = e.clientY - r.top + 18;
+        tip.style.left = x + 'px'; tip.style.top = y + 'px';
+      });
+      cell.addEventListener('mouseleave', () => { if (tip) tip.style.display = 'none'; });
+    });
   }
 
   function drawChart(markYear) {
