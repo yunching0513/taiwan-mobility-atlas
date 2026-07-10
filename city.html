@@ -1733,6 +1733,9 @@ body.lang-en #hdrTitleZh { display: none; }
         <div class="legend-item" style="margin-left:14px;padding-left:14px;border-left:1px solid var(--grey-3)"><span style="display:inline-block;width:18px;height:3px;background:#D94F3D;margin-right:2px"></span><span class="t-zh">國道</span><span class="t-en">Freeway</span></div>
         <div class="legend-item"><span style="display:inline-block;width:18px;height:3px;background:#E8A825;margin-right:2px"></span><span class="t-zh">快速公路</span><span class="t-en">Expressway</span></div>
         <div class="legend-item"><span style="display:inline-block;width:18px;height:2px;background:#3A7CC3;margin-right:2px"></span><span class="t-zh">省道</span><span class="t-en">Provincial Hwy</span></div>
+        <div class="legend-item sw-leg" style="display:none;margin-left:14px;padding-left:14px;border-left:1px solid var(--grey-3)"><span class="legend-dot" style="background:#D94F3D;border-radius:0"></span><span class="t-zh">人行道淨寬 &lt;1.5m</span><span class="t-en">Sidewalk clear &lt;1.5m</span></div>
+        <div class="legend-item sw-leg" style="display:none"><span class="legend-dot" style="background:#E8A825;border-radius:0"></span>1.5–2.5m</div>
+        <div class="legend-item sw-leg" style="display:none"><span class="legend-dot" style="background:#A8B200;border-radius:0"></span>≥2.5m</div>
         <div class="legend-note">Tap a dot →</div>
       </div>
     </div>
@@ -1748,6 +1751,7 @@ body.lang-en #hdrTitleZh { display: none; }
   </div>
   <div style="font-family:var(--font-en);font-size:9px;letter-spacing:0.15em;color:var(--grey-2);text-transform:uppercase;margin-top:12px">
     Note · 2016 &amp; 2017 records lack coordinates and are excluded from the map; their counts remain in the trend &amp; breakdown sections.
+    Sidewalk layer · MOTC 2026-06 inventory, coloured by clear (passable) width — red &lt;1.5m / gold 1.5–2.5m / green ≥2.5m.
   </div>
 
   <div class="hotspot-card" style="margin-top:24px">
@@ -2350,35 +2354,53 @@ const markerLayer = L.layerGroup().addTo(map);
     .catch(err => console.warn('highways.geojson not loaded:', err));
 
   // ── Sidewalk overlay — MOTC 113-H1 inventory (MultiPolygon footprints).
-  //    Coverage as of 2024-06: Taipei / New Taipei / Taoyuan only, so the
-  //    toggle is shown just for those slugs. Lazy-loaded on first 顯示
-  //    (3.5–6 MB per county) and drawn on a canvas renderer — 10–18k
-  //    polygons per county would crush the default SVG renderer.
-  const SW_SLUGS = ['taipei', 'newtaipei', 'taoyuan'];
+  //    2026-06 MOTC per-segment inventory (data/sidewalks26/, all 22
+  //    counties, DP-simplified). Coloured by CLEAR width — the passable
+  //    width after obstacles — same palette as sidewalk.html §03.
+  //    Lazy-loaded on first 顯示 (0.03–6.2 MB per county) and drawn on a
+  //    canvas renderer — up to ~18k polygons would crush SVG.
   let sidewalkLayer = null, swLoading = false;
   map.createPane('sidewalkPane');
   map.getPane('sidewalkPane').style.zIndex = 370;
   const swRenderer = L.canvas({ pane: 'sidewalkPane', padding: 0.3 });
+  function swColor(p) {
+    const c = p.c;
+    if (c == null) return '#B9B9B9';
+    if (c < 1.5) return '#D94F3D';
+    if (c < 2.5) return '#E8A825';
+    return '#A8B200';
+  }
+  function swLegendToggle(on) {
+    document.querySelectorAll('.sw-leg').forEach(el => { el.style.display = on ? '' : 'none'; });
+  }
   function loadSidewalks() {
-    if (sidewalkLayer) { if (!map.hasLayer(sidewalkLayer)) sidewalkLayer.addTo(map); return; }
+    if (sidewalkLayer) {
+      if (!map.hasLayer(sidewalkLayer)) sidewalkLayer.addTo(map);
+      swLegendToggle(true);
+      return;
+    }
     if (swLoading) return;
     swLoading = true;
     const lbl = document.getElementById('swLabel');
     if (lbl) lbl.textContent = TT('人行道 載入中…', 'Sidewalks loading…');
-    fetch('data/sidewalks/' + (window.__SLUG || '') + '.geojson')
+    fetch('data/sidewalks26/' + (window.__SLUG || '') + '.geojson')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(geo => {
         sidewalkLayer = L.geoJSON(geo, {
           pane: 'sidewalkPane',
           renderer: swRenderer,
-          style: { color: '#2C7A7B', weight: 0.6, opacity: 0.85, fillColor: '#2C7A7B', fillOpacity: 0.45 },
+          // Stroke only when zoomed in — at county zoom the outline swamps the fills.
+          style: f => ({ stroke: map.getZoom() >= 15, color: '#1A1A1A', weight: 0.4, fillColor: swColor(f.properties), fillOpacity: 0.9 }),
           onEachFeature: (f, layer) => {
             const p = f.properties || {};
-            const parts = [p.n, p.v, p.w ? TT('寬 ', 'width ') + p.w + ' m' : ''].filter(Boolean);
-            if (parts.length) layer.bindTooltip(parts.join(' · '), { sticky: true, className: 'taitung-tt' });
+            layer.bindTooltip(
+              `<strong>${p.n || TT('（未命名）', '(unnamed)')}</strong> · ${enTown(p.v || '')}<br>` +
+              `${TT('寬', 'width')} ${p.w != null ? p.w + ' m' : '—'} · ${TT('淨寬', 'clear')} ${p.c != null ? p.c + ' m' : '—'} · ` +
+              `${TT('斜坡', 'ramps')} ${p.r == null ? TT('無須設置', 'n/a') : p.r}`,
+              { sticky: true, className: 'taitung-tt' });
           },
         });
-        if (state.sw === 'on') sidewalkLayer.addTo(map);
+        if (state.sw === 'on') { sidewalkLayer.addTo(map); swLegendToggle(true); }
         if (lbl) lbl.textContent = TT('人行道 Sidewalks', 'Sidewalks');
       })
       .catch(err => {
@@ -2387,10 +2409,10 @@ const markerLayer = L.layerGroup().addTo(map);
         if (lbl) lbl.textContent = TT('人行道(載入失敗)', 'Sidewalks (failed)');
       });
   }
-  if (SW_SLUGS.includes(window.__SLUG)) {
-    const g = document.getElementById('swGroup');
-    if (g) g.style.display = '';
-  }
+  map.on('zoomend', () => {
+    if (sidewalkLayer) sidewalkLayer.setStyle({ stroke: map.getZoom() >= 15 });
+  });
+  document.getElementById('swGroup').style.display = '';
 
   // Heat layer — VZT gradient: lime → gold → red. Weight by deaths.
   const heatLayer = L.heatLayer([], {
@@ -3177,7 +3199,10 @@ const markerLayer = L.layerGroup().addTo(map);
       el.classList.add('active');
       state.sw = el.dataset.sw;
       if (state.sw === 'on') loadSidewalks();
-      else if (sidewalkLayer && map.hasLayer(sidewalkLayer)) map.removeLayer(sidewalkLayer);
+      else {
+        if (sidewalkLayer && map.hasLayer(sidewalkLayer)) map.removeLayer(sidewalkLayer);
+        swLegendToggle(false);
+      }
     });
   });
 

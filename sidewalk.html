@@ -506,6 +506,10 @@ body.lang-en .t-en { display: inline; }
       <span class="filter-group-label">Obstacles</span>
       <span class="cat-pill" id="polesToggle"><span class="t-zh">⚡ 電線桿</span><span class="t-en">⚡ Utility poles</span></span>
     </div>
+    <div class="filter-group">
+      <span class="filter-group-label">Crashes</span>
+      <span class="cat-pill" id="crashToggle"><span class="t-zh">🔴 A1 事故點</span><span class="t-en">🔴 A1 crash points</span></span>
+    </div>
     <div class="filter-group" style="margin-left:auto">
       <span class="filter-group-label" id="segCount">—</span>
     </div>
@@ -534,6 +538,7 @@ body.lang-en .t-en { display: inline; }
   </div>
   <div class="notes-card" style="margin-top:16px">
     <p style="font-size:12px"><span class="t-zh">2026 年 6 月路網（實際多邊形範圍，幾何經 ±0.3 公尺簡化）。放大後滑過任一段可看路名、寬度、淨寬與斜坡數；<strong>點擊路段即開啟街景比對</strong>：街景為主畫面、地圖縮至右上角，小地圖上的<strong>小人與視角錐</strong>標示實際全景位置與朝向：在全景內拖轉、前進時會<strong>即時跟動</strong>；「↻ 旋轉 90°」可快速換邊看。資訊列顯示<strong>影像拍攝日期</strong>；街景取該點最新一輪官方拍攝（若 Google 服務無法載入，會自動退回精簡嵌入模式，該模式下視角錐僅跟隨旋轉鈕）。資料依縣市按需載入（0.03–6.2 MB／縣市）。</span><span class="t-en">June 2026 network (actual polygon extents, geometry simplified within ±0.3 m). Zoom in and hover a segment for road name, width, clear width and ramp count; <strong>click a segment to open Street View comparison</strong> — the panorama takes the stage and the map docks top-right, with a <strong>pegman + view cone</strong> marking the true panorama position and facing — they <strong>follow live</strong> as you drag or walk inside the panorama; "↻ Rotate 90°" flips sides quickly. The info bar shows the <strong>imagery capture date</strong>, and the panorama uses the newest official pass at that spot (if Google's service fails to load, a lightweight embed takes over, where the cone follows the rotate button only). Data loads on demand per county (0.03–6.2 MB each).</span></p>
+    <p style="font-size:12px;margin-top:8px"><span class="t-zh"><strong>🔴 A1 事故點圖層</strong>：內政部警政署 A1（當場或 24 小時內死亡）交通事故（2018–2025 有座標者，全國 13,708 點，按縣市過濾顯示），點色依受害者運具（黑=機車、藍=汽/貨車、紅=行人、金=慢車）、點徑依死亡人數。把死亡事故疊在淨寬著色上，可直接檢視「行人死亡點位周邊的人行道是否存在、是否過得去」：紅點（行人）落在紅色路段（淨寬 &lt;1.5 公尺）或根本沒有人行道的路口，就是最需優先改善的證據。滑過任一點可看日期、區、運具與死傷數。</span><span class="t-en"><strong>🔴 A1 crash layer</strong>: National Police Agency A1 fatal crashes (death on scene or within 24 h; 2018–2025 geocoded records, 13,708 points nationwide, filtered to the selected county). Dot colour = victim mode (black motorcycle, blue car/truck, red pedestrian, gold bicycle), dot size = deaths. Overlaying fatalities on the clear-width colours shows directly whether the sidewalks around each death exist and are passable — a red (pedestrian) dot on a red segment (&lt;1.5 m clear) or on a corner with no sidewalk at all is priority-one evidence. Hover a dot for date, district, mode and casualties.</span></p>
     <p style="font-size:12px;margin-top:8px"><span class="t-zh"><strong>⚡ 電線桿圖層</strong>：台電桿籍資料（全國約 273 萬支，TWD97 座標轉換；本島 121 分帶、離島 119 分帶），開啟後放大至街區尺度（zoom ≥ 16）顯示視窗內桿位。電線桿常立於人行道上，是輪椅與嬰兒車的實體障礙：與淨寬著色對照可看出「帳面有人行道、實際過不去」的路段。注意：屏東縣桿籍近乎缺漏（僅 88 筆）；桿位為台電登記位置，可能與現地略有出入。</span><span class="t-en"><strong>⚡ Utility-pole layer</strong>: Taipower pole registry (~2.73M poles nationwide, TWD97→WGS84; 121°E zone for the main island, 119°E for offshore counties). When on, poles in the viewport render at zoom ≥ 16. Poles standing on sidewalks are physical barriers for wheelchairs and strollers — overlay them on the clear-width colours to spot segments that exist on paper but cannot be passed. Note: Pingtung's registry is nearly empty (88 records); positions are as registered and may differ slightly on site.</span></p>
   </div>
 </div>
@@ -948,17 +953,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const pole = polesOn
       ? `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:10px;margin-left:8px"><span style="width:9px;height:9px;border-radius:50%;background:#1A1A1A;border:2px solid #FFF;box-shadow:0 0 0 1px #1A1A1A"></span><span class="t-zh">電線桿${segMap.getZoom() < 16 ? '（放大後顯示）' : ''}</span><span class="t-en">utility poles${segMap.getZoom() < 16 ? ' (zoom in)' : ''}</span></span>`
       : '';
+    const cd = (color, zh, en) =>
+      `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><span style="width:9px;height:9px;border-radius:50%;background:${color};border:1.5px solid #FFF;box-shadow:0 0 0 1px ${color}"></span><span class="t-zh">${zh}</span><span class="t-en">${en}</span></span>`;
+    const crash = (typeof crashOn !== 'undefined' && crashOn)
+      ? `<span class="legend-title" style="margin-left:10px">A1 · 死亡事故</span>` +
+        cd('#1A1A1A', '機車', 'motorcycle') + cd('#3A7CC3', '汽/貨車', 'car/truck') +
+        cd('#D94F3D', '行人', 'pedestrian') + cd('#E8A825', '慢車', 'bicycle')
+      : '';
     if (segState.color === 'ramp') {
       return `<span class="legend-title">Curb ramps</span>` +
         sw('#D94F3D', '該設而未設', 'needed · missing') +
         sw('#A8B200', '已設置', 'installed') +
-        sw('#B9B9B9', '無須設置', 'not needed') + pole;
+        sw('#B9B9B9', '無須設置', 'not needed') + pole + crash;
     }
     return `<span class="legend-title">Clear width</span>` +
       sw('#D94F3D', '淨寬 < 1.5 m', '< 1.5 m') +
       sw('#E8A825', '1.5 – 2.5 m', '1.5 – 2.5 m') +
       sw('#A8B200', '≥ 2.5 m', '≥ 2.5 m') +
-      sw('#B9B9B9', '無資料', 'no data') + pole;
+      sw('#B9B9B9', '無資料', 'no data') + pole + crash;
   }
 
   // ── Utility-pole obstacle overlay (Taipower registry, per county) ──
@@ -1019,6 +1031,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const n = geo.features.length;
     document.getElementById('segCount').textContent =
       `${TT(bySlugZh[segState.slug] || '', enCounty(bySlugZh[segState.slug] || ''))} · ${n.toLocaleString()} ${TT('段', 'segments')}`;
+    renderCrashes();   // keep A1 dots refiltered + drawn above the segments
   }
 
   const bySlugZh = {};
@@ -1341,6 +1354,56 @@ document.addEventListener('DOMContentLoaded', () => {
       renderSegLayer();   // restore the count text
     }
     renderPoles();
+  });
+
+  // ── A1 crash-point overlay (data/national_points.js, lazy) ──────────
+  // Same per-victim palette as the county crash maps; radius ∝ deaths.
+  // Overlaying fatal crashes on the clear-width colours shows where
+  // people die alongside sidewalks that exist on paper but can't be used.
+  const CRASH_COLOR = ['#1A1A1A', '#3A7CC3', '#D94F3D', '#E8A825', '#888888'];  // by modeIdx
+  let crashOn = false, crashGroup = null, crashLoad = null;
+  function ensureCrashData() {
+    if (window.NATIONAL_POINTS) return Promise.resolve();
+    if (crashLoad) return crashLoad;
+    crashLoad = new Promise(resolve => {
+      const s = document.createElement('script');
+      s.src = 'data/national_points.js';
+      s.onload = () => resolve();
+      s.onerror = () => { crashLoad = null; resolve(); };
+      document.head.appendChild(s);
+    });
+    return crashLoad;
+  }
+  function renderCrashes() {
+    if (crashGroup) { segMap.removeLayer(crashGroup); crashGroup = null; }
+    document.getElementById('segLegend').innerHTML = segLegendHTML();
+    if (!crashOn || !window.NATIONAL_POINTS) return;
+    const NP = window.NATIONAL_POINTS;
+    const ci = NP.counties.findIndex(c => c.slug === segState.slug);
+    if (ci < 0) return;
+    const layers = [];
+    for (const p of NP.pts) {
+      if (p[5] !== ci) continue;
+      const dd = p[7] ? `${p[7].slice(0, 4)}.${p[7].slice(4, 6)}.${p[7].slice(6, 8)}` : `${p[3]}`;
+      layers.push(L.circleMarker([p[0], p[1]], {
+        renderer: segRenderer, radius: 3 + Math.min((p[4] || 1) - 1, 3),
+        color: '#FFFFFF', weight: 1.1, fillColor: CRASH_COLOR[p[2]] || '#888', fillOpacity: 0.95,
+      }).bindTooltip(
+        `<strong>${dd}</strong> · ${enTown(p[6])}<br>` +
+        `${TT(NP.modes[p[2]], NP.modes_en[p[2]])} · ${p[4]} ${TT('死', 'dead')} / ${p[9]} ${TT('傷', 'injured')}`,
+        { direction: 'top', offset: [0, -4] }));
+    }
+    crashGroup = L.layerGroup(layers).addTo(segMap);
+  }
+  document.getElementById('crashToggle').addEventListener('click', async () => {
+    crashOn = !crashOn;
+    document.getElementById('crashToggle').classList.toggle('active', crashOn);
+    if (crashOn && !window.NATIONAL_POINTS) {
+      document.getElementById('segCount').textContent = TT('載入事故點…', 'loading crashes…');
+      await ensureCrashData();
+      renderSegLayer();   // restores the count text (and re-draws crashes on top)
+    }
+    renderCrashes();
   });
 
   window.__rerender = () => { renderHero(); recompute(); buildSegSelect(); renderSegLayer(); };
