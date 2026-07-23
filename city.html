@@ -54,6 +54,10 @@ body { animation: pageFadeIn 0.45s ease-out; }
   --font-en: 'Space Grotesk', sans-serif;
 }
 
+html, body {
+  max-width: 100%;
+  overflow-x: clip;
+}
 body {
   font-family: var(--font-zh);
   background: var(--grey-4);
@@ -65,6 +69,7 @@ body {
   max-width: 1440px;
   margin: 0 auto;
   padding: 48px 40px 80px;
+  overflow-x: clip;
 }
 
 /* ── Page header ── */
@@ -128,6 +133,13 @@ body {
 .fp-wrap {
   position: fixed; bottom: 18px; right: 18px; z-index: 1500;
 }
+.fp-close {
+  position: absolute; z-index: 3; top: -14px; right: -10px;
+  width: 32px; height: 32px; border: 2px solid var(--black);
+  border-radius: 50%; background: var(--white); color: var(--black);
+  font: 700 16px/1 var(--font-en); cursor: pointer;
+  box-shadow: 2px 2px 0 var(--black);
+}
 .fp-wrap .fp-mascot {
   position: absolute; z-index: 1; left: 50%; bottom: 100%;
   transform: translateX(-50%);
@@ -151,9 +163,10 @@ body {
 .float-petition:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--black); }
 .float-petition .fp-arrow { font-family: var(--font-en); margin-left: 4px; }
 @media (max-width: 600px) {
-  .fp-wrap { bottom: 12px; right: 12px; }
+  .fp-wrap { bottom: max(12px, env(safe-area-inset-bottom)); right: 12px; }
   .float-petition { padding: 10px 14px; font-size: 12px; }
-  .fp-wrap .fp-mascot { width: 96px; margin-bottom: -14px; }
+  .fp-wrap .fp-mascot { display: none; }
+  .fp-close { width: 40px; height: 40px; top: -18px; right: -10px; }
 }
 
 /* ── Section titles ── */
@@ -301,6 +314,8 @@ body {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 0 -4px;
+  width: 100%;
+  max-width: 100%;
 }
 .trend-svg {
   width: 100%;
@@ -377,6 +392,8 @@ body {
   overflow-x: auto;
   overflow-y: auto;
   max-height: 640px;
+  width: 100%;
+  max-width: 100%;
 }
 .heatmap-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
 .heatmap-wrap::-webkit-scrollbar-thumb { background: var(--grey-3); border-radius: 3px; }
@@ -453,6 +470,9 @@ body {
   font-family: var(--font-zh);
   user-select: none;
   transition: background .12s, border-color .12s;
+  min-height: 40px;
+  color: inherit;
+  line-height: 1.2;
 }
 .cat-pill.en { font-family: var(--font-en); letter-spacing: 0.05em; font-weight: 500; }
 .cat-pill:hover { border-color: var(--black); }
@@ -467,6 +487,10 @@ body {
   text-decoration: line-through;
 }
 .cat-pill.disabled:hover { border-color: var(--grey-3); }
+.cat-pill:focus-visible, .lt-opt:focus-visible, .fp-close:focus-visible {
+  outline: 3px solid var(--blue); outline-offset: 3px;
+}
+.trend-card, .card, .map-wrap, .cover, .filter-bar { min-width: 0; }
 .mode-hint { align-self: center; margin-left: 4px; font-size: 10px; color: var(--grey-2); letter-spacing: 0.04em; font-style: italic; }
 
 /* ── Map + side panel ── */
@@ -1137,6 +1161,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
   .filter-group { width: 100%; gap: 6px; }
   .filter-group-label { width: 100%; }
   .cat-pill { padding: 6px 10px; font-size: 10.5px; }
+  .cat-pill { min-height: 44px; }
 
   .bar-row { grid-template-columns: 72px 1fr 52px; gap: 8px; font-size: 10.5px; }
   .bar-row .bar-label { font-size: 10.5px; }
@@ -1244,7 +1269,11 @@ body.lang-en #hdrTitleZh { display: none; }
   font-family: var(--font-en); font-size: 11px; font-weight: 600;
   box-shadow: 0 1px 4px rgba(0,0,0,0.12);
 }
-.lang-toggle .lt-opt { padding: 6px 12px; cursor: pointer; letter-spacing: 0.08em; color: var(--grey-2); }
+.lang-toggle .lt-opt {
+  min-width: 44px; min-height: 44px; padding: 6px 12px;
+  border: 0; background: transparent; cursor: pointer;
+  font: inherit; letter-spacing: 0.08em; color: var(--grey-1);
+}
 .lang-toggle .lt-opt.active { background: var(--black); color: var(--white); }
 .partner-logos {
   background: var(--white); padding: 36px 24px; text-align: center;
@@ -1461,13 +1490,21 @@ body.lang-en #hdrTitleZh { display: none; }
   box-shadow: 2px 2px 0 var(--black); font-family: var(--font-zh);
 }
 .sc-dl:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--black); }
+@media (prefers-reduced-motion: reduce) {
+  body, .focus-ring, .result.show { animation: none !important; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
 </style>
 </head>
 <body>
 <style>
 </style>
-<div class="lang-toggle" id="langToggle"><span class="lt-opt" data-lang="zh">中</span><span class="lt-opt" data-lang="en">EN</span></div>
+<div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
+  <button type="button" class="lt-opt" data-lang="zh" aria-pressed="true">中</button>
+  <button type="button" class="lt-opt" data-lang="en" aria-pressed="false">EN</button>
+</div>
 <div class="fp-wrap">
+  <button class="fp-close" id="fpClose" type="button" aria-label="關閉連署提示">×</button>
   <img class="fp-mascot fp-mascot-default" src="assets/vzt_mascot.png" alt="" aria-hidden="true">
   <img class="fp-mascot fp-mascot-like" src="assets/vzt_mascot_like.png" alt="" aria-hidden="true">
   <a class="float-petition" href="https://forms.gle/wqWe1f8peB4Qn5c66" target="_blank" rel="noopener">
@@ -1656,57 +1693,57 @@ body.lang-en #hdrTitleZh { display: none; }
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">Year</span>
-      <span class="cat-pill en active" data-year="all">All</span>
-      <span class="cat-pill en disabled" data-year="2016" title="No coordinates for 2016">2016</span>
-      <span class="cat-pill en disabled" data-year="2017" title="No coordinates for 2017">2017</span>
-      <span class="cat-pill en" data-year="2018">2018</span>
-      <span class="cat-pill en" data-year="2019">2019</span>
-      <span class="cat-pill en" data-year="2020">2020</span>
-      <span class="cat-pill en" data-year="2021">2021</span>
-      <span class="cat-pill en" data-year="2022">2022</span>
-      <span class="cat-pill en" data-year="2023">2023</span>
-      <span class="cat-pill en" data-year="2024">2024</span>
-      <span class="cat-pill en" data-year="2025">2025</span>
+      <button type="button" class="cat-pill en active" data-year="all" aria-pressed="true">All</button>
+      <button type="button" class="cat-pill en disabled" data-year="2016" title="No coordinates for 2016" disabled>2016</button>
+      <button type="button" class="cat-pill en disabled" data-year="2017" title="No coordinates for 2017" disabled>2017</button>
+      <button type="button" class="cat-pill en" data-year="2018" aria-pressed="false">2018</button>
+      <button type="button" class="cat-pill en" data-year="2019" aria-pressed="false">2019</button>
+      <button type="button" class="cat-pill en" data-year="2020" aria-pressed="false">2020</button>
+      <button type="button" class="cat-pill en" data-year="2021" aria-pressed="false">2021</button>
+      <button type="button" class="cat-pill en" data-year="2022" aria-pressed="false">2022</button>
+      <button type="button" class="cat-pill en" data-year="2023" aria-pressed="false">2023</button>
+      <button type="button" class="cat-pill en" data-year="2024" aria-pressed="false">2024</button>
+      <button type="button" class="cat-pill en" data-year="2025" aria-pressed="false">2025</button>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Victim</span>
-      <span class="cat-pill active" data-mode="all"><span class="t-zh">全部</span><span class="t-en">All</span></span>
-      <span class="cat-pill" data-mode="機車"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></span>
-      <span class="cat-pill" data-mode="汽車"><span class="t-zh">汽/貨車</span><span class="t-en">Car / Truck</span></span>
-      <span class="cat-pill" data-mode="人"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></span>
-      <span class="cat-pill" data-mode="慢車"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></span>
+      <button type="button" class="cat-pill active" data-mode="all" aria-pressed="true"><span class="t-zh">全部</span><span class="t-en">All</span></button>
+      <button type="button" class="cat-pill" data-mode="機車" aria-pressed="false"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></button>
+      <button type="button" class="cat-pill" data-mode="汽車" aria-pressed="false"><span class="t-zh">汽/貨車</span><span class="t-en">Car / Truck</span></button>
+      <button type="button" class="cat-pill" data-mode="人" aria-pressed="false"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></button>
+      <button type="button" class="cat-pill" data-mode="慢車" aria-pressed="false"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></button>
       <span class="mode-hint"><span class="t-zh">雙擊可複選</span><span class="t-en">dbl-click = multi</span></span>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">View</span>
-      <span class="cat-pill active" data-view="points"><span class="t-zh">點位 Points</span><span class="t-en">Points</span></span>
-      <span class="cat-pill" data-view="heat"><span class="t-zh">熱力 Heatmap</span><span class="t-en">Heatmap</span></span>
-      <span class="cat-pill" data-view="both"><span class="t-zh">兩者 Both</span><span class="t-en">Both</span></span>
+      <button type="button" class="cat-pill active" data-view="points" aria-pressed="true"><span class="t-zh">點位 Points</span><span class="t-en">Points</span></button>
+      <button type="button" class="cat-pill" data-view="heat" aria-pressed="false"><span class="t-zh">熱力 Heatmap</span><span class="t-en">Heatmap</span></button>
+      <button type="button" class="cat-pill" data-view="both" aria-pressed="false"><span class="t-zh">兩者 Both</span><span class="t-en">Both</span></button>
     </div>
         <div class="filter-group">
       <span class="filter-group-label">Base</span>
-      <span class="cat-pill" data-base="minimal"><span class="t-zh">簡潔</span><span class="t-en">Minimal</span></span>
-      <span class="cat-pill active" data-base="roads"><span class="t-zh">道路</span><span class="t-en">Roads</span></span>
-      <span class="cat-pill" data-base="satellite"><span class="t-zh">衛星</span><span class="t-en">Satellite</span></span>
+      <button type="button" class="cat-pill" data-base="minimal" aria-pressed="false"><span class="t-zh">簡潔</span><span class="t-en">Minimal</span></button>
+      <button type="button" class="cat-pill active" data-base="roads" aria-pressed="true"><span class="t-zh">道路</span><span class="t-en">Roads</span></button>
+      <button type="button" class="cat-pill" data-base="satellite" aria-pressed="false"><span class="t-zh">衛星</span><span class="t-en">Satellite</span></button>
     </div>
     <div class="filter-group">
       <span class="filter-group-label"><span class="t-zh">幹線 Hwys</span><span class="t-en">Hwys</span></span>
-      <span class="cat-pill active" data-hwy="on"><span class="t-zh">顯示</span><span class="t-en">Show</span></span>
-      <span class="cat-pill" data-hwy="off"><span class="t-zh">隱藏</span><span class="t-en">Hide</span></span>
+      <button type="button" class="cat-pill active" data-hwy="on" aria-pressed="true"><span class="t-zh">顯示</span><span class="t-en">Show</span></button>
+      <button type="button" class="cat-pill" data-hwy="off" aria-pressed="false"><span class="t-zh">隱藏</span><span class="t-en">Hide</span></button>
     </div>
     <div class="filter-group" id="swGroup" style="display:none">
       <span class="filter-group-label" id="swLabel"><span class="t-zh">人行道 Sidewalks</span><span class="t-en">Sidewalks</span></span>
-      <span class="cat-pill" data-sw="on"><span class="t-zh">顯示</span><span class="t-en">Show</span></span>
-      <span class="cat-pill active" data-sw="off"><span class="t-zh">隱藏</span><span class="t-en">Hide</span></span>
+      <button type="button" class="cat-pill" data-sw="on" aria-pressed="false"><span class="t-zh">顯示</span><span class="t-en">Show</span></button>
+      <button type="button" class="cat-pill active" data-sw="off" aria-pressed="true"><span class="t-zh">隱藏</span><span class="t-en">Hide</span></button>
     </div>
     <div class="filter-group" style="margin-left:auto">
-      <span class="filter-group-label" id="filterCount">Showing — / —</span>
+      <span class="filter-group-label" id="filterCount" aria-live="polite">Showing — / —</span>
     </div>
   </div>
 
   <div class="map-grid">
     <div class="map-wrap">
-      <div id="map"></div>
+      <div id="map" aria-label="縣市 A1 事故點位與熱力互動地圖"></div>
       <!-- Street View comparison mode: pano stage + the crash map docked top-right -->
       <div id="svStage">
         <div class="sv-bar">
@@ -2025,18 +2062,40 @@ const CAT_EN = {
 function catEN(k) { return TT(k, CAT_EN[k] || k); }
 // English township/district name (Hanyu Pinyin), zh in zh-mode
 function enTown(t) { return TT(t, (window.TOWN_EN && window.TOWN_EN[t]) || t); }
+function syncPressedState(el) {
+  if (el && el.hasAttribute('aria-pressed')) {
+    el.setAttribute('aria-pressed', el.classList.contains('active') ? 'true' : 'false');
+  }
+}
 function setLang(l) {
   window.__LANG = l;
   document.body.classList.toggle('lang-en', l === 'en');
   document.documentElement.lang = l === 'en' ? 'en' : 'zh-TW';
   try { localStorage.setItem('lang', l); } catch(e) {}
-  document.querySelectorAll('#langToggle .lt-opt').forEach(o => o.classList.toggle('active', o.dataset.lang === l));
+  document.querySelectorAll('#langToggle .lt-opt').forEach(o => {
+    o.classList.toggle('active', o.dataset.lang === l);
+    syncPressedState(o);
+  });
+  const fpClose = document.getElementById('fpClose');
+  if (fpClose) fpClose.setAttribute('aria-label', l === 'en' ? 'Dismiss petition prompt' : '關閉連署提示');
   if (window.__buildSelect) window.__buildSelect();
   if (window.__rerender) window.__rerender();
 }
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#langToggle .lt-opt').forEach(o =>
     o.addEventListener('click', () => setLang(o.dataset.lang)));
+  document.querySelectorAll('[aria-pressed]').forEach(syncPressedState);
+  new MutationObserver(records => records.forEach(r => syncPressedState(r.target)))
+    .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  const fp = document.querySelector('.fp-wrap');
+  const fpClose = document.getElementById('fpClose');
+  try {
+    if (sessionStorage.getItem('petitionPromptDismissed') === '1' && fp) fp.hidden = true;
+  } catch(e) {}
+  if (fpClose && fp) fpClose.addEventListener('click', () => {
+    fp.hidden = true;
+    try { sessionStorage.setItem('petitionPromptDismissed', '1'); } catch(e) {}
+  });
   setLang(window.__LANG);
 });
 </script>
