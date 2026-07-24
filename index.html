@@ -51,8 +51,16 @@ body { animation: pageFadeIn 0.45s ease-out; }
   --font-zh: 'Noto Sans TC', sans-serif;
   --font-en: 'Space Grotesk', sans-serif;
 }
+html { scroll-behavior: smooth; scroll-padding-top: 86px; }
 body { font-family: var(--font-zh); background: var(--grey-4); color: var(--black); line-height: 1.6; }
 .shell { max-width: 1440px; margin: 0 auto; padding: 48px 40px 80px; }
+.skip-link {
+  position: fixed; top: 10px; left: 10px; z-index: 3000;
+  transform: translateY(-150%);
+  background: var(--black); color: var(--white);
+  padding: 10px 14px; font-weight: 700; text-decoration: none;
+}
+.skip-link:focus { transform: translateY(0); }
 
 /* Header */
 .page-header {
@@ -67,12 +75,12 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
   white-space: nowrap;
 }
 .page-header .title-block { flex: 1; }
-.page-header h1 {
+.page-header .eyebrow {
   font-family: var(--font-en); font-size: 11px; font-weight: 500;
   letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--grey-2); line-height: 1.6;
 }
-.page-header .title-zh {
+.page-header h1.title-zh {
   font-family: var(--font-zh); font-weight: 700; font-size: 26px;
   letter-spacing: 0.04em; color: var(--black); margin-top: 4px;
 }
@@ -450,6 +458,13 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
 .fp-wrap {
   position: fixed; bottom: 18px; right: 18px; z-index: 1500;
 }
+.fp-close {
+  position: absolute; z-index: 3; top: -14px; right: -10px;
+  width: 32px; height: 32px; border: 2px solid var(--black);
+  border-radius: 50%; background: var(--white); color: var(--black);
+  font: 700 16px/1 var(--font-en); cursor: pointer;
+  box-shadow: 2px 2px 0 var(--black);
+}
 .fp-wrap .fp-mascot {
   position: absolute; z-index: 1; left: 50%; bottom: 100%;
   transform: translateX(-50%);
@@ -483,9 +498,10 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
   .petition-sub { font-size: 13px; }
   .petition-cta { font-size: 18px; padding: 24px 20px; }
   .demands-grid { grid-template-columns: 1fr; gap: 12px; }
-  .fp-wrap { bottom: 12px; right: 12px; }
+  .fp-wrap { bottom: max(12px, env(safe-area-inset-bottom)); right: 12px; }
   .float-petition { padding: 10px 14px; font-size: 12px; }
-  .fp-wrap .fp-mascot { width: 96px; margin-bottom: -14px; }
+  .fp-wrap .fp-mascot { display: none; }
+  .fp-close { width: 40px; height: 40px; top: -18px; right: -10px; }
 }
 
 .section { margin-bottom: 48px; }
@@ -553,10 +569,33 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
   border: 1px solid var(--grey-3); cursor: pointer;
   letter-spacing: 0.03em; background: var(--white);
   user-select: none; transition: background .12s, border-color .12s;
+  min-height: 40px; font-family: inherit; color: inherit; line-height: 1.2;
 }
 .cat-pill.en, .pt-pill.en { font-family: var(--font-en); letter-spacing: 0.05em; font-weight: 500; }
 .cat-pill:hover, .pt-pill:hover { border-color: var(--black); }
 .cat-pill.active, .pt-pill.active { background: var(--lime); border-color: var(--lime); font-weight: 700; }
+.cat-pill:focus-visible, .pt-pill:focus-visible, .lt-opt:focus-visible,
+.fp-close:focus-visible, .explore-nav a:focus-visible {
+  outline: 3px solid var(--blue); outline-offset: 3px;
+}
+
+/* Primary journey navigation */
+.explore-nav {
+  position: sticky; top: 10px; z-index: 1200;
+  display: flex; align-items: center; gap: 2px;
+  margin: 0 0 24px; padding: 5px;
+  overflow-x: auto; overscroll-behavior-inline: contain;
+  background: var(--black); border-left: 6px solid var(--lime);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.16);
+  scrollbar-width: thin;
+}
+.explore-nav a {
+  flex: 0 0 auto; min-height: 42px; display: inline-flex; align-items: center;
+  padding: 0 15px; color: var(--white); text-decoration: none;
+  font-family: var(--font-en); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.explore-nav a:hover { background: var(--lime); color: var(--black); }
 
 /* Map area */
 .map-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 24px; }
@@ -807,7 +846,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
   .page-header .logo-mark { order: 1; }
   .page-header .title-block { flex: 1 1 100%; order: 2; }
   .page-header .meta { order: 3; text-align: left; width: 100%; }
-  .page-header .title-zh { font-size: 22px; line-height: 1.3; }
+  .page-header h1.title-zh { font-size: 22px; line-height: 1.3; }
   .cover { padding: 24px; gap: 24px; }
   .cover .big-num { font-size: 80px; }
   .cover .donut { width: 180px; height: 180px; opacity: 0.25; }
@@ -816,8 +855,8 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
 @media (max-width: 480px) {
   .page-header { margin-bottom: 28px; gap: 12px; }
   .page-header .logo-mark { font-size: 8px; padding: 4px 7px; letter-spacing: 0.16em; }
-  .page-header h1 { font-size: 10px; letter-spacing: 0.18em; }
-  .page-header .title-zh { font-size: 19px; margin-top: 2px; letter-spacing: 0.02em; }
+  .page-header .eyebrow { font-size: 10px; letter-spacing: 0.18em; }
+  .page-header h1.title-zh { font-size: 21px; margin-top: 2px; letter-spacing: 0.02em; }
   .page-header .meta { font-size: 9px; letter-spacing: 0.18em; }
   .disclaimer { font-size: 9px; margin-top: 6px; }
   .cover .big-num { font-size: 64px; }
@@ -826,7 +865,11 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
   .filter-bar { padding: 14px 14px; gap: 10px 14px; }
   .filter-group { width: 100%; }
   .filter-group-label { width: 100%; }
+  .cat-pill, .pt-pill { min-height: 44px; }
   #ptmap { height: 480px; }
+  #countyMap { height: 420px !important; }
+  .explore-nav { margin-inline: -4px; top: 8px; }
+  .explore-nav a { min-height: 44px; padding-inline: 13px; }
 }
 
 /* ── i18n + logo ── */
@@ -842,7 +885,11 @@ body.lang-en .t-en-b { display: block; }
   font-family: var(--font-en); font-size: 11px; font-weight: 600;
   box-shadow: 0 1px 4px rgba(0,0,0,0.12);
 }
-.lang-toggle .lt-opt { padding: 6px 12px; cursor: pointer; letter-spacing: 0.08em; color: var(--grey-2); }
+.lang-toggle .lt-opt {
+  min-width: 44px; min-height: 44px; padding: 6px 12px;
+  border: 0; background: transparent; cursor: pointer;
+  font: inherit; letter-spacing: 0.08em; color: var(--grey-1);
+}
 .lang-toggle .lt-opt.active { background: var(--black); color: var(--white); }
 .partner-logos {
   background: var(--white); padding: 36px 24px; text-align: center;
@@ -913,12 +960,22 @@ body.lang-en .t-en-b { display: block; }
 .gx-note { font-size: 13px; line-height: 1.8; color: var(--grey-1); padding-top: 14px; border-top: 1px solid var(--grey-3); }
 .gx-note strong { color: var(--black); font-weight: 600; }
 @media (max-width: 640px) { .gx-rows { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body, .focus-ring { animation: none !important; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
 
 </style>
 </head>
 <body>
-<div class="lang-toggle" id="langToggle"><span class="lt-opt" data-lang="zh">中</span><span class="lt-opt" data-lang="en">EN</span></div>
+<a class="skip-link" href="#mainContent"><span class="t-zh">跳至主要內容</span><span class="t-en">Skip to content</span></a>
+<div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
+  <button type="button" class="lt-opt" data-lang="zh" aria-pressed="true">中</button>
+  <button type="button" class="lt-opt" data-lang="en" aria-pressed="false">EN</button>
+</div>
 <div class="fp-wrap">
+  <button class="fp-close" id="fpClose" type="button" aria-label="關閉連署提示">×</button>
   <img class="fp-mascot fp-mascot-default" src="assets/vzt_mascot.png" alt="" aria-hidden="true">
   <img class="fp-mascot fp-mascot-like" src="assets/vzt_mascot_like.png" alt="" aria-hidden="true">
   <a class="float-petition" href="https://forms.gle/wqWe1f8peB4Qn5c66" target="_blank" rel="noopener">
@@ -926,36 +983,13 @@ body.lang-en .t-en-b { display: block; }
     <span class="t-en">Sign the Petition<span class="fp-arrow">→</span></span>
   </a>
 </div>
-<div class="shell">
-
-<!-- 資料夥伴 · 合作單位 — moved above the page header -->
-<div class="top-partners">
-  <div class="tp-brand">
-    <span class="tp-label t-zh">資料夥伴 · 合作單位</span>
-    <span class="tp-label t-en">In partnership with</span>
-    <img src="assets/tcan_vzt_logo.png" alt="TCAN 台灣氣候行動網路 · Vision Zero Taiwan 還路於民行人路權促進會">
-  </div>
-  <a class="pl-visit" href="https://www.visionzero.tw/" target="_blank" rel="noopener noreferrer"><span class="t-zh">還路於民 Vision Zero Taiwan · 官方網站</span><span class="t-en">Vision Zero Taiwan · Official site</span><span class="pl-url">visionzero.tw ↗</span></a>
-</div>
-
-<!-- 2026 雙齊零街道願景手冊 — top reference banner -->
-<a class="hbanner" href="https://canva.link/kqb5nqfzp1gdnhz" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--lime);color:var(--black);text-decoration:none;padding:20px 26px;margin-bottom:32px;border-left:6px solid var(--black)">
-  <span class="hb-row" style="display:flex;align-items:center;gap:16px;min-width:0">
-    <span class="hb-emoji" style="font-size:30px;line-height:1" aria-hidden="true">📖</span>
-    <span style="min-width:0">
-      <span style="font-family:var(--font-en);font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey-1);display:block"><span class="t-zh">線上手冊 · 點我閱讀</span><span class="t-en">Online Handbook · Read now</span></span>
-      <span class="hb-title" style="font-size:19px;font-weight:700;letter-spacing:0.04em;display:block;margin-top:3px"><span class="t-zh">【2026 雙齊零街道願景手冊】</span><span class="t-en">2026 Dual-Zero Street Vision Handbook</span></span>
-      <span style="display:block;font-size:12.5px;font-weight:300;color:var(--grey-1);margin-top:3px;letter-spacing:0.03em"><span class="t-zh">交通零死亡 × 碳排歸零 — 完整願景與五大訴求，一次讀懂</span><span class="t-en">Zero road deaths × net-zero carbon — the full vision &amp; Five Demands</span></span>
-    </span>
-  </span>
-  <span style="font-family:var(--font-en);font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;background:var(--black);color:var(--lime);padding:11px 20px;white-space:nowrap"><span class="t-zh">開啟手冊 →</span><span class="t-en">Open handbook →</span></span>
-</a>
+<main class="shell" id="mainContent">
 
 <div class="page-header">
   <div class="logo-mark">Taiwan<br>Mobility<br>Atlas</div>
   <div class="title-block">
-    <h1>National Choropleth · A1 Fatal Crashes 2016–2025</h1>
-    <div class="title-zh"><span class="t-zh">台灣全國交通安全面量圖｜十年回顧</span><span class="t-en">Taiwan National Road-Safety Choropleth · 10-Year Review</span></div>
+    <div class="eyebrow">National Choropleth · A1 Fatal Crashes 2016–2025</div>
+    <h1 class="title-zh"><span class="t-zh">台灣全國交通安全面量圖｜十年回顧</span><span class="t-en">Taiwan National Road-Safety Choropleth · 10-Year Review</span></h1>
     <div class="disclaimer">
       <span class="t-zh">A1（24 小時內死亡）· 非官方專案 · 資料來源：內政部警政署交通事故開放資料</span>
       <span class="t-en">A1 (death within 24 h) · unofficial project · source: National Police Agency open data</span>
@@ -973,8 +1007,39 @@ body.lang-en .t-en-b { display: block; }
   <span style="font-family:var(--font-en);font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;background:var(--lime);color:var(--black);padding:10px 18px;white-space:nowrap"><span class="t-zh">立即查詢 →</span><span class="t-en">Check now →</span></span>
 </a>
 
+<nav class="explore-nav" aria-label="主要章節">
+  <a href="#overview"><span class="t-zh">總覽</span><span class="t-en">Overview</span></a>
+  <a href="#counties"><span class="t-zh">縣市</span><span class="t-en">Counties</span></a>
+  <a href="#districtMap"><span class="t-zh">行政區地圖</span><span class="t-en">District map</span></a>
+  <a href="#crashPoints"><span class="t-zh">事故點位</span><span class="t-en">Crash points</span></a>
+  <a href="#demographics"><span class="t-zh">族群分析</span><span class="t-en">Demographics</span></a>
+  <a href="#methodology"><span class="t-zh">資料方法</span><span class="t-en">Methods</span></a>
+</nav>
+
+<!-- 資料夥伴與倡議手冊 — secondary context after the primary task -->
+<div class="top-partners">
+  <div class="tp-brand">
+    <span class="tp-label t-zh">資料夥伴 · 合作單位</span>
+    <span class="tp-label t-en">In partnership with</span>
+    <img src="assets/tcan_vzt_logo.png" alt="TCAN 台灣氣候行動網路 · Vision Zero Taiwan 還路於民行人路權促進會">
+  </div>
+  <a class="pl-visit" href="https://www.visionzero.tw/" target="_blank" rel="noopener noreferrer"><span class="t-zh">還路於民 Vision Zero Taiwan · 官方網站</span><span class="t-en">Vision Zero Taiwan · Official site</span><span class="pl-url">visionzero.tw ↗</span></a>
+</div>
+
+<a class="hbanner" href="https://canva.link/kqb5nqfzp1gdnhz" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--lime);color:var(--black);text-decoration:none;padding:20px 26px;margin-bottom:32px;border-left:6px solid var(--black)">
+  <span class="hb-row" style="display:flex;align-items:center;gap:16px;min-width:0">
+    <span class="hb-emoji" style="font-size:30px;line-height:1" aria-hidden="true">📖</span>
+    <span style="min-width:0">
+      <span style="font-family:var(--font-en);font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey-1);display:block"><span class="t-zh">線上手冊 · 點我閱讀</span><span class="t-en">Online Handbook · Read now</span></span>
+      <span class="hb-title" style="font-size:19px;font-weight:700;letter-spacing:0.04em;display:block;margin-top:3px"><span class="t-zh">【2026 雙齊零街道願景手冊】</span><span class="t-en">2026 Dual-Zero Street Vision Handbook</span></span>
+      <span style="display:block;font-size:12.5px;font-weight:300;color:var(--grey-1);margin-top:3px;letter-spacing:0.03em"><span class="t-zh">交通零死亡 × 碳排歸零 — 完整願景與五大訴求，一次讀懂</span><span class="t-en">Zero road deaths × net-zero carbon — the full vision &amp; Five Demands</span></span>
+    </span>
+  </span>
+  <span style="font-family:var(--font-en);font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;background:var(--black);color:var(--lime);padding:11px 20px;white-space:nowrap"><span class="t-zh">開啟手冊 →</span><span class="t-en">Open handbook →</span></span>
+</a>
+
 <!-- 01 — Overview -->
-<div class="section">
+<div class="section" id="overview">
   <div class="section-label"><span class="t-zh">01 — Decade Overview 全國十年總覽</span><span class="t-en">01 — Decade Overview</span></div>
   <div class="cover">
     <svg class="donut" viewBox="0 0 200 200" aria-hidden="true">
@@ -1079,7 +1144,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 02 — Casualty Trend (A1 deaths + A2 events, 10 years) -->
-<div class="section">
+<div class="section" id="trends">
   <div class="section-label"><span class="t-zh">02 — Casualty Trend 傷亡趨勢</span><span class="t-en">02 — Casualty Trend</span></div>
   <div class="trend-natl">
     <div class="tn-hero">
@@ -1108,7 +1173,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 03 — County navigator -->
-<div class="section">
+<div class="section" id="counties">
   <div class="section-label"><span class="t-zh">03 — 22 Counties 縣市深度地圖</span><span class="t-en">03 — 22 Counties</span></div>
   <div class="nav-card">
     <h4>Explore by County</h4>
@@ -1118,45 +1183,45 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 03 — Choropleth -->
-<div class="section">
+<div class="section" id="districtMap">
   <div class="section-label"><span class="t-zh">04 — District-Level Choropleth 行政區面量圖</span><span class="t-en">04 — District-Level Choropleth</span></div>
 
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">Victim</span>
-      <span class="cat-pill active" data-mode="all"><span class="t-zh">全部</span><span class="t-en">All</span></span>
-      <span class="cat-pill" data-mode="機車"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></span>
-      <span class="cat-pill" data-mode="汽車"><span class="t-zh">汽/貨車</span><span class="t-en">Car/Truck</span></span>
-      <span class="cat-pill" data-mode="人"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></span>
-      <span class="cat-pill" data-mode="慢車"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></span>
+      <button type="button" class="cat-pill active" data-mode="all" aria-pressed="true"><span class="t-zh">全部</span><span class="t-en">All</span></button>
+      <button type="button" class="cat-pill" data-mode="機車" aria-pressed="false"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></button>
+      <button type="button" class="cat-pill" data-mode="汽車" aria-pressed="false"><span class="t-zh">汽/貨車</span><span class="t-en">Car/Truck</span></button>
+      <button type="button" class="cat-pill" data-mode="人" aria-pressed="false"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></button>
+      <button type="button" class="cat-pill" data-mode="慢車" aria-pressed="false"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></button>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Year</span>
-      <span class="cat-pill en active" data-year="all">All</span>
-      <span class="cat-pill en" data-year="2016">2016</span>
-      <span class="cat-pill en" data-year="2017">2017</span>
-      <span class="cat-pill en" data-year="2018">2018</span>
-      <span class="cat-pill en" data-year="2019">2019</span>
-      <span class="cat-pill en" data-year="2020">2020</span>
-      <span class="cat-pill en" data-year="2021">2021</span>
-      <span class="cat-pill en" data-year="2022">2022</span>
-      <span class="cat-pill en" data-year="2023">2023</span>
-      <span class="cat-pill en" data-year="2024">2024</span>
-      <span class="cat-pill en" data-year="2025">2025</span>
+      <button type="button" class="cat-pill en active" data-year="all" aria-pressed="true">All</button>
+      <button type="button" class="cat-pill en" data-year="2016" aria-pressed="false">2016</button>
+      <button type="button" class="cat-pill en" data-year="2017" aria-pressed="false">2017</button>
+      <button type="button" class="cat-pill en" data-year="2018" aria-pressed="false">2018</button>
+      <button type="button" class="cat-pill en" data-year="2019" aria-pressed="false">2019</button>
+      <button type="button" class="cat-pill en" data-year="2020" aria-pressed="false">2020</button>
+      <button type="button" class="cat-pill en" data-year="2021" aria-pressed="false">2021</button>
+      <button type="button" class="cat-pill en" data-year="2022" aria-pressed="false">2022</button>
+      <button type="button" class="cat-pill en" data-year="2023" aria-pressed="false">2023</button>
+      <button type="button" class="cat-pill en" data-year="2024" aria-pressed="false">2024</button>
+      <button type="button" class="cat-pill en" data-year="2025" aria-pressed="false">2025</button>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Metric</span>
-      <span class="cat-pill active" data-metric="abs"><span class="t-zh">A1 事故數量</span><span class="t-en">A1 events</span></span>
-      <span class="cat-pill" data-metric="rate"><span class="t-zh">每萬人 Per 10k</span><span class="t-en">Per 10k</span></span>
+      <button type="button" class="cat-pill active" data-metric="abs" aria-pressed="true"><span class="t-zh">A1 事故數量</span><span class="t-en">A1 events</span></button>
+      <button type="button" class="cat-pill" data-metric="rate" aria-pressed="false"><span class="t-zh">每萬人 Per 10k</span><span class="t-en">Per 10k</span></button>
     </div>
     <div class="filter-group" style="margin-left:auto">
-      <span class="filter-group-label" id="filterCount">— A1 事故</span>
+      <span class="filter-group-label" id="filterCount" aria-live="polite">— A1 事故</span>
     </div>
   </div>
 
   <div class="map-grid">
     <div class="map-wrap">
-      <div id="map"></div>
+      <div id="map" aria-label="台灣鄉鎮市區 A1 事故互動地圖"></div>
       <div class="map-legend">
         <span class="legend-title" id="legendTitle">Quintile · 0 → max</span>
         <span id="legendBins" style="display:flex;align-items:center;gap:1px"></span>
@@ -1175,24 +1240,24 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 04 — County choropleth -->
-<div class="section">
+<div class="section" id="countyMapSection">
   <div class="section-label"><span class="t-zh">05 — County Choropleth 縣市熱力圖</span><span class="t-en">05 — County Choropleth</span></div>
 
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">Metric</span>
-      <span class="cat-pill active" data-cmetric="abs"><span class="t-zh">A1 死亡數</span><span class="t-en">A1 deaths</span></span>
-      <span class="cat-pill" data-cmetric="per100k"><span class="t-zh">每十萬人 Per 100k</span><span class="t-en">Per 100k</span></span>
-      <span class="cat-pill" data-cmetric="lethality"><span class="t-zh">致死率 Lethality</span><span class="t-en">Lethality (A1 ÷ A2)</span></span>
+      <button type="button" class="cat-pill active" data-cmetric="abs" aria-pressed="true"><span class="t-zh">A1 死亡數</span><span class="t-en">A1 deaths</span></button>
+      <button type="button" class="cat-pill" data-cmetric="per100k" aria-pressed="false"><span class="t-zh">每十萬人 Per 100k</span><span class="t-en">Per 100k</span></button>
+      <button type="button" class="cat-pill" data-cmetric="lethality" aria-pressed="false"><span class="t-zh">致死率 Lethality</span><span class="t-en">Lethality (A1 ÷ A2)</span></button>
     </div>
     <div class="filter-group" style="margin-left:auto">
-      <span class="filter-group-label" id="countyStat">—</span>
+      <span class="filter-group-label" id="countyStat" aria-live="polite">—</span>
     </div>
   </div>
 
   <div class="map-grid">
     <div class="map-wrap">
-      <div id="countyMap" style="height:640px;background:var(--grey-4);border:1px solid var(--grey-3)"></div>
+      <div id="countyMap" aria-label="台灣縣市道路死亡指標互動地圖" style="height:640px;background:var(--grey-4);border:1px solid var(--grey-3)"></div>
       <div class="map-legend">
         <span class="legend-title" id="countyLegendTitle">Quintile</span>
         <span id="countyLegendBins" style="display:flex;align-items:center;gap:1px"></span>
@@ -1211,7 +1276,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 06 — National crash points (dot map) + deadliest segments (merged) -->
-<div class="section">
+<div class="section" id="crashPoints">
   <div class="section-label"><span class="t-zh">06 — Crash Points &amp; Deadliest Segments 全國事故點位與最危險路段</span><span class="t-en">06 — Crash Points &amp; Deadliest Segments</span></div>
 
   <!-- 6A · national crash-points dot map -->
@@ -1229,39 +1294,39 @@ body.lang-en .t-en-b { display: block; }
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">View</span>
-      <span class="pt-pill active" data-pview="points"><span class="t-zh">點位</span><span class="t-en">Points</span></span>
-      <span class="pt-pill" data-pview="heat"><span class="t-zh">熱力</span><span class="t-en">Heatmap</span></span>
-      <span class="pt-pill" data-pview="both"><span class="t-zh">兩者</span><span class="t-en">Both</span></span>
+      <button type="button" class="pt-pill active" data-pview="points" aria-pressed="true"><span class="t-zh">點位</span><span class="t-en">Points</span></button>
+      <button type="button" class="pt-pill" data-pview="heat" aria-pressed="false"><span class="t-zh">熱力</span><span class="t-en">Heatmap</span></button>
+      <button type="button" class="pt-pill" data-pview="both" aria-pressed="false"><span class="t-zh">兩者</span><span class="t-en">Both</span></button>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Victim</span>
-      <span class="pt-pill active" data-pmode="all"><span class="t-zh">全部</span><span class="t-en">All</span></span>
-      <span class="pt-pill" data-pmode="0"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></span>
-      <span class="pt-pill" data-pmode="1"><span class="t-zh">汽/貨車</span><span class="t-en">Car/Truck</span></span>
-      <span class="pt-pill" data-pmode="2"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></span>
-      <span class="pt-pill" data-pmode="3"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></span>
+      <button type="button" class="pt-pill active" data-pmode="all" aria-pressed="true"><span class="t-zh">全部</span><span class="t-en">All</span></button>
+      <button type="button" class="pt-pill" data-pmode="0" aria-pressed="false"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></button>
+      <button type="button" class="pt-pill" data-pmode="1" aria-pressed="false"><span class="t-zh">汽/貨車</span><span class="t-en">Car/Truck</span></button>
+      <button type="button" class="pt-pill" data-pmode="2" aria-pressed="false"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></button>
+      <button type="button" class="pt-pill" data-pmode="3" aria-pressed="false"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></button>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Year</span>
-      <span class="pt-pill en active" data-pyear="all">All</span>
-      <span class="pt-pill en" data-pyear="2016">2016</span>
-      <span class="pt-pill en" data-pyear="2017">2017</span>
-      <span class="pt-pill en" data-pyear="2018">2018</span>
-      <span class="pt-pill en" data-pyear="2019">2019</span>
-      <span class="pt-pill en" data-pyear="2020">2020</span>
-      <span class="pt-pill en" data-pyear="2021">2021</span>
-      <span class="pt-pill en" data-pyear="2022">2022</span>
-      <span class="pt-pill en" data-pyear="2023">2023</span>
-      <span class="pt-pill en" data-pyear="2024">2024</span>
-      <span class="pt-pill en" data-pyear="2025">2025</span>
+      <button type="button" class="pt-pill en active" data-pyear="all" aria-pressed="true">All</button>
+      <button type="button" class="pt-pill en" data-pyear="2016" aria-pressed="false">2016</button>
+      <button type="button" class="pt-pill en" data-pyear="2017" aria-pressed="false">2017</button>
+      <button type="button" class="pt-pill en" data-pyear="2018" aria-pressed="false">2018</button>
+      <button type="button" class="pt-pill en" data-pyear="2019" aria-pressed="false">2019</button>
+      <button type="button" class="pt-pill en" data-pyear="2020" aria-pressed="false">2020</button>
+      <button type="button" class="pt-pill en" data-pyear="2021" aria-pressed="false">2021</button>
+      <button type="button" class="pt-pill en" data-pyear="2022" aria-pressed="false">2022</button>
+      <button type="button" class="pt-pill en" data-pyear="2023" aria-pressed="false">2023</button>
+      <button type="button" class="pt-pill en" data-pyear="2024" aria-pressed="false">2024</button>
+      <button type="button" class="pt-pill en" data-pyear="2025" aria-pressed="false">2025</button>
     </div>
     <div class="filter-group" style="margin-left:auto">
-      <span class="filter-group-label" id="ptCount">— A1</span>
+      <span class="filter-group-label" id="ptCount" aria-live="polite">— A1</span>
     </div>
   </div>
 
   <div class="ptmap-wrap">
-    <div id="ptmap"></div>
+    <div id="ptmap" aria-label="全國 A1 死亡事故點位與熱力互動地圖"></div>
     <div class="ptmap-legend">
       <span class="legend-title">Victim</span>
       <span class="lg-dot"><i style="background:#1A1A1A"></i><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></span>
@@ -1288,11 +1353,11 @@ body.lang-en .t-en-b { display: block; }
   <div class="filter-bar">
     <div class="filter-group">
       <span class="filter-group-label">Victim</span>
-      <span class="pt-pill active" data-dmode="all"><span class="t-zh">全部</span><span class="t-en">All</span></span>
-      <span class="pt-pill" data-dmode="機車"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></span>
-      <span class="pt-pill" data-dmode="汽車"><span class="t-zh">汽/貨車</span><span class="t-en">Car/Truck</span></span>
-      <span class="pt-pill" data-dmode="人"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></span>
-      <span class="pt-pill" data-dmode="慢車"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></span>
+      <button type="button" class="pt-pill active" data-dmode="all" aria-pressed="true"><span class="t-zh">全部</span><span class="t-en">All</span></button>
+      <button type="button" class="pt-pill" data-dmode="機車" aria-pressed="false"><span class="t-zh">機車</span><span class="t-en">Motorcycle</span></button>
+      <button type="button" class="pt-pill" data-dmode="汽車" aria-pressed="false"><span class="t-zh">汽/貨車</span><span class="t-en">Car/Truck</span></button>
+      <button type="button" class="pt-pill" data-dmode="人" aria-pressed="false"><span class="t-zh">行人</span><span class="t-en">Pedestrian</span></button>
+      <button type="button" class="pt-pill" data-dmode="慢車" aria-pressed="false"><span class="t-zh">自行車/慢車</span><span class="t-en">Bicycle</span></button>
     </div>
   </div>
 
@@ -1304,7 +1369,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 05 — Age × Accident Type -->
-<div class="section">
+<div class="section" id="demographics">
   <div class="section-label"><span class="t-zh">07 — Age × Accident Type 年齡層與事故態樣</span><span class="t-en">07 — Age × Accident Type</span></div>
 
   <div class="age-card">
@@ -1317,19 +1382,19 @@ body.lang-en .t-en-b { display: block; }
     <div class="filter-bar" style="margin-bottom:24px">
       <div class="filter-group">
         <span class="filter-group-label">Source</span>
-        <span class="cat-pill active" data-asource="a1"><span class="t-zh">A1 死亡</span><span class="t-en">A1 Fatal</span></span>
-        <span class="cat-pill" data-asource="a2"><span class="t-zh">A2 受傷</span><span class="t-en">A2 Injury</span></span>
+        <button type="button" class="cat-pill active" data-asource="a1" aria-pressed="true"><span class="t-zh">A1 死亡</span><span class="t-en">A1 Fatal</span></button>
+        <button type="button" class="cat-pill" data-asource="a2" aria-pressed="false"><span class="t-zh">A2 受傷</span><span class="t-en">A2 Injury</span></button>
       </div>
       <div class="filter-group">
         <span class="filter-group-label">Year</span>
-        <span class="cat-pill en active" data-ayear="all">All</span>
-        <span class="cat-pill en" data-ayear="2018">2018</span>
-        <span class="cat-pill en" data-ayear="2019">2019</span>
-        <span class="cat-pill en" data-ayear="2020">2020</span>
-        <span class="cat-pill en" data-ayear="2022">2022</span>
-        <span class="cat-pill en" data-ayear="2023">2023</span>
-        <span class="cat-pill en" data-ayear="2024">2024</span>
-        <span class="cat-pill en" data-ayear="2025">2025</span>
+        <button type="button" class="cat-pill en active" data-ayear="all" aria-pressed="true">All</button>
+        <button type="button" class="cat-pill en" data-ayear="2018" aria-pressed="false">2018</button>
+        <button type="button" class="cat-pill en" data-ayear="2019" aria-pressed="false">2019</button>
+        <button type="button" class="cat-pill en" data-ayear="2020" aria-pressed="false">2020</button>
+        <button type="button" class="cat-pill en" data-ayear="2022" aria-pressed="false">2022</button>
+        <button type="button" class="cat-pill en" data-ayear="2023" aria-pressed="false">2023</button>
+        <button type="button" class="cat-pill en" data-ayear="2024" aria-pressed="false">2024</button>
+        <button type="button" class="cat-pill en" data-ayear="2025" aria-pressed="false">2025</button>
       </div>
       <div class="filter-group" style="margin-left:auto">
         <span class="filter-group-label" id="ageCoverage">—</span>
@@ -1375,7 +1440,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 07 — Gender Lens -->
-<div class="section">
+<div class="section" id="gender">
   <div class="section-label"><span class="t-zh">08 — Gender Lens 性別視角</span><span class="t-en">08 — Gender Lens</span></div>
   <div class="age-card">
     <div class="card-zh" style="font-size:14px;color:var(--grey-2);margin-bottom:22px"><span class="t-zh">全國 A1 死者性別 · 整體與運具別（十年，取可辨識性別之死者）</span><span class="t-en">National A1 victim gender · overall &amp; by mode (decade · identifiable victims)</span></div>
@@ -1384,7 +1449,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 09 — Sidewalk check-up (sidewalk.html) -->
-<div class="section">
+<div class="section" id="relatedResearch">
   <div class="section-label"><span class="t-zh">09 — Sidewalk Check-up 人行道健檢</span><span class="t-en">09 — Sidewalk Check-up</span></div>
   <a href="sidewalk.html" style="display:block;background:var(--white);color:var(--black);text-decoration:none;padding:44px 40px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border-top:4px solid var(--blue)">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap">
@@ -1459,7 +1524,7 @@ body.lang-en .t-en-b { display: block; }
 </div>
 
 <!-- 11 — Notes -->
-<div class="section">
+<div class="section" id="methodology">
   <div class="section-label"><span class="t-zh">14 — Notes 資料說明</span><span class="t-en">14 — Notes</span></div>
 
   <div class="county-card" style="margin-bottom:16px;border-top:3px solid var(--lime)">
@@ -1539,7 +1604,7 @@ body.lang-en .t-en-b { display: block; }
   </div>
 </footer>
 
-</div>
+</main>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
@@ -1556,6 +1621,11 @@ function TT(zh, en) { return window.__LANG === 'en' ? en : zh; }
 function enCounty(c) { return (window.__COUNTY2EN && window.__COUNTY2EN[c]) || c; }
 // English township/district name (Hanyu Pinyin official romanization), zh in zh-mode
 function enTown(t) { return TT(t, (window.TOWN_EN && window.TOWN_EN[t]) || t); }
+function syncPressedState(el) {
+  if (el && el.hasAttribute('aria-pressed')) {
+    el.setAttribute('aria-pressed', el.classList.contains('active') ? 'true' : 'false');
+  }
+}
 
 // Gender lens — national breakdown (decade, identifiable victims) · data/gender.json
 fetch('data/gender.json')
@@ -1598,13 +1668,30 @@ function setLang(l) {
   document.body.classList.toggle('lang-en', l === 'en');
   document.documentElement.lang = l === 'en' ? 'en' : 'zh-TW';
   try { localStorage.setItem('lang', l); } catch(e) {}
-  document.querySelectorAll('#langToggle .lt-opt').forEach(o => o.classList.toggle('active', o.dataset.lang === l));
+  document.querySelectorAll('#langToggle .lt-opt').forEach(o => {
+    o.classList.toggle('active', o.dataset.lang === l);
+    syncPressedState(o);
+  });
+  const fpClose = document.getElementById('fpClose');
+  if (fpClose) fpClose.setAttribute('aria-label', l === 'en' ? 'Dismiss petition prompt' : '關閉連署提示');
   if (window.__renderNav) window.__renderNav();
   if (window.__rerender) window.__rerender();
 }
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#langToggle .lt-opt').forEach(o =>
     o.addEventListener('click', () => setLang(o.dataset.lang)));
+  document.querySelectorAll('[aria-pressed]').forEach(syncPressedState);
+  new MutationObserver(records => records.forEach(r => syncPressedState(r.target)))
+    .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  const fp = document.querySelector('.fp-wrap');
+  const fpClose = document.getElementById('fpClose');
+  try {
+    if (sessionStorage.getItem('petitionPromptDismissed') === '1' && fp) fp.hidden = true;
+  } catch(e) {}
+  if (fpClose && fp) fpClose.addEventListener('click', () => {
+    fp.hidden = true;
+    try { sessionStorage.setItem('petitionPromptDismissed', '1'); } catch(e) {}
+  });
   setLang(window.__LANG);
 });
 </script>
