@@ -9,7 +9,7 @@
 @page { size: A4 portrait; margin: 0; }
 
 :root {
-  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#888; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
+  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#6B6B6B; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
   --lime:#C8D400; --lime-dk:#A8B200; --lime-lt:#E8F000;
   --red:#D94F3D; --red-dk:#A33A2D;
   --blue:#3A7CC3; --blue-dk:#1F4B7A;
@@ -302,11 +302,11 @@ function renderChart(actuals, traj, color) {
   // x-axis labels
   ['16','25','35','50'].forEach((lab, i) => {
     const yr = [2016, 2025, 2035, 2050][i];
-    svg += `<text x="${xS(yr)}" y="${H-2}" font-family="Space Grotesk" font-size="7" fill="#888" text-anchor="middle">'${lab}</text>`;
+    svg += `<text x="${xS(yr)}" y="${H-2}" font-family="Space Grotesk" font-size="7" fill="#6B6B6B" text-anchor="middle">'${lab}</text>`;
   });
   // y-axis labels (min + max)
-  svg += `<text x="${pad.l-2}" y="${yS(yMax)+3}" font-family="Space Grotesk" font-size="7" fill="#888" text-anchor="end">${formatY(yMax)}</text>`;
-  svg += `<text x="${pad.l-2}" y="${yS(0)}" font-family="Space Grotesk" font-size="7" fill="#888" text-anchor="end">0</text>`;
+  svg += `<text x="${pad.l-2}" y="${yS(yMax)+3}" font-family="Space Grotesk" font-size="7" fill="#6B6B6B" text-anchor="end">${formatY(yMax)}</text>`;
+  svg += `<text x="${pad.l-2}" y="${yS(0)}" font-family="Space Grotesk" font-size="7" fill="#6B6B6B" text-anchor="end">0</text>`;
 
   // trajectory dashed (lime)
   const trajPath = Object.entries(traj).map(([y, v], i) =>

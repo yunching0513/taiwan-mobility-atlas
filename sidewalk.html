@@ -41,7 +41,7 @@ body { animation: pageFadeIn 0.45s ease-out; }
   --lime-lt:#E8F000;
   --black:  #1A1A1A;
   --grey-1: #4A4A4A;
-  --grey-2: #888888;
+  --grey-2: #6B6B6B;
   --grey-3: #D0D0D0;
   --grey-4: #F2F2F2;
   --white:  #FFFFFF;
@@ -269,7 +269,7 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
 }
 .detail-empty .en {
   font-family: var(--font-en); font-size: 9px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--grey-3); margin-top: 8px; display: block;
+  text-transform: uppercase; color: var(--grey-2); margin-top: 8px; display: block;
 }
 .detail-name { font-size: 20px; font-weight: 300; letter-spacing: 0.08em; margin-bottom: 4px; }
 .detail-county {
@@ -498,8 +498,8 @@ body.lang-en .t-en { display: inline; }
 
   <div class="filter-bar">
     <div class="filter-group">
-      <span class="filter-group-label">County</span>
-      <select id="segCounty" style="font-family:var(--font-zh);font-size:12px;padding:6px 10px;border:1px solid var(--grey-3);background:var(--white);cursor:pointer"></select>
+      <span class="filter-group-label" id="segCountyLbl">County</span>
+      <select id="segCounty" aria-labelledby="segCountyLbl" style="font-family:var(--font-zh);font-size:12px;padding:6px 10px;border:1px solid var(--grey-3);background:var(--white);cursor:pointer"></select>
     </div>
     <div class="filter-group">
       <span class="filter-group-label">Colour by</span>

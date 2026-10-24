@@ -35,7 +35,7 @@
 body { animation: pageFadeIn 0.45s ease-out; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#888; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
+  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#6B6B6B; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
   --lime:#C8D400; --lime-dk:#A8B200; --lime-lt:#E8F000;
   --red:#D94F3D; --red-dk:#A33A2D; --gold:#E8A825; --blue:#3A7CC3;
   --font-zh:'Noto Sans TC',sans-serif;
@@ -63,7 +63,7 @@ a { color: inherit; }
 }
 .hero .en {
   font-family: var(--font-en); font-size: 10px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--grey-2); margin-top: 6px;
+  text-transform: uppercase; color: #9A9A9A; margin-top: 6px;
 }
 
 /* ── search ── */
@@ -470,7 +470,7 @@ function select(key) {
   s += `<polyline fill="none" stroke="#D94F3D" stroke-width="3" points="${yr.map((v, i) => px(i).toFixed(1) + ',' + py(v).toFixed(1)).join(' ')}"/>`;
   yr.forEach((v, i) => {
     s += `<circle cx="${px(i).toFixed(1)}" cy="${py(v).toFixed(1)}" r="3.4" fill="#D94F3D"/>`;
-    s += `<text x="${px(i).toFixed(1)}" y="${(py(v) - 9).toFixed(1)}" font-family="Space Grotesk" font-size="12" fill="#888" text-anchor="middle">${v}</text>`;
+    s += `<text x="${px(i).toFixed(1)}" y="${(py(v) - 9).toFixed(1)}" font-family="Space Grotesk" font-size="12" fill="#6B6B6B" text-anchor="middle">${v}</text>`;
   });
   $('rSpark').innerHTML = s;
 

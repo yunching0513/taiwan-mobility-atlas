@@ -35,7 +35,7 @@
 body { animation: pageFadeIn 0.45s ease-out; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#888; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
+  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#6B6B6B; --grey-3:#D0D0D0; --grey-4:#F2F2F2; --white:#FFF;
   --lime:#C8D400; --lime-dk:#A8B200; --lime-lt:#E8F000;
   --red:#D94F3D; --red-dk:#A33A2D; --gold:#E8A825; --blue:#3A7CC3;
   --font-zh:'Noto Sans TC',sans-serif;
@@ -70,7 +70,7 @@ body.lang-en .t-en { display: inline; }
 .hero .st.b .n { color: var(--gold); }
 .hero .st.c .n { color: var(--red); }
 .hero .st .l { margin-top: 9px; font-size: 13px; letter-spacing: 0.08em; color: var(--grey-3); }
-.hero .st .e { font-family: var(--font-en); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-2); margin-top: 3px; }
+.hero .st .e { font-family: var(--font-en); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #9A9A9A; margin-top: 3px; }
 
 .shell { max-width: 1180px; margin: 0 auto; padding: 56px 20px 40px; }
 .section { margin-bottom: 56px; }
@@ -302,10 +302,10 @@ function drawScatter() {
   let s = '';
   for (let g = 0; g <= 30; g += 5) {
     s += `<line x1="${pad.l}" y1="${y(g)}" x2="${W-pad.r}" y2="${y(g)}" stroke="#F2F2F2"/>`;
-    s += `<text x="${pad.l-8}" y="${y(g)+4}" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">${g}</text>`;
+    s += `<text x="${pad.l-8}" y="${y(g)+4}" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">${g}</text>`;
   }
   for (let g = 30; g <= 95; g += 10) {
-    s += `<text x="${x(g)}" y="${H-26}" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#888">${g}%</text>`;
+    s += `<text x="${x(g)}" y="${H-26}" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">${g}%</text>`;
   }
   s += `<text x="${(pad.l+W-pad.r)/2}" y="${H-4}" text-anchor="middle" font-family="Noto Sans TC" font-size="12" fill="#4A4A4A">${TT('私人運具市佔率 →','Private-mode share →')}</text>`;
   s += `<text x="14" y="${pad.t-8}" font-family="Noto Sans TC" font-size="12" fill="#4A4A4A">${TT('每千人死傷率','Casualties /1k')}</text>`;
@@ -352,10 +352,10 @@ function drawRace(revealFrac) {
   let s = '';
   for (let g = 0; g <= 35; g += 5) {
     s += `<line x1="${pad.l}" y1="${y(g)}" x2="${W-pad.r}" y2="${y(g)}" stroke="#F2F2F2"/>`;
-    s += `<text x="${pad.l-8}" y="${y(g)+4}" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">${g}</text>`;
+    s += `<text x="${pad.l-8}" y="${y(g)+4}" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">${g}</text>`;
   }
   years.forEach((yr, i) => {
-    if (yr % 2 === 1) s += `<text x="${x(i)}" y="${H-14}" text-anchor="middle" font-family="Space Grotesk" font-size="10.5" fill="#888">${yr}</text>`;
+    if (yr % 2 === 1) s += `<text x="${x(i)}" y="${H-14}" text-anchor="middle" font-family="Space Grotesk" font-size="10.5" fill="#6B6B6B">${yr}</text>`;
   });
   const path = series => series.map((v, i) => (v == null ? '' : `${i === 0 || series[i-1] == null ? 'M' : 'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`)).join('');
   const clipW = pad.l + (revealFrac == null ? 1 : revealFrac) * (W - pad.l - pad.r);
@@ -425,10 +425,10 @@ function drawScen() {
   const steps = isD ? [0, 900, 1800, 2700, 3600] : [0, 300000, 600000, 900000, 1200000];
   steps.forEach(g => {
     s += `<line x1="${pad.l}" y1="${y(g)}" x2="${W-pad.r}" y2="${y(g)}" stroke="#F2F2F2"/>`;
-    s += `<text x="${pad.l-8}" y="${y(g)+4}" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">${fmt(g)}</text>`;
+    s += `<text x="${pad.l-8}" y="${y(g)+4}" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">${fmt(g)}</text>`;
   });
   [2010, 2020, 2025, 2030, 2040, 2050].forEach(yr => {
-    s += `<text x="${x(yr)}" y="${H-18}" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#888">${yr}</text>`;
+    s += `<text x="${x(yr)}" y="${H-18}" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">${yr}</text>`;
   });
   // milestone flags
   S.milestones.forEach(m => {

@@ -42,7 +42,7 @@ body { animation: pageFadeIn 0.45s ease-out; }
   --lime-lt:#E8F000;
   --black:  #1A1A1A;
   --grey-1: #4A4A4A;
-  --grey-2: #888888;
+  --grey-2: #6B6B6B;
   --grey-3: #D0D0D0;
   --grey-4: #F2F2F2;
   --white:  #FFFFFF;
@@ -645,7 +645,7 @@ body {
   font-size: 9px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey-3);
+  color: var(--grey-2);
   margin-top: 8px;
   display: block;
 }
@@ -1244,7 +1244,7 @@ footer .tag.black { background: var(--black); color: var(--white); border-color:
   text-align: right;
 }
 .district-row .d-rate small {
-  font-size: 8px; letter-spacing: 0.18em; color: var(--grey-3);
+  font-size: 8px; letter-spacing: 0.18em; color: var(--grey-2);
   display: block; margin-top: -2px;
 }
 .district-row.lowN-row { opacity: 0.5; }
@@ -1341,7 +1341,7 @@ body.lang-en #hdrTitleZh { display: none; }
 .vt-lbl { color: #B0B0B0; letter-spacing: 0.04em; }
 .vt-val { font-weight: 600; letter-spacing: -0.01em; }
 .vt-val.lime { color: var(--lime); }
-.vt-val small { color: #888; font-weight: 400; margin-left: 3px; }
+.vt-val small { color: #6B6B6B; font-weight: 400; margin-left: 3px; }
 .vt-row.muted .vt-lbl, .vt-row.muted .vt-val { color: #777; }
 .vz-targets {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
@@ -1836,7 +1836,7 @@ body.lang-en #hdrTitleZh { display: none; }
         <span class="pill active" data-sort="abs"><span class="t-zh">累計 Total</span><span class="t-en">Total</span></span>
         <span class="pill" data-sort="rate"><span class="t-zh">每萬人 Per 10k</span><span class="t-en">Per 10k</span></span>
       </div>
-      <div id="byDistrict" class="district-list"></div>
+      <div id="byDistrict" class="district-list" tabindex="0" role="region" aria-label="行政區排名 · District ranking"></div>
       <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--grey-3);font-family:var(--font-en);font-size:9px;letter-spacing:0.12em;color:var(--grey-2);line-height:1.7">
         Rate · per 10,000 residents (2013 population, MOI dataset 8410)
       </div>
@@ -2137,7 +2137,7 @@ function __main() {
     const el = document.getElementById('byGender');
     if (!el || !g) return;
     const tot = g.m + g.f;
-    if (!tot) { el.innerHTML = '<div style="font-size:11px;color:#888">—</div>'; return; }
+    if (!tot) { el.innerHTML = '<div style="font-size:11px;color:#6B6B6B">—</div>'; return; }
     const mp = Math.round(g.m / tot * 100), fp = 100 - mp;
     const ML = '<span class="t-zh">男</span><span class="t-en">M</span>';
     const FL = '<span class="t-zh">女</span><span class="t-en">F</span>';
@@ -2201,7 +2201,7 @@ function __main() {
     const gridLines = [];
     for (let g = 0; g <= maxY; g += gridStep) {
       gridLines.push(`<line x1="${padL}" x2="${W-padR}" y1="${y(g)}" y2="${y(g)}" stroke="#F2F2F2" stroke-width="1"/>`);
-      gridLines.push(`<text x="${padL-8}" y="${y(g)+3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#888">${g}</text>`);
+      gridLines.push(`<text x="${padL-8}" y="${y(g)+3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#6B6B6B">${g}</text>`);
     }
 
     // x ticks
@@ -2237,7 +2237,7 @@ function __main() {
       ${dthLabels}
       ${xTicks}
       <text x="${padL}" y="${padT-8}" font-family="Space Grotesk" font-size="9"
-        fill="#888" letter-spacing="0.2em">EVENTS · DEATHS</text>
+        fill="#6B6B6B" letter-spacing="0.2em">EVENTS · DEATHS</text>
     `;
   }
 
@@ -2278,9 +2278,9 @@ function __main() {
     ];
     document.getElementById('snapshot').innerHTML = `
       <div style="display:grid;grid-template-columns:1.4fr 0.6fr 0.6fr;gap:8px;align-items:baseline;font-size:11px">
-        <div style="font-family:'Space Grotesk';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#888">Metric</div>
-        <div style="font-family:'Space Grotesk';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#888;text-align:right">2025</div>
-        <div style="font-family:'Space Grotesk';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#888;text-align:right">10y Avg</div>
+        <div style="font-family:'Space Grotesk';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B6B">Metric</div>
+        <div style="font-family:'Space Grotesk';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B6B;text-align:right">2025</div>
+        <div style="font-family:'Space Grotesk';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B6B;text-align:right">10y Avg</div>
         ${rows.map(([label, v, a]) => {
           const diff = v - a;
           const dStr = (diff===0)?'＝':((diff>0?'+':'')+diff);
@@ -2288,7 +2288,7 @@ function __main() {
           return `
             <div style="border-top:1px solid #D0D0D0;padding-top:10px;color:#4A4A4A">${label}</div>
             <div style="border-top:1px solid #D0D0D0;padding-top:10px;text-align:right;font-family:'Space Grotesk';font-size:22px;font-weight:300;color:#1A1A1A">${v}</div>
-            <div style="border-top:1px solid #D0D0D0;padding-top:10px;text-align:right;font-family:'Space Grotesk';font-size:14px;font-weight:400;color:#888">
+            <div style="border-top:1px solid #D0D0D0;padding-top:10px;text-align:right;font-family:'Space Grotesk';font-size:14px;font-weight:400;color:#6B6B6B">
               ${a}
               <div style="font-size:9px;color:${dColor};letter-spacing:0.1em">${dStr}</div>
             </div>
@@ -2641,7 +2641,7 @@ const markerLayer = L.layerGroup().addTo(map);
     const tops = computeHotspots(events, 10);
     const el = document.getElementById('hotspots');
     if (!tops.length) {
-      el.innerHTML = `<div style="font-size:11px;color:#888;padding:24px 0;font-weight:300">— ${TT('篩選條件下無熱點資料','No hotspots under this filter')} —</div>`;
+      el.innerHTML = `<div style="font-size:11px;color:#6B6B6B;padding:24px 0;font-weight:300">— ${TT('篩選條件下無熱點資料','No hotspots under this filter')} —</div>`;
       return;
     }
     el.innerHTML = tops.map((h, i) => {
@@ -2741,7 +2741,7 @@ const markerLayer = L.layerGroup().addTo(map);
     ` : `
       <div class="detail-row">
         <span class="dlabel">Schema</span>
-        <span class="dval" style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;color:#888">SIMPLIFIED RECORD${TT(' · 簡式資料，僅含時間／地點／傷亡／車種',' · time/place/casualties/vehicle only')}</span>
+        <span class="dval" style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;color:#6B6B6B">SIMPLIFIED RECORD${TT(' · 簡式資料，僅含時間／地點／傷亡／車種',' · time/place/casualties/vehicle only')}</span>
       </div>
     `;
 
@@ -3098,7 +3098,7 @@ const markerLayer = L.layerGroup().addTo(map);
   }
   function renderBars(elId, rows, opts={}) {
     const el = document.getElementById(elId);
-    if (!rows.length) { el.innerHTML = `<div style="font-size:11px;color:#888;font-weight:300">— ${TT('篩選條件下無資料','No data under this filter')} —</div>`; return; }
+    if (!rows.length) { el.innerHTML = `<div style="font-size:11px;color:#6B6B6B;font-weight:300">— ${TT('篩選條件下無資料','No data under this filter')} —</div>`; return; }
     const max = Math.max(1, ...rows.map(r => r[1]));
     const total = rows.reduce((s,r)=>s+r[1],0) || 1;
     el.innerHTML = rows.map(([k, v]) => {
@@ -3501,12 +3501,12 @@ const markerLayer = L.layerGroup().addTo(map);
     });
     // x-axis labels
     [2016, 2025, 2035, 2050].forEach(y => {
-      s += `<text x="${xS(y)}" y="${H-pad.b+18}" font-family="Space Grotesk" font-size="11" fill="#888" text-anchor="middle">${y}</text>`;
+      s += `<text x="${xS(y)}" y="${H-pad.b+18}" font-family="Space Grotesk" font-size="11" fill="#6B6B6B" text-anchor="middle">${y}</text>`;
     });
     // y-axis ticks
     [0, yMax / 2, yMax].forEach(v => {
       s += `<line x1="${pad.l-3}" y1="${yS(v)}" x2="${pad.l}" y2="${yS(v)}" stroke="#888" stroke-width="0.5"/>`;
-      s += `<text x="${pad.l-6}" y="${yS(v)+4}" font-family="Space Grotesk" font-size="10" fill="#888" text-anchor="end">${_vzFmt(v)}</text>`;
+      s += `<text x="${pad.l-6}" y="${yS(v)+4}" font-family="Space Grotesk" font-size="10" fill="#6B6B6B" text-anchor="end">${_vzFmt(v)}</text>`;
     });
 
     // ── BAU envelope (drawn first so other lines sit on top) ──
@@ -4134,13 +4134,13 @@ const markerLayer = L.layerGroup().addTo(map);
     let s = '';
     [0, 0.2, 0.4, 0.6, 0.8].forEach(v => {
       s += '<line x1="' + padL + '" y1="' + y(v) + '" x2="' + (W - padR) + '" y2="' + y(v) + '" stroke="#F2F2F2" stroke-width="1"/>';
-      s += '<text x="' + (padL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#888">' + Math.round(v * 100) + '%</text>';
+      s += '<text x="' + (padL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">' + Math.round(v * 100) + '%</text>';
     });
     [2025, 2030, 2035, 2040, 2045, 2050].forEach(yr => {
-      s += '<text x="' + x(yr) + '" y="' + (H - 8) + '" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#888">' + yr + '</text>';
+      s += '<text x="' + x(yr) + '" y="' + (H - 8) + '" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#6B6B6B">' + yr + '</text>';
     });
     s += '<line x1="' + padL + '" y1="' + y(g0) + '" x2="' + (W - padR) + '" y2="' + y(g0) + '" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4"/>';
-    s += '<text x="' + (W - padR - 4) + '" y="' + (y(g0) - 6) + '" text-anchor="end" font-family="Noto Sans TC, Space Grotesk, sans-serif" font-size="11" fill="#888">' + TT('不積極作為情境 ', 'No-action baseline ') + Math.round(g0 * 100) + '%</text>';
+    s += '<text x="' + (W - padR - 4) + '" y="' + (y(g0) - 6) + '" text-anchor="end" font-family="Noto Sans TC, Space Grotesk, sans-serif" font-size="11" fill="#6B6B6B">' + TT('不積極作為情境 ', 'No-action baseline ') + Math.round(g0 * 100) + '%</text>';
     let area = 'M' + x(2025) + ',' + y(g0), line = 'M' + x(2025) + ',' + y(g0);
     for (let yr = 2026; yr <= 2050; yr++) {
       const g = lcfModel(yr).g;

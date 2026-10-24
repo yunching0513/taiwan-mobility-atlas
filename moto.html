@@ -36,7 +36,7 @@ body { animation: pageFadeIn 0.45s ease-out; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --lime:#C8D400; --lime-dk:#A8B200; --lime-lt:#E8F000;
-  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#888888; --grey-3:#D0D0D0; --grey-4:#F2F2F2;
+  --black:#1A1A1A; --grey-1:#4A4A4A; --grey-2:#6B6B6B; --grey-3:#D0D0D0; --grey-4:#F2F2F2;
   --white:#FFFFFF; --red:#D94F3D; --blue:#3A7CC3; --gold:#E8A825;
   --font-zh:'Noto Sans TC',sans-serif; --font-en:'Space Grotesk',sans-serif;
 }
@@ -185,8 +185,8 @@ footer { margin-top:40px; padding-top:20px; border-top:1px solid var(--grey-3); 
 
 <!-- COUNTY SELECTOR -->
 <div class="county-bar">
-  <span class="cb-label"><span class="t-zh">檢視範圍 · Scope</span><span class="t-en">Scope</span></span>
-  <select id="countySel"></select>
+  <span class="cb-label" id="countySelLbl"><span class="t-zh">檢視範圍 · Scope</span><span class="t-en">Scope</span></span>
+  <select id="countySel" aria-labelledby="countySelLbl"></select>
   <span class="scope-note" id="scopeNote"></span>
   <span class="cb-stat" id="cbStat"></span>
 </div>

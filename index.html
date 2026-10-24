@@ -41,7 +41,7 @@ body { animation: pageFadeIn 0.45s ease-out; }
   --lime-lt:#E8F000;
   --black:  #1A1A1A;
   --grey-1: #4A4A4A;
-  --grey-2: #888888;
+  --grey-2: #6B6B6B;
   --grey-3: #D0D0D0;
   --grey-4: #F2F2F2;
   --white:  #FFFFFF;
@@ -324,7 +324,7 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
 .combo-row:first-child { border-top: none; }
 .combo-row .cr-rank {
   font-family: var(--font-en); font-size: 16px; font-weight: 300;
-  color: rgba(255,255,255,0.4); text-align: right;
+  color: rgba(255,255,255,0.6); text-align: right;
 }
 .combo-row.top1 .cr-rank { color: var(--lime); font-weight: 500; }
 .combo-row.top2 .cr-rank, .combo-row.top3 .cr-rank { color: var(--lime-lt); font-weight: 500; }
@@ -691,7 +691,7 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
 }
 .detail-empty .en {
   font-family: var(--font-en); font-size: 9px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--grey-3); margin-top: 8px; display: block;
+  text-transform: uppercase; color: var(--grey-2); margin-top: 8px; display: block;
 }
 .detail-name {
   font-size: 20px; font-weight: 300; letter-spacing: 0.08em;
@@ -763,7 +763,7 @@ body { font-family: var(--font-zh); background: var(--grey-4); color: var(--blac
   font-family: var(--font-en); font-size: 10.5px; color: var(--grey-1); text-align: right;
 }
 .county-row .c-rate small {
-  font-size: 8px; color: var(--grey-3); letter-spacing: 0.18em; display: block;
+  font-size: 8px; color: var(--grey-2); letter-spacing: 0.18em; display: block;
 }
 
 footer {
@@ -1791,13 +1791,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftTicks = [];
     for (let g = 0; g <= 4; g++) {
       const v = (maxA1 * (4 - g) / 4);
-      leftTicks.push(`<text x="${padL-8}" y="${padT + innerH * g / 4 + 3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#888">${Math.round(v).toLocaleString()}</text>`);
+      leftTicks.push(`<text x="${padL-8}" y="${padT + innerH * g / 4 + 3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#6B6B6B">${Math.round(v).toLocaleString()}</text>`);
     }
     const rightTicks = [];
     for (let g = 0; g <= 4; g++) {
       const v = (maxA2 * (4 - g) / 4);
       const label = v >= 100000 ? Math.round(v/1000) + 'k' : Math.round(v).toLocaleString();
-      rightTicks.push(`<text x="${W-padR+8}" y="${padT + innerH * g / 4 + 3}" text-anchor="start" font-family="Space Grotesk" font-size="9" fill="#888">${label}</text>`);
+      rightTicks.push(`<text x="${W-padR+8}" y="${padT + innerH * g / 4 + 3}" text-anchor="start" font-family="Space Grotesk" font-size="9" fill="#6B6B6B">${label}</text>`);
     }
 
     // x ticks
@@ -1818,7 +1818,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ${leftTicks.join('')}
       ${rightTicks.join('')}
       <text x="${padL}" y="${padT-8}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#D94F3D">A1 DEATHS ←</text>
-      <text x="${W-padR}" y="${padT-8}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#888" text-anchor="end">→ A2 EVENTS / INJURED</text>
+      <text x="${W-padR}" y="${padT-8}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#6B6B6B" text-anchor="end">→ A2 EVENTS / INJURED</text>
       <path d="${injPath}" stroke="#3A7CC3" stroke-width="1.4" fill="none" stroke-dasharray="4 3" opacity="0.85"/>
       <path d="${a2Path}" stroke="#888" stroke-width="2" fill="none"/>
       <path d="${a1Path}" stroke="#D94F3D" stroke-width="2.5" fill="none"/>
@@ -1830,7 +1830,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // headline growth number (2025 A2 vs 2016 A2)
     const grow = ((a2Events[a2Events.length-1] - a2Events[0]) / a2Events[0] * 100);
     const el = document.getElementById('trendA2Growth');
-    if (el) el.innerHTML = (grow >= 0 ? '+' : '') + grow.toFixed(0) + '<small style="font-size:18px;letter-spacing:0.05em;color:#888">% A2</small>';
+    if (el) el.innerHTML = (grow >= 0 ? '+' : '') + grow.toFixed(0) + '<small style="font-size:18px;letter-spacing:0.05em;color:#6B6B6B">% A2</small>';
   }
   renderNatlTrend();
 
@@ -1856,7 +1856,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const yy = padT + innerH * g / 5;
       grid.push(`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#F2F2F2" stroke-width="1"/>`);
       const v = maxY * (5 - g) / 5;
-      grid.push(`<text x="${padL-8}" y="${yy+3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#888">${Math.round(v).toLocaleString()}</text>`);
+      grid.push(`<text x="${padL-8}" y="${yy+3}" text-anchor="end" font-family="Space Grotesk" font-size="9" fill="#6B6B6B">${Math.round(v).toLocaleString()}</text>`);
     }
     const xTicks = years.map((yr,i) =>
       `<text x="${x(i)}" y="${H-padB+18}" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#4A4A4A">${yr}</text>`).join('');
@@ -1874,12 +1874,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const li = years.length - 1;
     svg.innerHTML = `
       ${grid.join('')}
-      <text x="${padL}" y="${padT-10}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#888">DEATHS / YEAR</text>
+      <text x="${padL}" y="${padT-10}" font-family="Space Grotesk" font-size="9" letter-spacing="0.18em" fill="#6B6B6B">DEATHS / YEAR</text>
       ${band}
       <path d="${d30Path}" stroke="#888" stroke-width="2.5" fill="none"/>
       <path d="${a1Path}" stroke="#D94F3D" stroke-width="2.5" fill="none"/>
       ${d30Dots}${a1Dots}
-      <text x="${x(li)+8}" y="${y(d30[li])+3}" font-family="Space Grotesk" font-size="11" font-weight="700" fill="#888">30-day</text>
+      <text x="${x(li)+8}" y="${y(d30[li])+3}" font-family="Space Grotesk" font-size="11" font-weight="700" fill="#6B6B6B">30-day</text>
       <text x="${x(li)+8}" y="${y(a1[li])+3}" font-family="Space Grotesk" font-size="11" font-weight="700" fill="#D94F3D">A1·24h</text>
       <text x="${x(5)}" y="${(y(d30[5])+y(a1[5]))/2+3}" text-anchor="middle" font-family="Space Grotesk" font-size="9.5" font-weight="700" fill="#A8801A" letter-spacing="0.04em">A2 ·24h–30d</text>
       ${xTicks}`;
@@ -2291,7 +2291,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="detail-section">
         <h4>By Victim Mode</h4>
-        ${modesHTML || '<div style="font-size:11px;color:#888">no breakdown</div>'}
+        ${modesHTML || '<div style="font-size:11px;color:#6B6B6B">no breakdown</div>'}
       </div>
       <div class="detail-section">
         <h4>By Year</h4>
