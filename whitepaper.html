@@ -148,6 +148,10 @@ body.lang-en .t-en { display: inline; }
 .partner-logos .pl-visit .pl-url { font-family: var(--font-en); font-weight: 600; font-size: 11.5px; letter-spacing: 0.06em; color: var(--lime-dk); }
 .partner-logos .pl-visit:hover .pl-url { color: var(--lime); }
 .partner-logos .pl-visit > span { flex: none; white-space: nowrap; }
+/* 窄螢幕：夥伴連結可換行並縮在容器內，否則固定寬度會撐出整頁水平捲動 */
+.partner-logos .pl-visit { flex-wrap: wrap; justify-content: center; max-width: 100%; row-gap: 4px; }
+.partner-logos .pl-visit > span { flex: 0 1 auto; min-width: 0; white-space: normal; word-break: keep-all; text-align: center; }
+.partner-logos .pl-visit .pl-url { white-space: nowrap; }
 .back-link {
   display: inline-block; margin: 18px 0 0;
   font-family: var(--font-en); font-size: 11px; letter-spacing: 0.16em;

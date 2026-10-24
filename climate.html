@@ -584,6 +584,11 @@ footer {
   .comm-row { grid-template-columns: 1fr; gap: 16px; }
   .foot-grid { grid-template-columns: 1fr; }
 }
+/* 320px 級的手機：十年長條收窄間距，避免撐出水平捲動 */
+@media (max-width: 400px) {
+  .decade-bars { gap: 10px; }
+  .decade-bar-group { gap: 6px; padding: 0 2px; }
+}
 </style>
 </head>
 <body>
